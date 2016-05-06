@@ -15,8 +15,9 @@ int main(int argc, char** argv)
     }
 
     VisualDictionary * visualDictionary = new VisualDictionary(atoi(argv[1]), argv[2]);
-    visualDictionary->initializeDictionary();
-
+    //visualDictionary->initializeDictionary();
+    //visualDictionary->saveDictionary();
+    visualDictionary->loadDictionary();
 
     return 0;
 }

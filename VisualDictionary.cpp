@@ -4,12 +4,10 @@
 
 VisualDictionary::VisualDictionary(int sizeOfDictionary, string pathToDatabase)
 {
-    this->keyPoints = new vector<KeyPoint>();
+    this->startPath = path(pathToDatabase);
     this->sizeOfDictionary = sizeOfDictionary;
-    this->startPath = new path(pathToDatabase);
-    this->currentFeatures = new Mat();
-    this->allFeatures = new Mat(0, 128, CV_32FC1, Scalar(0));
-    this->selectedWords = new Mat(0, 128, CV_32FC1, Scalar(0));
+    this->allFeatures = Mat(0, 128, CV_32FC1, Scalar(0));
+    this->selectedWords = Mat(0, 128, CV_32FC1, Scalar(0));
     this->keyPointsDetector = SIFT::create();
     this->featureExtractor = SIFT::create();
 }
@@ -23,7 +21,7 @@ VisualDictionary::~VisualDictionary()
 void VisualDictionary::initializeDictionary()
 {
     //listAllFiles(this->startPath);
-    recursive_directory_iterator dir(*startPath), end;
+    recursive_directory_iterator dir(startPath), end;
 
     //Go through all the images
     while (dir != end)
@@ -34,6 +32,7 @@ void VisualDictionary::initializeDictionary()
         {
             //Load image
             currentImage = imread(dir->path().string(), CV_LOAD_IMAGE_ANYDEPTH);
+            std::cout << "after load image";
 
             // Check for invalid input
             if (!currentImage.data)
@@ -43,11 +42,11 @@ void VisualDictionary::initializeDictionary()
             }
 
             std::cout << dir->path() << std::endl;
-            keyPointsDetector->detect(currentImage, *keyPoints);
-            featureExtractor->compute(currentImage, *keyPoints, *currentFeatures);
-            cout << "Rows: " << currentFeatures->rows << ", columns " << currentFeatures->cols << endl;
+            keyPointsDetector->detect(currentImage, keyPoints);
+            featureExtractor->compute(currentImage, keyPoints, currentFeatures);
+            cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
             //allFeatures->push_back(currentFeatures);
-            vconcat(*currentFeatures, *allFeatures, *allFeatures);
+            vconcat(currentFeatures, allFeatures, allFeatures);
         }
 
         ++dir;
@@ -75,10 +74,10 @@ void VisualDictionary::listAllFiles(path * startPath)
 
 void VisualDictionary::chooseWords()
 {
-    cout << "Rows: " << allFeatures->rows << ", columns " << allFeatures->cols << endl;
+    cout << "Rows: " << allFeatures.rows << ", columns " << allFeatures.cols << endl;
 
     int wordsLeftToChoose = sizeOfDictionary;
-    int sizeOfNumbers = allFeatures->rows;
+    int sizeOfNumbers = allFeatures.rows;
     int * numbers = new int[sizeOfNumbers];
     int * chosenNumbers = new int[sizeOfDictionary];
 
@@ -104,9 +103,25 @@ void VisualDictionary::chooseWords()
 
     for (int i = 0; i < sizeOfDictionary; ++i)
     {
-        selectedWords->push_back(allFeatures->row(chosenNumbers[i]));
+        selectedWords.push_back(allFeatures.row(chosenNumbers[i]));
     }
 
     cout << "Selected words" << endl;
-    cout << "Rows: " << selectedWords->rows << " , columns: " << selectedWords->cols << endl;
+    cout << "Rows: " << selectedWords.rows << " , columns: " << selectedWords.cols << endl;
+}
+
+
+void VisualDictionary::saveDictionary()
+{
+    FileStorage fs(this->dictionaryFileName, FileStorage::WRITE);
+    fs << "Dictionary" << this->selectedWords;
+    fs.release();
+}
+
+void VisualDictionary::loadDictionary()
+{
+    FileStorage fs(this->dictionaryFileName, FileStorage::READ);
+    fs["Dictionary"] >> this->selectedWords;
+    fs.release();
+    cout << "Rows: " << this->selectedWords.rows << " , columns: " << this->selectedWords.cols << endl;
 }

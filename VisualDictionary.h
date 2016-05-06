@@ -18,13 +18,14 @@ class VisualDictionary
 {
 private:
     int sizeOfDictionary;
+    string dictionaryFileName = "dictionary.xml";
     //list<path> * imagesPath;
-    path * startPath;
+    path startPath;
     Mat currentImage;
-    vector<KeyPoint> * keyPoints;
-    Mat * currentFeatures;
-    Mat * allFeatures;
-    Mat * selectedWords;
+    vector<KeyPoint> keyPoints;
+    Mat currentFeatures;
+    Mat allFeatures;
+    Mat selectedWords;
     Ptr<SIFT> keyPointsDetector;
     Ptr<SIFT> featureExtractor;
 
@@ -34,6 +35,10 @@ public:
     VisualDictionary(int sizeOfDictionary, string pathToDatabase);
     ~VisualDictionary();
     void initializeDictionary();
+    void write(FileStorage & fs) const;
+    void read(const FileNode & node);
+    void saveDictionary();
+    void loadDictionary();
 
 private:
     void listAllFiles(path * startPath);
