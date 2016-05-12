@@ -32,7 +32,6 @@ void VisualDictionary::initializeDictionary()
         {
             //Load image
             currentImage = imread(dir->path().string(), CV_LOAD_IMAGE_ANYDEPTH);
-            std::cout << "after load image";
 
             // Check for invalid input
             if (!currentImage.data)
@@ -96,10 +95,6 @@ void VisualDictionary::chooseWords()
         wordsLeftToChoose--;
     }
 
-    /*for (int i = 0; i < sizeOfDictionary; i++)
-    {
-        cout << chosenNumbers[i] << endl;
-    }*/
 
     for (int i = 0; i < sizeOfDictionary; ++i)
     {
@@ -108,6 +103,8 @@ void VisualDictionary::chooseWords()
 
     cout << "Selected words" << endl;
     cout << "Rows: " << selectedWords.rows << " , columns: " << selectedWords.cols << endl;
+    delete numbers;
+    delete chosenNumbers;
 }
 
 

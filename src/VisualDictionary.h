@@ -35,8 +35,6 @@ public:
     VisualDictionary(int sizeOfDictionary, string pathToDatabase);
     ~VisualDictionary();
     void initializeDictionary();
-    void write(FileStorage & fs) const;
-    void read(const FileNode & node);
     void saveDictionary();
     void loadDictionary();
 
