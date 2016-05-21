@@ -1,5 +1,0 @@
-/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/CMakeFiles/test.dir
-/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/CMakeFiles/rebuild_cache.dir
-/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/CMakeFiles/Test.dir
-/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/CMakeFiles/edit_cache.dir
-/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/CMakeFiles/BagOfWords.dir
