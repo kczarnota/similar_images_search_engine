@@ -2,6 +2,7 @@
 #define BAGOFWORDS_PICTUREDATABASE_H
 
 #include "PictureInformation.h"
+#include "VisualDictionary.h"
 
 class PictureDatabase
 {
@@ -12,11 +13,14 @@ class PictureDatabase
     {
         ar & database;
     }
+    int sizeOfDictionary;
 
 public:
     PictureDatabase();
+    PictureDatabase(int sizeOfDictionary);
     void addPicture(PictureInformation pi);
     PictureInformation getPicture(int i);
+    int getSize();
 
 };
 

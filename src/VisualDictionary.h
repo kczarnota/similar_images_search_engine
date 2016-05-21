@@ -18,7 +18,7 @@ class VisualDictionary
 {
 private:
     int sizeOfDictionary;
-    string dictionaryFileName = "dictionary.xml";
+    string dictionaryPath = "../dictionary.xml";
     //list<path> * imagesPath;
     path startPath;
     Mat currentImage;
@@ -34,9 +34,11 @@ private:
 public:
     VisualDictionary(int sizeOfDictionary, string pathToDatabase);
     ~VisualDictionary();
-    void initializeDictionary();
+    void constructDictionary();
     void saveDictionary();
     void loadDictionary();
+    Mat getRow(int rowNumber);
+    int getSize();
 
 private:
     void listAllFiles(path * startPath);

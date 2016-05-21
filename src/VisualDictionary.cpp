@@ -18,10 +18,10 @@ VisualDictionary::~VisualDictionary()
 }
 
 
-void VisualDictionary::initializeDictionary()
+void VisualDictionary::constructDictionary()
 {
     //listAllFiles(this->startPath);
-    recursive_directory_iterator dir(startPath), end;
+    recursive_directory_iterator dir(this->startPath), end;
 
     //Go through all the images
     while (dir != end)
@@ -101,8 +101,7 @@ void VisualDictionary::chooseWords()
         selectedWords.push_back(allFeatures.row(chosenNumbers[i]));
     }
 
-    cout << "Selected words" << endl;
-    cout << "Rows: " << selectedWords.rows << " , columns: " << selectedWords.cols << endl;
+    cout << "Selected words: rows: " << selectedWords.rows << " , columns: " << selectedWords.cols << endl;
     delete numbers;
     delete chosenNumbers;
 }
@@ -110,15 +109,28 @@ void VisualDictionary::chooseWords()
 
 void VisualDictionary::saveDictionary()
 {
-    FileStorage fs(this->dictionaryFileName, FileStorage::WRITE);
+    FileStorage fs(this->dictionaryPath, FileStorage::WRITE);
     fs << "Dictionary" << this->selectedWords;
     fs.release();
 }
 
 void VisualDictionary::loadDictionary()
 {
-    FileStorage fs(this->dictionaryFileName, FileStorage::READ);
+    FileStorage fs(this->dictionaryPath, FileStorage::READ);
     fs["Dictionary"] >> this->selectedWords;
     fs.release();
     cout << "Rows: " << this->selectedWords.rows << " , columns: " << this->selectedWords.cols << endl;
 }
+
+Mat VisualDictionary::getRow(int rowNumber)
+{
+    return this->selectedWords.row(rowNumber);
+}
+
+int VisualDictionary::getSize()
+{
+    return this->sizeOfDictionary;
+}
+
+
+

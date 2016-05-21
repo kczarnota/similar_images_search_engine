@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <fstream>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -48,3 +48,4 @@ TEST_CASE("Testing database")
     REQUIRE(db2.getPicture(1).getElement(2) == 1.2);
 }
 
+*/

@@ -19,10 +19,12 @@ class PictureInformation
 
 public:
     PictureInformation();
-    PictureInformation(std::string filename);
-    void add(double element);
-    double getElement(int i);
+    PictureInformation(std::string filename, int sizeOfDictionary);
+    void addOneAt(int index);
+    double getValueAt(int index);
     std::string getName();
+    void normalize(int numberOfAllElements);
+    PictureInformation& operator=(PictureInformation pi);
 };
 
 
