@@ -62,7 +62,7 @@ void BOW::addPictureToDatabase(string pathToPicture)
         for(j = 0; j < this->visualDictionary->getSize(); ++j)
         {
             int currentSum = 0;
-            this->visualDictionary->getRow(j).copyTo(currentWord.row(0));
+            this->visualDictionary->getWord(j).copyTo(currentWord.row(0));
             absdiff(currentRow, currentWord, difference);
 
             for(int k = 0; k < 128; ++k)

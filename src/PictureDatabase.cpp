@@ -1,5 +1,10 @@
 #include "PictureDatabase.h"
 
+PictureDatabase::PictureDatabase()
+{
+
+}
+
 PictureDatabase::PictureDatabase(int sizeOfDictionary)
 {
     this->sizeOfDictionary = sizeOfDictionary;
@@ -18,11 +23,6 @@ PictureInformation PictureDatabase::getPicture(int i)
 int PictureDatabase::getSize()
 {
     return (int)this->database.size();
-}
-
-PictureDatabase::PictureDatabase()
-{
-
 }
 
 

@@ -4,6 +4,9 @@
 #include "PictureInformation.h"
 #include "VisualDictionary.h"
 
+/*
+ * Klasa przechowująca wektor obiektów PictureInforamtion opisujące obrazy
+ */
 class PictureDatabase
 {
     friend class boost::serialization::access;

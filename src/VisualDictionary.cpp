@@ -1,7 +1,9 @@
 #include "VisualDictionary.h"
 #include <iostream>
 
-
+/*
+ * Konstruktor. Inicjalizuje zmienne. Smart pointery nie wymagają jawnej dealokacji
+ */
 VisualDictionary::VisualDictionary(int sizeOfDictionary, string pathToDatabase)
 {
     this->startPath = path(pathToDatabase);
@@ -12,28 +14,24 @@ VisualDictionary::VisualDictionary(int sizeOfDictionary, string pathToDatabase)
     this->featureExtractor = SIFT::create();
 }
 
-
-VisualDictionary::~VisualDictionary()
-{
-}
-
-
+/*
+ * Przechodzi przez wszystkie podkatalogi bazy obrazów wyszukując obrazy, pobiera wszystkie cechy i wybiera określoną
+ * ilość w celu utorzenia słownika.
+ */
 void VisualDictionary::constructDictionary()
 {
-    //listAllFiles(this->startPath);
     recursive_directory_iterator dir(this->startPath), end;
 
-    //Go through all the images
     while (dir != end)
     {
         file_status fs = status(dir->path());
 
-        if (!is_directory(fs))
+        if (!is_directory(fs)) //Pomiń katalogi
         {
-            //Load image
+            //Załaduj obrazek
             currentImage = imread(dir->path().string(), CV_LOAD_IMAGE_ANYDEPTH);
 
-            // Check for invalid input
+            //Sprawdź czy się udało
             if (!currentImage.data)
             {
                 cout << "Could not open or find the image" << std::endl;
@@ -44,33 +42,17 @@ void VisualDictionary::constructDictionary()
             keyPointsDetector->detect(currentImage, keyPoints);
             featureExtractor->compute(currentImage, keyPoints, currentFeatures);
             cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
-            //allFeatures->push_back(currentFeatures);
-            vconcat(currentFeatures, allFeatures, allFeatures);
+            vconcat(currentFeatures, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
         }
-
         ++dir;
     }
-
-    chooseWords();
+    chooseWords(); //Wybierz słowa do słownika
 }
 
-void VisualDictionary::listAllFiles(path * startPath)
-{
-    recursive_directory_iterator dir(*startPath), end;
 
-    while (dir != end)
-    {
-        file_status fs = status(dir->path());
-
-        if (!is_directory(fs))
-        {
-            std::cout << dir->path() << std::endl;
-        }
-
-        ++dir;
-    }
-}
-
+/*
+ * Wybiera podaną liczbę cech jako słowa i dodaje je do slownika
+ */
 void VisualDictionary::chooseWords()
 {
     cout << "Rows: " << allFeatures.rows << ", columns " << allFeatures.cols << endl;
@@ -106,7 +88,9 @@ void VisualDictionary::chooseWords()
     delete chosenNumbers;
 }
 
-
+/*
+ * Zapisuje słownik do pliku
+ */
 void VisualDictionary::saveDictionary()
 {
     FileStorage fs(this->dictionaryPath, FileStorage::WRITE);
@@ -114,6 +98,9 @@ void VisualDictionary::saveDictionary()
     fs.release();
 }
 
+/*
+ * Wczytuje słownik z pliku
+ */
 void VisualDictionary::loadDictionary()
 {
     FileStorage fs(this->dictionaryPath, FileStorage::READ);
@@ -122,11 +109,17 @@ void VisualDictionary::loadDictionary()
     cout << "Rows: " << this->selectedWords.rows << " , columns: " << this->selectedWords.cols << endl;
 }
 
-Mat VisualDictionary::getRow(int rowNumber)
+/*
+ * Pobiera konkretne słowo ze słownika
+ */
+Mat VisualDictionary::getWord(int rowNumber)
 {
     return this->selectedWords.row(rowNumber);
 }
 
+/*
+ * Zwraca rozmiar słownika
+ */
 int VisualDictionary::getSize()
 {
     return this->sizeOfDictionary;

@@ -1,20 +1,24 @@
 #include "PictureInformation.h"
 
+PictureInformation::PictureInformation()
+{
+
+}
+
 PictureInformation::PictureInformation(std::string filename, int sizeOfDictionary)
 {
     this->pathToFile = filename;
     this->histogram.resize(sizeOfDictionary);
 }
 
+/*
+ * Dodaj jeden do liczby wystąpień danego słowa
+ */
 void PictureInformation::addOneAt(int index)
 {
     (this->histogram)[index]++;
 }
 
-PictureInformation::PictureInformation()
-{
-
-}
 
 double PictureInformation::getValueAt(int index)
 {
@@ -26,6 +30,10 @@ std::string PictureInformation::getName()
     return this->pathToFile;
 }
 
+/*
+ * Dzieli wartość wystąpień każdego słowa przez ilość wszystkich słów. Jest to niezbędne ponieważ obrazki mogą mieć
+ * różną liczbę punktów kluczowych, a co za tym idzie są opisywane różną liczbą słów.
+ */
 void PictureInformation::normalize(int numberOfAllElements)
 {
     for(int i = 0; i < this->histogram.size(); ++i)
@@ -34,15 +42,3 @@ void PictureInformation::normalize(int numberOfAllElements)
             this->histogram[i] /= numberOfAllElements;
     }
 }
-
-PictureInformation &PictureInformation::operator=(PictureInformation pi)
-{
-  /*  this->value = token.value;
-    this->type = token.type;
-    this->position = token.position; */
-    return *this;
-}
-
-
-
-

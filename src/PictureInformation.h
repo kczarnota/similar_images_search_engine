@@ -5,6 +5,9 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/access.hpp>
 
+/*
+ * Klasa przechowująca informacje o obrazie. Zawiera histogram słów utworzony na podstawie słownika.
+ */
 class PictureInformation
 {
     friend class boost::serialization::access;
@@ -24,7 +27,6 @@ public:
     double getValueAt(int index);
     std::string getName();
     void normalize(int numberOfAllElements);
-    PictureInformation& operator=(PictureInformation pi);
 };
 
 

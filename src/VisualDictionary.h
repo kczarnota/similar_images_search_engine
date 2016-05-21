@@ -14,12 +14,14 @@ using namespace cv::xfeatures2d;
 using namespace boost::filesystem;
 using namespace std;
 
+/*
+ * Klasa reprezentująca słownik
+ */
 class VisualDictionary
 {
 private:
     int sizeOfDictionary;
     string dictionaryPath = "../dictionary.xml";
-    //list<path> * imagesPath;
     path startPath;
     Mat currentImage;
     vector<KeyPoint> keyPoints;
@@ -33,15 +35,13 @@ private:
 
 public:
     VisualDictionary(int sizeOfDictionary, string pathToDatabase);
-    ~VisualDictionary();
     void constructDictionary();
     void saveDictionary();
     void loadDictionary();
-    Mat getRow(int rowNumber);
+    Mat getWord(int rowNumber);
     int getSize();
 
 private:
-    void listAllFiles(path * startPath);
     void chooseWords();
 };
 
