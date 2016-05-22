@@ -30,55 +30,8 @@ void BOW::prepareDictionary()
 
 void BOW::addPictureToDatabase(string pathToPicture)
 {
-    Ptr<SIFT> keyPointsDetector = SIFT::create();
-    Ptr<SIFT> featureExtractor= SIFT::create();
-    vector<KeyPoint> keyPoints;
-    Mat features = Mat(0, 128, CV_32FC1, Scalar(0));
-
-    cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_ANYDEPTH);
-
-    if (!picture.data)
-    {
-        cout << "Could not open or find the image" << std::endl;
-        exit(-1);
-    }
-
-    PictureInformation pictureInformation(pathToPicture, this->visualDictionary->getSize());
-
-    keyPointsDetector->detect(picture, keyPoints);
-    featureExtractor->compute(picture, keyPoints, features);
-
-    Mat currentRow(1, 128, CV_32FC1, Scalar(0));
-    Mat currentWord(1, 128, CV_32FC1, Scalar(0));
-    Mat difference(1, 128, CV_32FC1, Scalar(0));
-
-    std::cout << features.rows << std::endl;
-
-    int i, j;
-    for(i = 0; i < features.rows; ++i)
-    {
-        int minSumIndex = 0, minSum = -1;
-        features.row(i).copyTo(currentRow.row(0));
-        for(j = 0; j < this->visualDictionary->getSize(); ++j)
-        {
-            int currentSum = 0;
-            this->visualDictionary->getWord(j).copyTo(currentWord.row(0));
-            absdiff(currentRow, currentWord, difference);
-
-            for(int k = 0; k < 128; ++k)
-                currentSum += difference.at<float>(0, k);
-
-            if(minSum == -1 || currentSum < minSum)
-            {
-                minSum = currentSum;
-                minSumIndex = j;
-            }
-        }
-        pictureInformation.addOneAt(minSumIndex);
-    }
-
-    pictureInformation.normalize(features.rows);
-    this->pictureDatabase->addPicture(pictureInformation);
+    PictureInformation pi = this->computeHistogram(pathToPicture);
+    this->pictureDatabase->addPicture(pi);
 
    /* for(int n = 0; n < this->visualDictionary->getSize(); ++n)
     {
@@ -149,7 +102,7 @@ void BOW::listDatabase()
     {
         PictureInformation pi = this->pictureDatabase->getPicture(i);
         cout << pi.getName() << endl;
-        for(int j = 0; j < 10; ++j)
+        for(int j = 0; j < this->visualDictionary->getSize(); ++j)
         {
             cout << pi.getValueAt(j) << endl;
         }
@@ -174,6 +127,97 @@ void BOW::updateDatabase(string pathToDatabase)
         ++dir;
     }
 }
+
+string BOW::makeQuery(string pathToPicture)
+{
+    PictureInformation queryPicture = this->computeHistogram(pathToPicture);
+
+    int minIndex = 0;
+    double minDistance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(0));
+    double distance = minDistance;
+
+    for(int i = 1; i < this->visualDictionary->getSize(); ++i)
+    {
+        distance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(i));
+
+        if(distance < minDistance)
+        {
+            minDistance = distance;
+            minIndex = i;
+        }
+    }
+
+    PictureInformation mostSimilarPicture = this->pictureDatabase->getPicture(minIndex);
+    return mostSimilarPicture.getName();
+}
+
+double BOW::comparePictureHistograms(PictureInformation p1, PictureInformation p2)
+{
+    double distance = 0.0, sumOfMinElements = 0.0;
+
+    for(int i = 0; i < 128; ++i)
+        sumOfMinElements += std::min(p1.getValueAt(i), p2.getValueAt(i));
+
+    distance = 1 - sumOfMinElements;
+    return distance;
+}
+
+
+PictureInformation BOW::computeHistogram(string pathToPicture)
+{
+    Ptr<SIFT> keyPointsDetector = SIFT::create();
+    Ptr<SIFT> featureExtractor= SIFT::create();
+    vector<KeyPoint> keyPoints;
+    Mat features = Mat(0, 128, CV_32FC1, Scalar(0));
+
+    cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_ANYDEPTH);
+
+    if (!picture.data)
+    {
+        cout << "Could not open or find the image" << std::endl;
+        exit(-1);
+    }
+
+    PictureInformation pictureInformation(pathToPicture, this->visualDictionary->getSize());
+
+    keyPointsDetector->detect(picture, keyPoints);
+    featureExtractor->compute(picture, keyPoints, features);
+
+    Mat currentRow(1, 128, CV_32FC1, Scalar(0));
+    Mat currentWord(1, 128, CV_32FC1, Scalar(0));
+    Mat difference(1, 128, CV_32FC1, Scalar(0));
+
+    std::cout << features.rows << std::endl;
+
+    int i, j;
+    for(i = 0; i < features.rows; ++i)
+    {
+        int minSumIndex = 0, minSum = -1;
+        features.row(i).copyTo(currentRow.row(0));
+        for(j = 0; j < this->visualDictionary->getSize(); ++j)
+        {
+            int currentSum = 0;
+            this->visualDictionary->getWord(j).copyTo(currentWord.row(0));
+            absdiff(currentRow, currentWord, difference);
+
+            for(int k = 0; k < 128; ++k)
+                currentSum += difference.at<float>(0, k);
+
+            if(minSum == -1 || currentSum < minSum)
+            {
+                minSum = currentSum;
+                minSumIndex = j;
+            }
+        }
+        pictureInformation.addOneAt(minSumIndex);
+    }
+
+    pictureInformation.normalize(features.rows);
+
+    return pictureInformation;
+}
+
+
 
 
 

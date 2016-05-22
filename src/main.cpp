@@ -15,10 +15,19 @@ int main(int argc, char** argv)
     }
 
     BOW bow(atoi(argv[1]), argv[2]);
-    //bow.prepareDictionary();
+    bow.prepareDictionary();
     //bow.createDatabase(argv[2]);
     bow.loadDatabase();
-    bow.listDatabase();
-
+    //bow.listDatabase();
+    string pathToPic;
+    cout << "Podaj nazwe pliku" << endl;
+    cin >> pathToPic;
+    while(pathToPic != "q")
+    {
+        string pic = bow.makeQuery(pathToPic);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
+        cout << pic << endl;
+        cout << "Podaj nazwe pliku" << endl;
+        cin >> pathToPic;
+    }
     return 0;
 }

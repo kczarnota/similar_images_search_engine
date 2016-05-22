@@ -18,6 +18,8 @@ private:
     PictureDatabase * pictureDatabase;
     void addPictureToDatabase(string pathToPicture);
     void saveDatabase();
+    PictureInformation computeHistogram(string pathToPicture);
+    double comparePictureHistograms(PictureInformation p1, PictureInformation p2);
 
 public:
     BOW(int sizeOfDictionary, string pathToDatabase);
@@ -27,6 +29,7 @@ public:
     void updateDatabase(string pathToDatabase);
     void loadDatabase();
     void listDatabase();
+    string makeQuery(string pathToPicture);
 };
 
 
