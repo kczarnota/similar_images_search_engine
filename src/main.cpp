@@ -24,8 +24,8 @@ int main(int argc, char** argv)
     cin >> pathToPic;
     while(pathToPic != "q")
     {
-        string pic = bow.makeQuery(pathToPic);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
-        cout << pic << endl;
+        ResultVector res = bow.makeQuery(pathToPic);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
+        res.printTable();
         cout << "Podaj nazwe pliku" << endl;
         cin >> pathToPic;
     }

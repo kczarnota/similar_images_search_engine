@@ -128,27 +128,31 @@ void BOW::updateDatabase(string pathToDatabase)
     }
 }
 
-string BOW::makeQuery(string pathToPicture)
+ResultVector BOW::makeQuery(string pathToPicture)
 {
     PictureInformation queryPicture = this->computeHistogram(pathToPicture);
 
     int minIndex = 0;
     double minDistance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(0));
     double distance = minDistance;
+    ResultVector resultVector(10, 2.0);
 
     for(int i = 1; i < this->visualDictionary->getSize(); ++i)
     {
         distance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(i));
 
-        if(distance < minDistance)
+        resultVector.tryAdd(make_pair(this->pictureDatabase->getPicture(i).getName(), distance));
+       /* if(distance < minDistance)
         {
             minDistance = distance;
             minIndex = i;
         }
+        */
     }
 
-    PictureInformation mostSimilarPicture = this->pictureDatabase->getPicture(minIndex);
-    return mostSimilarPicture.getName();
+    //PictureInformation mostSimilarPicture = this->pictureDatabase->getPicture(minIndex);
+    //return mostSimilarPicture.getName();
+    return resultVector;
 }
 
 double BOW::comparePictureHistograms(PictureInformation p1, PictureInformation p2)

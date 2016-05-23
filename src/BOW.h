@@ -3,6 +3,7 @@
 
 #include "PictureDatabase.h"
 #include "VisualDictionary.h"
+#include "ResultVector.h"
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
@@ -29,7 +30,7 @@ public:
     void updateDatabase(string pathToDatabase);
     void loadDatabase();
     void listDatabase();
-    string makeQuery(string pathToPicture);
+    ResultVector makeQuery(string pathToPicture);
 };
 
 
