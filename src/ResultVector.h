@@ -21,6 +21,8 @@ public:
     void rewriteRest(std::pair<string, double> pairToInsert, vector<pair<string, double>>::iterator it);
     pair<string, double> getPairAt(int index);
     void printTable();
+    int getSize();
+
 };
 
 

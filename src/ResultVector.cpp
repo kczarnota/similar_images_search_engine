@@ -46,3 +46,8 @@ void ResultVector::printTable()
     for(vector<pair<string, double>>::iterator it = this->table.begin(); it != this->table.end(); ++it)
         cout << (*it).first << " " <<  (*it).second << endl;
 }
+
+int ResultVector::getSize()
+{
+    return this->table.size();
+}
