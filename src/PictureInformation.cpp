@@ -38,7 +38,6 @@ void PictureInformation::normalize(int numberOfAllElements)
 {
     for(int i = 0; i < this->histogram.size(); ++i)
     {
-        if(this->histogram[i] != 0)
-            this->histogram[i] /= numberOfAllElements;
+        this->histogram[i] /= numberOfAllElements;
     }
 }

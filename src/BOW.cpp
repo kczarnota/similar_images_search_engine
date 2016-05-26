@@ -159,7 +159,7 @@ double BOW::comparePictureHistograms(PictureInformation p1, PictureInformation p
 {
     double distance = 0.0, sumOfMinElements = 0.0;
 
-    for(int i = 0; i < 128; ++i)
+    for(int i = 0; i < this->visualDictionary->getSize(); ++i)
         sumOfMinElements += std::min(p1.getValueAt(i), p2.getValueAt(i));
 
     distance = 1 - sumOfMinElements;
@@ -216,7 +216,15 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
         pictureInformation.addOneAt(minSumIndex);
     }
 
+
     pictureInformation.normalize(features.rows);
+
+    double total = 0;
+    for(int a = 0; a < 1000; ++a)
+    {
+        total += pictureInformation.getValueAt(a);
+    }
+    cout << "Total value: " << total << endl;
 
     return pictureInformation;
 }
