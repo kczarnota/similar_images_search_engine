@@ -19,12 +19,17 @@ void PictureInformation::addOneAt(int index)
     (this->histogram)[index]++;
 }
 
-
+/*
+ * Zwraca ilość wystąpień danego słowa w histogramie.
+ */
 double PictureInformation::getValueAt(int index)
 {
     return (this->histogram)[index];
 }
 
+/*
+ * Zwraca ścieżkę do pliku z obrazem.
+ */
 std::string PictureInformation::getName()
 {
     return this->pathToFile;

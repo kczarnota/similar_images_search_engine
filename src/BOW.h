@@ -17,12 +17,18 @@ class BOW
 private:
     VisualDictionary * visualDictionary;
     PictureDatabase * pictureDatabase;
+    double precision;
+    double recall;
+
     void addPictureToDatabase(string pathToPicture);
     void saveDatabase();
-    PictureInformation computeHistogram(string pathToPicture);
-    double comparePictureHistograms(PictureInformation p1, PictureInformation p2);
+
 
 public:
+    double comparePictureHistograms(PictureInformation p1, PictureInformation p2);
+    PictureInformation computeHistogram(string pathToPicture);
+    void testDictionary();
+
     BOW(int sizeOfDictionary, string pathToDatabase);
     ~BOW();
     void prepareDictionary();
@@ -30,7 +36,13 @@ public:
     void updateDatabase(string pathToDatabase);
     void loadDatabase();
     void listDatabase();
-    ResultVector makeQuery(string pathToPicture);
+    ResultVector makeQuery(string pathToPicture, int resultNumber);
+    double getPrecision() {return this->precision;}
+    double getRecall() {return this->recall; }
+    void computePrecisionAndRecall(ResultVector vec, int numberOfAskedPictures);
+    std::pair<double, double> getPrecisionAndRecall(ResultVector vec, int numberOfAskedPictures);
+    vector<string> splitString(string s);
+    void testPicture(int min, int max, int step, int questionNumber);
 };
 
 

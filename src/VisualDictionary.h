@@ -21,7 +21,8 @@ class VisualDictionary
 {
 private:
     int sizeOfDictionary;
-    string dictionaryPath = "../dictionary.xml";
+    //string dictionaryPath = "../dictionaryTest.xml";
+    string dictionaryPath = "../dictionary1000.xml";
     path startPath;
     Mat currentImage;
     vector<KeyPoint> keyPoints;
@@ -35,11 +36,13 @@ private:
 
 public:
     VisualDictionary(int sizeOfDictionary, string pathToDatabase);
-    void constructDictionary();
+    void constructDictionaryRandom();
+    void constructDictionaryKMeans();
     void saveDictionary();
     void loadDictionary();
     Mat getWord(int rowNumber);
     int getSize();
+    void testDictionary();
 
 private:
     void chooseWords();

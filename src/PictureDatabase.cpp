@@ -24,14 +24,3 @@ int PictureDatabase::getSize()
 {
     return (int)this->database.size();
 }
-
-
-
-
-
-
-
-
-
-
-

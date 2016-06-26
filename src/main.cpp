@@ -6,7 +6,7 @@
 using namespace cv;
 using namespace std;
 
-void cvShowManyImages(char* title, int nArgs, ...);
+void showManyImages(char* title, int nArgs, IplImage ** images);
 
 int main(int argc, char** argv)
 {
@@ -18,36 +18,127 @@ int main(int argc, char** argv)
 
     BOW bow(atoi(argv[1]), argv[2]);
     bow.prepareDictionary();
+    //bow.testDictionary();
+
     //bow.createDatabase(argv[2]);
     bow.loadDatabase();
     //bow.listDatabase();
     string pathToPic;
+    int numberOfImagesToDisplay;
+
+
+    path p(argv[2]);
+    recursive_directory_iterator dir(p), end;
+    double averagePrecision[9];
+    double averageRecall[9];
+
+    for(int i = 0; i < 9; ++i)
+        averagePrecision[i] = 0.0;
+
+    for(int i = 0; i < 9; ++i)
+        averageRecall[i] = 0.0;
+
+    int m = 0;
+    while (dir != end)
+    {
+        file_status fs = status(dir->path());
+
+        if (!is_directory(fs))
+        {
+            ResultVector res = bow.makeQuery(dir->path().string(), 90);
+            std::pair<double, double> p;
+            p = bow.getPrecisionAndRecall(res, 10);
+            averagePrecision[0] += p.first;
+            averageRecall[0] += p.second;
+
+            p = bow.getPrecisionAndRecall(res, 20);
+            averagePrecision[1] += p.first;
+            averageRecall[1] += p.second;
+
+            p = bow.getPrecisionAndRecall(res, 30);
+            averagePrecision[2] += p.first;
+            averageRecall[2] += p.second;
+
+            p = bow.getPrecisionAndRecall(res, 40);
+            averagePrecision[3] += p.first;
+            averageRecall[3] += p.second;
+
+            p = bow.getPrecisionAndRecall(res, 50);
+            averagePrecision[4] += p.first;
+            averageRecall[4] += p.second;
+
+            p = bow.getPrecisionAndRecall(res, 60);
+            averagePrecision[5] += p.first;
+            averageRecall[5] += p.second;
+
+            p = bow.getPrecisionAndRecall(res, 70);
+            averagePrecision[6] += p.first;
+            averageRecall[6] += p.second;
+
+            p = bow.getPrecisionAndRecall(res, 80);
+            averagePrecision[7] += p.first;
+            averageRecall[7] += p.second;
+
+            p = bow.getPrecisionAndRecall(res, 90);
+            averagePrecision[8] += p.first;
+            averageRecall[8] += p.second;
+
+
+            cout << m << " " << bow.getPrecision() << endl;
+
+            ++m;
+        }
+
+        ++dir;
+    }
+
+    for(int i = 0, j = 10; i < 9; ++i, j+= 10)
+    {
+        averagePrecision[i] /= 1000;
+        cout << "Average precison for: "<< j << "    " << averagePrecision[i] << endl;
+
+        averageRecall[i] /= 1000;
+        cout << "Average recall for: "<< j << "    " << averageRecall[i] << endl;
+    }
+
+
+    //cout << "Average precison: " << averagePrecision << endl;
+
+
+
+   /* cout << "Ile obrazow mam wyswietlic?" << endl;
+    cin >> numberOfImagesToDisplay;
+    ++numberOfImagesToDisplay;
     cout << "Podaj nazwe pliku" << endl;
     cin >> pathToPic;
     while(pathToPic != "q")
     {
-        ResultVector res = bow.makeQuery(pathToPic);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
+        ResultVector res = bow.makeQuery(pathToPic, numberOfImagesToDisplay);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
         res.printTable();
-        IplImage *img1 = cvLoadImage(res.getPairAt(0).first.c_str());
-        IplImage *img2 = cvLoadImage(res.getPairAt(1).first.c_str());
-        IplImage *img3 = cvLoadImage(res.getPairAt(2).first.c_str());
-        IplImage *img4 = cvLoadImage(res.getPairAt(3).first.c_str());
-        IplImage *img5 = cvLoadImage(res.getPairAt(4).first.c_str());
-        IplImage *img6 = cvLoadImage(res.getPairAt(5).first.c_str());
-        IplImage *img7 = cvLoadImage(res.getPairAt(6).first.c_str());
-        IplImage *img8 = cvLoadImage(res.getPairAt(7).first.c_str());
-        IplImage *img9 = cvLoadImage(res.getPairAt(8).first.c_str());
-        IplImage *img10 = cvLoadImage(res.getPairAt(9).first.c_str());
+        cout << "Precision: " << bow.getPrecision() << ", recall: " << bow.getRecall() << endl;
 
-        cvShowManyImages("Tytul", 10, img1, img2, img3, img4, img5, img6, img7, img8, img9, img10);
+        IplImage ** images = new IplImage*[numberOfImagesToDisplay];
+
+        for(int i = 0; i < numberOfImagesToDisplay; ++i)
+        {
+            images[i] = cvLoadImage(res.getPairAt(i).first.c_str());
+        }
+
+        showManyImages((char *)"Bag of Words", numberOfImagesToDisplay, images);
+        delete images;
+        cout << "Ile obrazow mam wyswietlic?" << endl;
+        cin >> numberOfImagesToDisplay;
+        ++numberOfImagesToDisplay;
         cout << "Podaj nazwe pliku" << endl;
         cin >> pathToPic;
     }
 
+    //bow.testPicture(10, 90, 10, 100); */
+
     return 0;
 }
 
-void cvShowManyImages(char* title, int nArgs, ...)
+void showManyImages(char* title, int nArgs, IplImage ** images)
 {
     // img - Used for getting the arguments
     IplImage *img;
@@ -122,16 +213,13 @@ void cvShowManyImages(char* title, int nArgs, ...)
     // Create a new 3 channel image //[[ dispimage]]
     DispImage = cvCreateImage(cvSize(100 + size * w, 60 + size * h), 8, 3);
 
-    // Used to get the arguments passed
-    va_list args;
-    va_start(args, nArgs);
 
     // Loop for nArgs number of arguments
     for (i = 0, m = 20, n = 20; i < nArgs; i++, m += (20 + size))
     {
 
         // Get the Pointer to the IplImage
-        img = va_arg(args, IplImage*);
+        img = images[i];
 
         // Check whether it is NULL or not
         // If it is NULL, release the image, and return
@@ -174,9 +262,6 @@ void cvShowManyImages(char* title, int nArgs, ...)
 
     cvWaitKey();
     cvDestroyWindow(title);
-
-    // End the number of arguments
-    va_end(args);
 
     // Release the Image Memory
     cvReleaseImage(&DispImage);

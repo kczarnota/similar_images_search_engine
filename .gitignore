@@ -1,5 +1,7 @@
 .idea/
 build/
 BazaDanych/**
-dictionary.xml
+*.xml
+TODO
+bin/
 
