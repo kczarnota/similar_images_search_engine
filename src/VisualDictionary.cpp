@@ -13,8 +13,24 @@ VisualDictionary::VisualDictionary(int sizeOfDictionary, string pathToDatabase, 
     this->keyPointsDetector = SIFT::create();
     this->featureExtractor = SIFT::create();
     this->dictionaryPath = dictionaryPath;
+}
 
-    prepareDictionary();
+
+void VisualDictionary::prepareDictionary()
+{
+    std::ifstream f(this->dictionaryPath);
+    //std::ifstream f("../dictionaryTest.xml");
+    if(f.good())
+    {
+        std::cout << "Loading dictionary" << std::endl;
+        this->loadDictionary();
+    }
+    else
+    {
+        std::cout << "Constructing and saving dictionary" << std::endl;
+        this->constructDictionaryRandom();
+        this->saveDictionary();
+    }
 }
 
 /*
@@ -44,7 +60,7 @@ void VisualDictionary::constructDictionaryRandom()
             //std::cout << dir->path() << std::endl;
             keyPointsDetector->detect(currentImage, keyPoints);
             featureExtractor->compute(currentImage, keyPoints, currentFeatures);
-            //cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
+            cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
             vconcat(currentFeatures, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
         }
         ++dir;
@@ -313,23 +329,3 @@ void VisualDictionary::printMatrix(Mat matrix)
 {
     std::cout << matrix << std::endl;
 }
-
-void VisualDictionary::prepareDictionary()
-{
-    std::ifstream f(this->dictionaryPath);
-    //std::ifstream f("../dictionaryTest.xml");
-    if(f.good())
-    {
-        std::cout << "Loading dictionary" << std::endl;
-        this->loadDictionary();
-    }
-    else
-    {
-        std::cout << "Constructing and saving dictionary" << std::endl;
-        this->constructDictionaryRandom();
-        this->saveDictionary();
-    }
-}
-
-
-

@@ -10,9 +10,9 @@ void showManyImages(char* title, int nArgs, IplImage ** images);
 
 int main(int argc, char** argv)
 {
-    if (argc != 3)
+    if (argc != 4)
     {
-        cout << "Usage: BagOfWords sizeOfDictionary pathToDatabase" << endl;
+        cout << "Usage: BagOfWords sizeOfDictionary pathToDatabase databaseName" << endl;
         exit(0);
     }
 
@@ -21,12 +21,13 @@ int main(int argc, char** argv)
     //vd.testDictionaryK();
 
 
-    BOW bow(atoi(argv[1]), argv[2]);
+    BOW bow(atoi(argv[1]), argv[2], argv[3]);
+    bow.init();
     //bow.prepareDictionary();
     //bow.testDictionary();
 
     //bow.createDatabase(argv[2]);
-    bow.loadDatabase();
+    //bow.loadDatabase();
     //bow.listDatabase();
     string pathToPic;
     int numberOfImagesToDisplay;

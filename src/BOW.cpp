@@ -1,8 +1,14 @@
 #include "BOW.h"
 
-BOW::BOW(int sizeOfDictionary, string pathToDatabase)
+BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName)
 {
-    this->visualDictionary = new VisualDictionary(sizeOfDictionary, pathToDatabase, dictionaryPath);
+    this->pathToImages = pathToImages;
+    this->databasePath = removeLastPathSegment(this->pathToImages) + databaseName;
+    this->dictionaryPath = databasePath + "_dictionary.xml";
+
+    cout << databasePath << endl;
+    cout << dictionaryPath << endl;
+    this->visualDictionary = new VisualDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
     this->pictureDatabase = new PictureDatabase(sizeOfDictionary);
 }
 
@@ -12,23 +18,42 @@ BOW::~BOW()
     delete this->pictureDatabase;
 }
 
-void BOW::createDatabase(string pathToDatabase)
+
+void BOW::init()
 {
-    this->updateDatabase(pathToDatabase);
+    this->visualDictionary->prepareDictionary();
+
+    std::ifstream f(this->databasePath);
+    if(f.good())
+    {
+        loadDatabase();
+    }
+    else
+    {
+        createDatabase();
+    }
+}
+
+void BOW::createDatabase()
+{
+    this->updateDatabase(this->pathToImages);
     this->saveDatabase();
 }
 
 void BOW::saveDatabase()
 {
-    std::ofstream ofs("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/database");
+    //std::ofstream ofs("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/database");
+    std::ofstream ofs(this->databasePath);
     boost::archive::text_oarchive oa(ofs);
     oa << this->pictureDatabase;
+    cout << "Database created" << endl;
 }
 
 void BOW::loadDatabase()
 {
     // create and open an archive for input
-    std::ifstream ifs("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/database");
+    //std::ifstream ifs("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/database");
+    std::ifstream ifs(this->databasePath);
     boost::archive::text_iarchive ia(ifs);
     // read class state from archive
     ia >> this->pictureDatabase;
@@ -298,6 +323,34 @@ void BOW::testDictionary()
                 cout << sum << endl;
         }
     }
+}
+
+string BOW::removeLastPathSegment(string path)
+{
+    int i = path.length() - 1;
+
+    path.erase(i, 1);
+    i--;
+    char c = path[i];
+
+    while(c != '/')
+    {
+        path.erase(i, 1);
+        --i;
+        c = path[i];
+    }
+
+    return path;
+}
+
+string BOW::getDatabasePath()
+{
+    return this->databasePath;
+}
+
+string BOW::getDictionaryPath()
+{
+    return this->dictionaryPath;
 }
 
 

@@ -15,6 +15,8 @@
 class BOW
 {
 private:
+    string pathToImages;
+    string databasePath;
     string dictionaryPath = "../dictionary.xml";
     VisualDictionary * visualDictionary;
     PictureDatabase * pictureDatabase;
@@ -30,10 +32,10 @@ public:
     PictureInformation computeHistogram(string pathToPicture);
     void testDictionary();
 
-    BOW(int sizeOfDictionary, string pathToDatabase);
+    BOW(int sizeOfDictionary, string pathToImages, string databaseName);
     ~BOW();
     //void prepareDictionary();
-    void createDatabase(string pathToDatabase);
+    void createDatabase();
     void updateDatabase(string pathToDatabase);
     void loadDatabase();
     void listDatabase();
@@ -44,6 +46,11 @@ public:
     std::pair<double, double> getPrecisionAndRecall(ResultVector vec, int numberOfAskedPictures);
     vector<string> splitString(string s);
     void testPicture(int min, int max, int step, int questionNumber);
+    void init();
+
+    string removeLastPathSegment(string path);
+    string getDatabasePath();
+    string getDictionaryPath();
 };
 
 

@@ -11,6 +11,7 @@ class PictureDatabase
 {
     friend class boost::serialization::access;
     std::vector<PictureInformation> database;
+    string path;
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
@@ -24,7 +25,6 @@ public:
     void addPicture(PictureInformation pi);
     PictureInformation getPicture(int i);
     int getSize();
-
 };
 
 

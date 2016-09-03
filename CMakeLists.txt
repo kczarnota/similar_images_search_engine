@@ -10,9 +10,9 @@ file(GLOB SRC_LIST
         )
 
 #file(GLOB SRC_LIST_TEST
- #       "test/*.hpp"
- #       "test/*.cpp"
-  #      )
+#        "test/*.hpp"
+#       "test/*.cpp"
+#        )
 find_package( OpenCV REQUIRED )
 find_package( Boost REQUIRED COMPONENTS system filesystem serialization )
 

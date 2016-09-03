@@ -45,11 +45,10 @@ public:
     void testDictionary();
     void testDictionaryK();
     void printMatrix(Mat matrix);
+    void prepareDictionary();
 
 private:
     void chooseWords();
-
-    void prepareDictionary();
 };
 
 #endif //BAGOFWORDS_VISUALDICTIONARY_H
