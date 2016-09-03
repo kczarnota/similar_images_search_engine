@@ -22,7 +22,7 @@ class VisualDictionary
 private:
     int sizeOfDictionary;
     //string dictionaryPath = "../dictionaryTest.xml";
-    string dictionaryPath = "../dictionary.xml";
+    string dictionaryPath;
     path startPath;
     Mat currentImage;
     vector<KeyPoint> keyPoints;
@@ -35,7 +35,7 @@ private:
 
 
 public:
-    VisualDictionary(int sizeOfDictionary, string pathToDatabase);
+    VisualDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath);
     void constructDictionaryRandom();
     void constructDictionaryKMeans();
     void saveDictionary();
@@ -48,6 +48,8 @@ public:
 
 private:
     void chooseWords();
+
+    void prepareDictionary();
 };
 
 #endif //BAGOFWORDS_VISUALDICTIONARY_H

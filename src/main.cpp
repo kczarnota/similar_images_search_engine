@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 
 
     BOW bow(atoi(argv[1]), argv[2]);
-    bow.prepareDictionary();
+    //bow.prepareDictionary();
     //bow.testDictionary();
 
     //bow.createDatabase(argv[2]);

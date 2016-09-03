@@ -15,6 +15,7 @@
 class BOW
 {
 private:
+    string dictionaryPath = "../dictionary.xml";
     VisualDictionary * visualDictionary;
     PictureDatabase * pictureDatabase;
     double precision;
@@ -31,7 +32,7 @@ public:
 
     BOW(int sizeOfDictionary, string pathToDatabase);
     ~BOW();
-    void prepareDictionary();
+    //void prepareDictionary();
     void createDatabase(string pathToDatabase);
     void updateDatabase(string pathToDatabase);
     void loadDatabase();

@@ -4,7 +4,7 @@
 /*
  * Konstruktor. Inicjalizuje zmienne. Smart pointery nie wymagają jawnej dealokacji
  */
-VisualDictionary::VisualDictionary(int sizeOfDictionary, string pathToDatabase)
+VisualDictionary::VisualDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath)
 {
     this->startPath = path(pathToDatabase);
     this->sizeOfDictionary = sizeOfDictionary;
@@ -12,6 +12,9 @@ VisualDictionary::VisualDictionary(int sizeOfDictionary, string pathToDatabase)
     this->selectedWords = Mat(0, 128, CV_32FC1, Scalar(0));
     this->keyPointsDetector = SIFT::create();
     this->featureExtractor = SIFT::create();
+    this->dictionaryPath = dictionaryPath;
+
+    prepareDictionary();
 }
 
 /*
@@ -309,6 +312,23 @@ void VisualDictionary::testDictionaryK()
 void VisualDictionary::printMatrix(Mat matrix)
 {
     std::cout << matrix << std::endl;
+}
+
+void VisualDictionary::prepareDictionary()
+{
+    std::ifstream f(this->dictionaryPath);
+    //std::ifstream f("../dictionaryTest.xml");
+    if(f.good())
+    {
+        std::cout << "Loading dictionary" << std::endl;
+        this->loadDictionary();
+    }
+    else
+    {
+        std::cout << "Constructing and saving dictionary" << std::endl;
+        this->constructDictionaryRandom();
+        this->saveDictionary();
+    }
 }
 
 

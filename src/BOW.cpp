@@ -2,7 +2,7 @@
 
 BOW::BOW(int sizeOfDictionary, string pathToDatabase)
 {
-    this->visualDictionary = new VisualDictionary(sizeOfDictionary, pathToDatabase);
+    this->visualDictionary = new VisualDictionary(sizeOfDictionary, pathToDatabase, dictionaryPath);
     this->pictureDatabase = new PictureDatabase(sizeOfDictionary);
 }
 
@@ -10,24 +10,6 @@ BOW::~BOW()
 {
     delete this->visualDictionary;
     delete this->pictureDatabase;
-}
-
-/* Sprawdza czy istnieje już słownik - jeśli tak to go wczytuje, w przeciwnym wypadku tworzy go */
-void BOW::prepareDictionary()
-{
-    std::ifstream f("../dictionary.xml");
-    //std::ifstream f("../dictionaryTest.xml");
-    if(f.good())
-    {
-        std::cout << "Loading dictionary" << std::endl;
-        this->visualDictionary->loadDictionary();
-    }
-    else
-    {
-        std::cout << "Constructing and saving dictionary" << std::endl;
-        this->visualDictionary->constructDictionaryRandom();
-        this->visualDictionary->saveDictionary();
-    }
 }
 
 void BOW::createDatabase(string pathToDatabase)
@@ -319,4 +301,21 @@ void BOW::testDictionary()
 }
 
 
+/* Sprawdza czy istnieje już słownik - jeśli tak to go wczytuje, w przeciwnym wypadku tworzy go */
+/*void BOW::prepareDictionary()
+{
+    std::ifstream f("../dictionary.xml");
+    //std::ifstream f("../dictionaryTest.xml");
+    if(f.good())
+    {
+        std::cout << "Loading dictionary" << std::endl;
+        this->visualDictionary->loadDictionary();
+    }
+    else
+    {
+        std::cout << "Constructing and saving dictionary" << std::endl;
+        this->visualDictionary->constructDictionaryRandom();
+        this->visualDictionary->saveDictionary();
+    }
+}*/
 
