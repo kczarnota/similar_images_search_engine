@@ -12,9 +12,10 @@ BOW::~BOW()
     delete this->pictureDatabase;
 }
 
+/* Sprawdza czy istnieje już słownik - jeśli tak to go wczytuje, w przeciwnym wypadku tworzy go */
 void BOW::prepareDictionary()
 {
-    std::ifstream f("../dictionary1000.xml");
+    std::ifstream f("../dictionary.xml");
     //std::ifstream f("../dictionaryTest.xml");
     if(f.good())
     {
@@ -45,7 +46,7 @@ void BOW::saveDatabase()
 void BOW::loadDatabase()
 {
     // create and open an archive for input
-    std::ifstream ifs("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/database1000");
+    std::ifstream ifs("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/database");
     boost::archive::text_iarchive ia(ifs);
     // read class state from archive
     ia >> this->pictureDatabase;

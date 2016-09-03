@@ -16,6 +16,11 @@ int main(int argc, char** argv)
         exit(0);
     }
 
+
+    //VisualDictionary vd(atoi(argv[1]), argv[2]);
+    //vd.testDictionaryK();
+
+
     BOW bow(atoi(argv[1]), argv[2]);
     bow.prepareDictionary();
     //bow.testDictionary();
@@ -27,7 +32,7 @@ int main(int argc, char** argv)
     int numberOfImagesToDisplay;
 
 
-    path p(argv[2]);
+/*    path p(argv[2]);
     recursive_directory_iterator dir(p), end;
     double averagePrecision[9];
     double averageRecall[9];
@@ -103,10 +108,10 @@ int main(int argc, char** argv)
 
 
     //cout << "Average precison: " << averagePrecision << endl;
+    */
 
 
-
-   /* cout << "Ile obrazow mam wyswietlic?" << endl;
+    cout << "Ile obrazow mam wyswietlic?" << endl;
     cin >> numberOfImagesToDisplay;
     ++numberOfImagesToDisplay;
     cout << "Podaj nazwe pliku" << endl;
@@ -133,7 +138,7 @@ int main(int argc, char** argv)
         cin >> pathToPic;
     }
 
-    //bow.testPicture(10, 90, 10, 100); */
+    //bow.testPicture(10, 90, 10, 100);
 
     return 0;
 }

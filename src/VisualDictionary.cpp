@@ -38,10 +38,10 @@ void VisualDictionary::constructDictionaryRandom()
                 exit(-1);
             }
 
-            std::cout << dir->path() << std::endl;
+            //std::cout << dir->path() << std::endl;
             keyPointsDetector->detect(currentImage, keyPoints);
             featureExtractor->compute(currentImage, keyPoints, currentFeatures);
-            cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
+            //cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
             vconcat(currentFeatures, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
         }
         ++dir;
@@ -61,7 +61,7 @@ void VisualDictionary::constructDictionaryRandom()
  */
 void VisualDictionary::chooseWords()
 {
-    cout << "Rows: " << allFeatures.rows << ", columns " << allFeatures.cols << endl;
+    cout << " Wszystkie Rows: " << allFeatures.rows << ", wszystkie columns " << allFeatures.cols << endl;
 
     int wordsLeftToChoose = sizeOfDictionary;
     int sizeOfNumbers = allFeatures.rows;
@@ -100,33 +100,33 @@ void VisualDictionary::chooseWords()
  */
 void VisualDictionary::constructDictionaryKMeans()
 {
+    //Wybranie k losowych słów
+    this->constructDictionaryRandom();
+
     bool shouldStop = false;
-    Mat *classes = new Mat[this->sizeOfDictionary];
+    Mat *classes = new Mat[this->selectedWords.rows];
     Mat currentClass(1, 128, CV_32FC1, Scalar(0));
     Mat currentFeature(1, 128, CV_32FC1, Scalar(0));
     Mat difference(1, 128, CV_32FC1, Scalar(0));
     Mat average(1, 128, CV_32FC1, Scalar(0));
 
 
-    //Wybranie k losowych słów
-    this->constructDictionaryRandom();
-
-
     while(!shouldStop)
     {
         //Wyzerowanie macierzy
-        for(int i = 0; i < this->sizeOfDictionary; ++i)
+        for(int i = 0; i < this->selectedWords.rows; ++i)
         {
             classes[i] = Mat(0, 128, CV_32FC1, Scalar(0));
         }
 
         shouldStop = true;
+
         //Przypisać do najbliższych klas
-        for(int i = 0; i < this->allFeatures.rows; ++i)
+        for(int i = 0; i < this->allFeatures.rows; ++i) //każdą z cech trzeba przypisać do klasy
         {
             int minSumIndex = 0, minSum = -1;
             this->allFeatures.row(i).copyTo(currentFeature.row(0)); //wybrana cecha
-            for(int j = 0; j < this->sizeOfDictionary; ++j)
+            for(int j = 0; j < this->selectedWords.rows; ++j) //przeglądam wszystkich reprezentantów klas
             {
                 int currentSum = 0;
                 this->selectedWords.row(j).copyTo(currentClass.row(0)); //wybrana klasa
@@ -146,7 +146,7 @@ void VisualDictionary::constructDictionaryKMeans()
         }
 
         //Obliczyć średnie i sprawdzić czy nic się nie zmieniło
-        for(int i = 0; i < this->sizeOfDictionary; ++i) //dla każdej klasy
+        for(int i = 0; i < this->selectedWords.rows; ++i) //dla każdej klasy
         {
             for(int j = 0; j < classes[i].rows; ++j) //przechodzę przez wszystkie wiersze i obliczam średnią
             {
@@ -158,10 +158,21 @@ void VisualDictionary::constructDictionaryKMeans()
 
             for(int k = 0; k < 128; ++k)
             {
-                average.at<float>(0, k) /= classes[i].rows; //wszystkie wartości podzielone przez liczbę cech
+                average.at<float>(0, k) = (int)average.at<float>(0, k)/classes[i].rows; //wszystkie wartości podzielone przez liczbę cech
             }
 
-            absdiff(this->selectedWords.row(i), average.row(0), difference); //wyliczenie różnicy
+
+            for(int k = 0; k < 128; ++k)
+            {
+                if(average.at<float>(0, k) != this->selectedWords.row(i).at<float>(0, k))
+                {
+                    shouldStop = false;
+                    average.row(0).copyTo(this->selectedWords.row(i)); //to zastępujemy stare nowym
+                    break;
+                }
+            }
+
+          /*  absdiff(this->selectedWords.row(i), average.row(0), difference); //wyliczenie różnicy
 
             double differenceSum = 0;
             for(int k = 0; k < 128; ++k)
@@ -174,10 +185,11 @@ void VisualDictionary::constructDictionaryKMeans()
                 shouldStop = false;
                 average.row(0).copyTo(this->selectedWords.row(i)); //to zastępujemy stare nowym
             }
+            */
         }
     }
 
-    delete classes;
+    delete []classes;
 }
 
 /*
@@ -286,3 +298,18 @@ void VisualDictionary::testDictionary()
 
     saveDictionary();
 }
+
+void VisualDictionary::testDictionaryK()
+{
+    this->constructDictionaryKMeans();
+
+    this->saveDictionary();
+}
+
+void VisualDictionary::printMatrix(Mat matrix)
+{
+    std::cout << matrix << std::endl;
+}
+
+
+

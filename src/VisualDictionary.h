@@ -22,7 +22,7 @@ class VisualDictionary
 private:
     int sizeOfDictionary;
     //string dictionaryPath = "../dictionaryTest.xml";
-    string dictionaryPath = "../dictionary1000.xml";
+    string dictionaryPath = "../dictionary.xml";
     path startPath;
     Mat currentImage;
     vector<KeyPoint> keyPoints;
@@ -43,6 +43,8 @@ public:
     Mat getWord(int rowNumber);
     int getSize();
     void testDictionary();
+    void testDictionaryK();
+    void printMatrix(Mat matrix);
 
 private:
     void chooseWords();
