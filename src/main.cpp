@@ -22,7 +22,9 @@ int main(int argc, char** argv)
 
 
     BOW bow(atoi(argv[1]), argv[2], argv[3]);
+    //bow.testDictionary();
     bow.init();
+    //bow.init();
     //bow.prepareDictionary();
     //bow.testDictionary();
 
@@ -112,7 +114,7 @@ int main(int argc, char** argv)
     */
 
 
-    cout << "Ile obrazow mam wyswietlic?" << endl;
+/*    cout << "Ile obrazow mam wyswietlic?" << endl;
     cin >> numberOfImagesToDisplay;
     ++numberOfImagesToDisplay;
     cout << "Podaj nazwe pliku" << endl;
@@ -137,7 +139,7 @@ int main(int argc, char** argv)
         ++numberOfImagesToDisplay;
         cout << "Podaj nazwe pliku" << endl;
         cin >> pathToPic;
-    }
+    }*/
 
     //bow.testPicture(10, 90, 10, 100);
 

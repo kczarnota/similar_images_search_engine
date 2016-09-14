@@ -1,5 +1,6 @@
 #include "VisualDictionary.h"
 #include <iostream>
+#include <limits>
 
 /*
  * Konstruktor. Inicjalizuje zmienne. Smart pointery nie wymagają jawnej dealokacji
@@ -28,7 +29,8 @@ void VisualDictionary::prepareDictionary()
     else
     {
         std::cout << "Constructing and saving dictionary" << std::endl;
-        this->constructDictionaryRandom();
+        //this->constructDictionaryRandom();
+        this->constructDictionaryKMeans();
         this->saveDictionary();
     }
 }
@@ -76,7 +78,7 @@ void VisualDictionary::constructDictionaryRandom()
 
 
 /*
- * Wybiera podaną liczbę cech jako słowa i dodaje je do slownika
+ * Wybiera podaną liczbę cech jako słowa i dodaje je do slownika(przechowuje je w selectedWords)
  */
 void VisualDictionary::chooseWords()
 {
@@ -121,6 +123,7 @@ void VisualDictionary::constructDictionaryKMeans()
 {
     //Wybranie k losowych słów
     this->constructDictionaryRandom();
+    cout << "Random selected" << endl;
 
     bool shouldStop = false;
     Mat *classes = new Mat[this->selectedWords.rows];
@@ -129,9 +132,10 @@ void VisualDictionary::constructDictionaryKMeans()
     Mat difference(1, 128, CV_32FC1, Scalar(0));
     Mat average(1, 128, CV_32FC1, Scalar(0));
 
-
+    int iterations = 0;
     while(!shouldStop)
     {
+        cout << iterations++ << endl;
         //Wyzerowanie macierzy
         for(int i = 0; i < this->selectedWords.rows; ++i)
         {
@@ -143,7 +147,7 @@ void VisualDictionary::constructDictionaryKMeans()
         //Przypisać do najbliższych klas
         for(int i = 0; i < this->allFeatures.rows; ++i) //każdą z cech trzeba przypisać do klasy
         {
-            int minSumIndex = 0, minSum = -1;
+            int minSumIndex = -1, minSum = std::numeric_limits<int>::max();
             this->allFeatures.row(i).copyTo(currentFeature.row(0)); //wybrana cecha
             for(int j = 0; j < this->selectedWords.rows; ++j) //przeglądam wszystkich reprezentantów klas
             {
@@ -151,11 +155,14 @@ void VisualDictionary::constructDictionaryKMeans()
                 this->selectedWords.row(j).copyTo(currentClass.row(0)); //wybrana klasa
 
                 absdiff(currentClass, currentFeature, difference);
-
+               // printMatrix(currentClass);
+               // printMatrix(currentFeature);
                 for(int k = 0; k < 128; ++k)
+                {
                     currentSum += difference.at<float>(0, k);
+                }
 
-                if(minSum == -1 || currentSum < minSum)
+                if(currentSum < minSum)
                 {
                     minSum = currentSum;
                     minSumIndex = j;
@@ -164,6 +171,12 @@ void VisualDictionary::constructDictionaryKMeans()
             classes[minSumIndex].push_back(currentFeature.row(0));
         }
 
+
+/*        for (int l = 0; l < 5; ++l)
+        {
+            printMatrix(classes[l]);
+            cout << "_________________________________________________________________________" << endl;
+        }*/
         //Obliczyć średnie i sprawdzić czy nic się nie zmieniło
         for(int i = 0; i < this->selectedWords.rows; ++i) //dla każdej klasy
         {
@@ -189,6 +202,11 @@ void VisualDictionary::constructDictionaryKMeans()
                     average.row(0).copyTo(this->selectedWords.row(i)); //to zastępujemy stare nowym
                     break;
                 }
+            }
+
+            for (int k = 0; k < 128; ++k)
+            {
+                average.at<float>(0, k) = 0;
             }
 
           /*  absdiff(this->selectedWords.row(i), average.row(0), difference); //wyliczenie różnicy
@@ -320,9 +338,22 @@ void VisualDictionary::testDictionary()
 
 void VisualDictionary::testDictionaryK()
 {
-    this->constructDictionaryKMeans();
+    float data[10][128];
 
-    this->saveDictionary();
+    for (int i = 0; i < 10; ++i)
+    {
+        for (int j = 0; j < 128; ++j)
+        {
+            data[i][j] = i + 1;
+        }
+    }
+
+    allFeatures.push_back(Mat(10, 128, CV_32FC1, &data));
+    printMatrix(allFeatures);
+    chooseWords();
+    printMatrix(selectedWords);
+    constructDictionaryKMeans();
+    saveDictionary();
 }
 
 void VisualDictionary::printMatrix(Mat matrix)

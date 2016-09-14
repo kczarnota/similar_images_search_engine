@@ -304,7 +304,7 @@ void BOW::testPicture(int min, int max, int step, int questionNumber)
 
 void BOW::testDictionary()
 {
-    Mat difference(1, 128, CV_32FC1, Scalar(0));
+/*    Mat difference(1, 128, CV_32FC1, Scalar(0));
 
     for(int i = 0; i < this->visualDictionary->getSize(); ++i)
     {
@@ -322,7 +322,8 @@ void BOW::testDictionary()
             if(sum == 0)
                 cout << sum << endl;
         }
-    }
+    }*/
+    this->visualDictionary->testDictionaryK();
 }
 
 string BOW::removeLastPathSegment(string path)

@@ -16,8 +16,14 @@ sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libp
 
 ##2. Klonowanie repo
 ```bash
-git clone https://github.com/Itseez/opencv.git
+git clone https://github.com/Itseez/opencv.git 
 git clone https://github.com/Itseez/opencv_contrib.git
+```
+
+##2b. Klonowanie repo
+```bash
+git clone https://github.com/opencv/opencv.git 
+git clone https://github.com/opencv/opencv_contrib.git
 ```
 
 ##3. Folder na build
