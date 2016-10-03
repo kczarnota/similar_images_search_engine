@@ -19,7 +19,7 @@ using namespace std;
  */
 class VisualDictionary
 {
-private:
+protected:
     int sizeOfDictionary;
     //string dictionaryPath = "../dictionaryTest.xml";
     string dictionaryPath;
@@ -36,8 +36,9 @@ private:
 
 public:
     VisualDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath);
-    void constructDictionaryRandom();
-    void constructDictionaryKMeans();
+
+    virtual void constructDictionaryRandom()= 0;
+    virtual void constructDictionaryKMeans() = 0;
     void saveDictionary();
     void loadDictionary();
     Mat getWord(int rowNumber);
@@ -47,7 +48,7 @@ public:
     void printMatrix(Mat matrix);
     void prepareDictionary();
 
-private:
+protected:
     void chooseWords();
 };
 

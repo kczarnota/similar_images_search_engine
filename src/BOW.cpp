@@ -8,7 +8,8 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName)
 
     cout << databasePath << endl;
     cout << dictionaryPath << endl;
-    this->visualDictionary = new VisualDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
+    //this->visualDictionary = new VisualDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
+    this->visualDictionary = new SIFTDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
     this->pictureDatabase = new PictureDatabase(sizeOfDictionary);
 }
 
