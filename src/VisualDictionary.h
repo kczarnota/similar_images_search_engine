@@ -31,6 +31,7 @@ protected:
     Mat selectedWords;
     Ptr<SIFT> keyPointsDetector;
     Ptr<SIFT> featureExtractor;
+    int vectorLength;
 
 
 

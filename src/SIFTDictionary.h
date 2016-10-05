@@ -7,7 +7,6 @@ using namespace std;
 
 class SIFTDictionary : public VisualDictionary
 {
-
 public:
     SIFTDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath);
     void constructDictionaryRandom();

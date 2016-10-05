@@ -4,10 +4,12 @@
 SIFTDictionary::SIFTDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath) : VisualDictionary(
         sizeOfDictionary, pathToDatabase, dictionaryPath)
 {
+    vectorLength = 128;
     this->startPath = path(pathToDatabase);
     this->sizeOfDictionary = sizeOfDictionary;
-    this->allFeatures = Mat(0, 128, CV_32FC1, Scalar(0));
-    this->selectedWords = Mat(0, 128, CV_32FC1, Scalar(0));
+    this->currentFeatures = Mat(0, 128, CV_32FC1, Scalar(0));
+    this->allFeatures = Mat(0, vectorLength, CV_32FC1, Scalar(0));
+    this->selectedWords = Mat(0, vectorLength, CV_32FC1, Scalar(0));
     this->keyPointsDetector = SIFT::create();
     this->featureExtractor = SIFT::create();
     this->dictionaryPath = dictionaryPath;
@@ -53,10 +55,10 @@ void SIFTDictionary::constructDictionaryKMeans()
 
     bool shouldStop = false;
     Mat *classes = new Mat[this->selectedWords.rows];
-    Mat currentClass(1, 128, CV_32FC1, Scalar(0));
-    Mat currentFeature(1, 128, CV_32FC1, Scalar(0));
-    Mat difference(1, 128, CV_32FC1, Scalar(0));
-    Mat average(1, 128, CV_32FC1, Scalar(0));
+    Mat currentClass(1, vectorLength, CV_32FC1, Scalar(0));
+    Mat currentFeature(1, vectorLength, CV_32FC1, Scalar(0));
+    Mat difference(1, vectorLength, CV_32FC1, Scalar(0));
+    Mat average(1, vectorLength, CV_32FC1, Scalar(0));
 
     int iterations = 0;
     while(!shouldStop && iterations < 10)
@@ -65,7 +67,7 @@ void SIFTDictionary::constructDictionaryKMeans()
         //Wyzerowanie macierzy
         for(int i = 0; i < this->selectedWords.rows; ++i)
         {
-            classes[i] = Mat(0, 128, CV_32FC1, Scalar(0));
+            classes[i] = Mat(0, vectorLength, CV_32FC1, Scalar(0));
         }
 
         shouldStop = true;
@@ -83,7 +85,7 @@ void SIFTDictionary::constructDictionaryKMeans()
                 absdiff(currentClass, currentFeature, difference);
                 // printMatrix(currentClass);
                 // printMatrix(currentFeature);
-                for(int k = 0; k < 128; ++k)
+                for(int k = 0; k < vectorLength; ++k)
                 {
                     currentSum += difference.at<float>(0, k);
                 }
@@ -108,19 +110,19 @@ void SIFTDictionary::constructDictionaryKMeans()
         {
             for(int j = 0; j < classes[i].rows; ++j) //przechodzę przez wszystkie wiersze i obliczam średnią
             {
-                for(int k = 0; k < 128; ++k)
+                for(int k = 0; k < vectorLength; ++k)
                 {
                     average.at<float>(0, k) += classes[i].row(j).at<float>(0, k); //suma wartości
                 }
             }
 
-            for(int k = 0; k < 128; ++k)
+            for(int k = 0; k < vectorLength; ++k)
             {
                 average.at<float>(0, k) = (int)average.at<float>(0, k)/classes[i].rows; //wszystkie wartości podzielone przez liczbę cech
             }
 
 
-            for(int k = 0; k < 128; ++k)
+            for(int k = 0; k < vectorLength; ++k)
             {
                 if(average.at<float>(0, k) != this->selectedWords.row(i).at<float>(0, k))
                 {
@@ -130,7 +132,7 @@ void SIFTDictionary::constructDictionaryKMeans()
                 }
             }
 
-            for (int k = 0; k < 128; ++k)
+            for (int k = 0; k < vectorLength; ++k)
             {
                 average.at<float>(0, k) = 0;
             }

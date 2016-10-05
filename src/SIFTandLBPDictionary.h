@@ -3,6 +3,7 @@
 
 
 #include "VisualDictionary.h"
+#include <opencv2/imgproc.hpp>
 
 class SIFTandLBPDictionary : public VisualDictionary
 {
@@ -11,6 +12,7 @@ public:
     void constructDictionaryRandom();
     void constructDictionaryKMeans();
 
+    void computeLBPfeatures(Mat image, Mat lbpFeatures);
 };
 
 

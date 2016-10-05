@@ -5,9 +5,12 @@
 #include "VisualDictionary.h"
 #include "ResultVector.h"
 #include "SIFTDictionary.h"
+#include "SIFTandLBPDictionary.h"
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
+
+enum Mode {SIFT_DESCRIPTOR, SIFTandLBP_DESCRIPTOR};
 /*
  * Główna klasa tworząca interfejs korzystania z metody BOW. Umożliwia stworzenie słownika(lub wczytanie go, jeśli
  * istnieje), utworzenie bazy obrazów, wczytanie obrazów do niej, zapisanie jej w pliku, odczyt z pliku oraz
@@ -23,6 +26,7 @@ private:
     PictureDatabase * pictureDatabase;
     double precision;
     double recall;
+    Mode mode;
 
     void addPictureToDatabase(string pathToPicture);
     void saveDatabase();
@@ -48,6 +52,7 @@ public:
     vector<string> splitString(string s);
     void testPicture(int min, int max, int step, int questionNumber);
     void init();
+    void computeLBPfeatures(Mat image, Mat lbpFeatures, vector<KeyPoint> keyPoints);
 
     string removeLastPathSegment(string path);
     string getDatabasePath();

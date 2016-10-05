@@ -9,7 +9,9 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName)
     cout << databasePath << endl;
     cout << dictionaryPath << endl;
     //this->visualDictionary = new VisualDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
-    this->visualDictionary = new SIFTDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
+    //this->visualDictionary = new SIFTDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
+    this->visualDictionary = new SIFTandLBPDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
+    this->mode = Mode::SIFTandLBP_DESCRIPTOR;
     this->pictureDatabase = new PictureDatabase(sizeOfDictionary);
 }
 
@@ -113,10 +115,17 @@ void BOW::addPictureToDatabase(string pathToPicture)
 
 PictureInformation BOW::computeHistogram(string pathToPicture)
 {
+    int vectorLength = 0;
+    if(mode == Mode::SIFT_DESCRIPTOR)
+        vectorLength = 128;
+    else if(mode == Mode::SIFTandLBP_DESCRIPTOR)
+        vectorLength = 192;
+
     Ptr<SIFT> keyPointsDetector = SIFT::create();
     Ptr<SIFT> featureExtractor= SIFT::create();
     vector<KeyPoint> keyPoints;
-    Mat features = Mat(0, 128, CV_32FC1, Scalar(0));
+
+    Mat onlySIFT = Mat(0, 128, CV_32FC1, Scalar(0));
 
     cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_ANYDEPTH);
 
@@ -127,14 +136,40 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
     }
 
     keyPointsDetector->detect(picture, keyPoints);
-    featureExtractor->compute(picture, keyPoints, features);
+    featureExtractor->compute(picture, keyPoints, onlySIFT);
+
+    Mat features = Mat(onlySIFT.rows, vectorLength, CV_32FC1, Scalar(0));
+    Mat lbpFeatures = Mat(onlySIFT.rows, 64, CV_32FC1, Scalar(0));
+    if(mode == Mode::SIFT_DESCRIPTOR)
+    {
+        onlySIFT.copyTo(features);
+    }
+    else if(mode == Mode::SIFTandLBP_DESCRIPTOR)
+    {
+        computeLBPfeatures(picture, lbpFeatures, keyPoints);
+
+        for (int i = 0; i < features.rows; ++i)
+        {
+            for (int j = 0; j < 192; ++j)
+            {
+                if(j < 128)
+                {
+                    features.at<float>(i, j) = onlySIFT.at<float>(i, j);
+                }
+                else
+                {
+                    features.at<float>(i, j) = lbpFeatures.at<float>(i, j % 64);
+                }
+            }
+        }
+    }
 
     PictureInformation pictureInformation(pathToPicture, this->visualDictionary->getSize());
 
 
-    Mat currentRow(1, 128, CV_32FC1, Scalar(0));
-    Mat currentWord(1, 128, CV_32FC1, Scalar(0));
-    Mat difference(1, 128, CV_32FC1, Scalar(0));
+    Mat currentRow(1, vectorLength, CV_32FC1, Scalar(0));
+    Mat currentWord(1, vectorLength, CV_32FC1, Scalar(0));
+    Mat difference(1, vectorLength, CV_32FC1, Scalar(0));
 
     std::cout << features.rows << std::endl;
     //std::cout << pathToPicture << std::endl;
@@ -150,7 +185,7 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
             this->visualDictionary->getWord(j).copyTo(currentWord.row(0));
             absdiff(currentRow, currentWord, difference);
 
-            for(int k = 0; k < 128; ++k)
+            for(int k = 0; k < vectorLength; ++k)
                 currentSum += difference.at<float>(0, k);
 
             if(minSum == -1 || currentSum < minSum)
@@ -374,3 +409,84 @@ string BOW::getDictionaryPath()
     }
 }*/
 
+void BOW::computeLBPfeatures(Mat image, Mat lbpFeatures, vector<KeyPoint> keyPoints)
+{
+    int counter = 0;
+    for(KeyPoint p : keyPoints)
+    {
+        Mat dest;
+        getRectSubPix(image, Size(10, 10), Point2f(p.pt.x, p.pt.y), dest);
+
+        int flatNumber = 0;
+        for(int r = 1; r < 9; ++r)
+        {
+            for (int c = 1; c < 9; ++c)
+            {
+                Scalar intensity = dest.at<uchar>(r, c);
+                uchar mid = intensity.val[0];
+
+                unsigned char number = 0;
+
+                //left middle
+                intensity = dest.at<uchar>(r, c - 1);
+                if(intensity.val[0] > mid)
+                {
+                    number |= 1 << 7;
+                }
+
+                //left bottom
+                intensity = dest.at<uchar>(r + 1, c - 1);
+                if(intensity.val[0] > mid)
+                {
+                    number |= 1 << 6;
+                }
+
+                //bottom middle
+                intensity = dest.at<uchar>(r + 1, c);
+                if(intensity.val[0] > mid)
+                {
+                    number |= 1 << 5;
+                }
+
+                //rigth bottom
+                intensity = dest.at<uchar>(r + 1, c + 1);
+                if(intensity.val[0] > mid)
+                {
+                    number |= 1 << 4;
+                }
+
+                //right middle
+                intensity = dest.at<uchar>(r, c + 1);
+                if(intensity.val[0] > mid)
+                {
+                    number |= 1 << 3;
+                }
+
+                //right top
+                intensity = dest.at<uchar>(r - 1, c + 1);
+                if(intensity.val[0] > mid)
+                {
+                    number |= 1 << 2;
+                }
+
+                //right middle
+                intensity = dest.at<uchar>(r - 1, c);
+                if(intensity.val[0] > mid)
+                {
+                    number |= 1 << 1;
+                }
+
+                //left top
+                intensity = dest.at<uchar>(r - 1, c - 1);
+                if(intensity.val[0] > mid)
+                {
+                    number |= 1;
+                }
+
+                lbpFeatures.at<float>(counter, flatNumber) = number;
+                flatNumber++;
+            }
+        }
+        counter++;
+    }
+}
