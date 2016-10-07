@@ -11,8 +11,6 @@ public:
     SIFTandLBPDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath);
     void constructDictionaryRandom();
     void constructDictionaryKMeans();
-
-    void computeLBPfeatures(Mat image, Mat lbpFeatures);
 };
 
 
