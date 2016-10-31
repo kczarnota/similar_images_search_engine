@@ -40,6 +40,7 @@ int main(int argc, char** argv)
         averageRecall[i] = 0.0;
 
     int m = 0;
+    int wrongFirst = 0;
     while (dir != end)
     {
         file_status fs = status(dir->path());
@@ -47,6 +48,12 @@ int main(int argc, char** argv)
         if (!is_directory(fs))
         {
             ResultVector res = bow.makeQuery(dir->path().string(), 90);
+
+            if(dir->path().string() != res.getPairAt(0).first)
+            {
+                wrongFirst++;
+            }
+
             std::pair<double, double> p;
             p = bow.getPrecisionAndRecall(res, 10);
             averagePrecision[0] += p.first;
@@ -100,10 +107,9 @@ int main(int argc, char** argv)
 
         averageRecall[i] /= 1000;
         cout << "Average recall for: "<< j << "    " << averageRecall[i] << endl;
+
+        cout << "Wrong first " << wrongFirst << endl;
     }
-
-
-    cout << "Average precison: " << averagePrecision << endl;
 
 
 /*    cout << "Ile obrazow mam wyswietlic?" << endl;

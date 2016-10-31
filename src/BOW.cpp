@@ -140,8 +140,6 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
     else if(mode == Mode::HOG_DESCRIPTOR)
         vectorLength = 36;
 
-    Ptr<SIFT> keyPointsDetector = SIFT::create();
-    Ptr<SIFT> featureExtractor= SIFT::create();
     vector<KeyPoint> keyPoints;
 
     Mat onlySIFT = Mat(0, 128, CV_32FC1, Scalar(0));
@@ -155,19 +153,16 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
         exit(-1);
     }
 
-    keyPointsDetector->detect(picture, keyPoints);
-    featureExtractor->compute(picture, keyPoints, onlySIFT);
-
-    Mat features;
+    Mat features = Mat(0, vectorLength, CV_32FC1, Scalar(0));
     Mat lbpFeatures = Mat(onlySIFT.rows, 64, CV_32FC1, Scalar(0));
     if(mode == Mode::SIFT_DESCRIPTOR)
     {
-        features = Mat(onlySIFT.rows, vectorLength, CV_32FC1, Scalar(0));
-        onlySIFT.copyTo(features);
+        SIFTDescriptorExtractor::computeSIFTfeatures(picture, features, keyPoints);
     }
     else if(mode == Mode::SIFTandLBP_DESCRIPTOR)
     {
-        features = Mat(onlySIFT.rows, vectorLength, CV_32FC1, Scalar(0));
+        //TODO FIX
+        SIFTDescriptorExtractor::computeSIFTfeatures(picture, features, keyPoints);
         LBPDescriptor::computeLBPfeatures(picture, lbpFeatures, keyPoints);
 
         for (int i = 0; i < features.rows; ++i)
@@ -187,7 +182,6 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
     }
     else if(mode == HOG_DESCRIPTOR)
     {
-        features = Mat(0, vectorLength, CV_32FC1, Scalar(0));
         HOGDescriptorExtractor::computeHOGfeatures(picture, features);
     }
 
@@ -251,17 +245,14 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
 {
     PictureInformation queryPicture = this->computeHistogram(pathToPicture);
     cout << pathToPicture << endl;
-    int minIndex = 0;
-    double distances[this->pictureDatabase->getSize()];
     double minDistance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(0));
     double distance = minDistance;
-    distances[0] = distance;
     ResultVector resultVector(resultNumber, 2.0);
+    resultVector.tryAdd(make_pair(this->pictureDatabase->getPicture(0).getName(), distance));
 
     for(int i = 1; i < this->pictureDatabase->getSize(); ++i)//this->visualDictionary->getSize(); ++i)
     {
         distance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(i));
-        distances[i] = distance;
         resultVector.tryAdd(make_pair(this->pictureDatabase->getPicture(i).getName(), distance));
     }
 

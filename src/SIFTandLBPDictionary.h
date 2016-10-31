@@ -8,8 +8,6 @@
 class SIFTandLBPDictionary : public VisualDictionary
 {
 private:
-    Ptr<SIFT> keyPointsDetector;
-    Ptr<SIFT> featureExtractor;
     vector<KeyPoint> keyPoints;
 
 public:

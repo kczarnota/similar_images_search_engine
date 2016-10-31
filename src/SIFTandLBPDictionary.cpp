@@ -1,5 +1,6 @@
 #include "SIFTandLBPDictionary.h"
 #include "LBPDescriptor.h"
+#include "SIFTDescriptorExtractor.hpp"
 #include <iostream>
 
 SIFTandLBPDictionary::SIFTandLBPDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath) : VisualDictionary(
@@ -11,8 +12,6 @@ SIFTandLBPDictionary::SIFTandLBPDictionary(int sizeOfDictionary, string pathToDa
     this->currentFeatures = Mat(0, 128, CV_32FC1, Scalar(0));
     this->allFeatures = Mat(0, vectorLength, CV_32FC1, Scalar(0));
     this->selectedWords = Mat(0, vectorLength, CV_32FC1, Scalar(0));
-    this->keyPointsDetector = SIFT::create();
-    this->featureExtractor = SIFT::create();
     this->dictionaryPath = dictionaryPath;
 }
 
@@ -37,8 +36,7 @@ void SIFTandLBPDictionary::constructDictionaryRandom()
             }
 
             //std::cout << dir->path() << std::endl;
-            keyPointsDetector->detect(currentImage, keyPoints);
-            featureExtractor->compute(currentImage, keyPoints, currentFeatures);
+            SIFTDescriptorExtractor::computeSIFTfeatures(currentImage, currentFeatures, keyPoints);
             Mat featuresSIFTandLBP = Mat(currentFeatures.rows, 192, CV_32FC1, Scalar(0));
             Mat featuresLBP = Mat(currentFeatures.rows, 64, CV_32FC1, Scalar(0));
             LBPDescriptor::computeLBPfeatures(currentImage, featuresLBP, keyPoints);

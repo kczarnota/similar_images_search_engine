@@ -10,8 +10,6 @@ SIFTDictionary::SIFTDictionary(int sizeOfDictionary, string pathToDatabase, stri
     this->currentFeatures = Mat(0, 128, CV_32FC1, Scalar(0));
     this->allFeatures = Mat(0, vectorLength, CV_32FC1, Scalar(0));
     this->selectedWords = Mat(0, vectorLength, CV_32FC1, Scalar(0));
-    this->keyPointsDetector = SIFT::create();
-    this->featureExtractor = SIFT::create();
     this->dictionaryPath = dictionaryPath;
 }
 
@@ -36,8 +34,7 @@ void SIFTDictionary::constructDictionaryRandom()
             }
 
             //std::cout << dir->path() << std::endl;
-            keyPointsDetector->detect(currentImage, keyPoints);
-            featureExtractor->compute(currentImage, keyPoints, currentFeatures);
+            SIFTDescriptorExtractor::computeSIFTfeatures(currentImage, currentFeatures, keyPoints);
             cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
             vconcat(currentFeatures, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
         }
