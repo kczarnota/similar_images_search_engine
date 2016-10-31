@@ -25,12 +25,9 @@ protected:
     string dictionaryPath;
     path startPath;
     Mat currentImage;
-    vector<KeyPoint> keyPoints;
     Mat currentFeatures;
     Mat allFeatures;
     Mat selectedWords;
-    Ptr<SIFT> keyPointsDetector;
-    Ptr<SIFT> featureExtractor;
     int vectorLength;
 
 

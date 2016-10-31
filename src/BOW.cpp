@@ -1,6 +1,6 @@
 #include "BOW.h"
 
-BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName)
+BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode)
 {
     this->pathToImages = pathToImages;
     this->databasePath = removeLastPathSegment(this->pathToImages) + databaseName;
@@ -10,8 +10,23 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName)
     cout << dictionaryPath << endl;
     //this->visualDictionary = new VisualDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
     //this->visualDictionary = new SIFTDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
-    this->visualDictionary = new SIFTandLBPDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
-    this->mode = Mode::SIFTandLBP_DESCRIPTOR;
+
+    if(mode == "s")
+    {
+        this->mode = Mode::SIFT_DESCRIPTOR;
+        this->visualDictionary = new SIFTDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
+    }
+    else if(mode == "sl")
+    {
+        this->mode = Mode::SIFTandLBP_DESCRIPTOR;
+        this->visualDictionary = new SIFTandLBPDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
+    }
+    else
+    {
+        this->mode = Mode::HOG_DESCRIPTOR;
+        this->visualDictionary = new HOGDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
+    }
+
     this->pictureDatabase = new PictureDatabase(sizeOfDictionary);
 }
 
@@ -92,6 +107,7 @@ void BOW::updateDatabase(string pathToDatabase)
 {
     path p(pathToDatabase);
     recursive_directory_iterator dir(p), end;
+    int picNum = 0;
 
     while (dir != end)
     {
@@ -100,6 +116,7 @@ void BOW::updateDatabase(string pathToDatabase)
         if (!is_directory(fs))
         {
             this->addPictureToDatabase(dir->path().string());
+            cout << "Picture nr: " << picNum++ << endl;
         }
 
         ++dir;
@@ -120,12 +137,15 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
         vectorLength = 128;
     else if(mode == Mode::SIFTandLBP_DESCRIPTOR)
         vectorLength = 192;
+    else if(mode == Mode::HOG_DESCRIPTOR)
+        vectorLength = 36;
 
     Ptr<SIFT> keyPointsDetector = SIFT::create();
     Ptr<SIFT> featureExtractor= SIFT::create();
     vector<KeyPoint> keyPoints;
 
     Mat onlySIFT = Mat(0, 128, CV_32FC1, Scalar(0));
+    Mat onlyHOG = Mat(0, 36, CV_32FC1, Scalar(0));
 
     cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_ANYDEPTH);
 
@@ -138,14 +158,16 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
     keyPointsDetector->detect(picture, keyPoints);
     featureExtractor->compute(picture, keyPoints, onlySIFT);
 
-    Mat features = Mat(onlySIFT.rows, vectorLength, CV_32FC1, Scalar(0));
+    Mat features;
     Mat lbpFeatures = Mat(onlySIFT.rows, 64, CV_32FC1, Scalar(0));
     if(mode == Mode::SIFT_DESCRIPTOR)
     {
+        features = Mat(onlySIFT.rows, vectorLength, CV_32FC1, Scalar(0));
         onlySIFT.copyTo(features);
     }
     else if(mode == Mode::SIFTandLBP_DESCRIPTOR)
     {
+        features = Mat(onlySIFT.rows, vectorLength, CV_32FC1, Scalar(0));
         LBPDescriptor::computeLBPfeatures(picture, lbpFeatures, keyPoints);
 
         for (int i = 0; i < features.rows; ++i)
@@ -163,6 +185,11 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
             }
         }
     }
+    else if(mode == HOG_DESCRIPTOR)
+    {
+        features = Mat(0, vectorLength, CV_32FC1, Scalar(0));
+        HOGDescriptorExtractor::computeHOGfeatures(picture, features);
+    }
 
     PictureInformation pictureInformation(pathToPicture, this->visualDictionary->getSize());
 
@@ -177,11 +204,12 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
     int i, j;
     for(i = 0; i < features.rows; ++i)
     {
-        int minSumIndex = 0, minSum = -1;
+        int minSumIndex = 0;
+        float minSum = -1;
         features.row(i).copyTo(currentRow.row(0));
         for(j = 0; j < this->visualDictionary->getSize(); ++j)
         {
-            int currentSum = 0;
+            float currentSum = 0;
             this->visualDictionary->getWord(j).copyTo(currentWord.row(0));
             absdiff(currentRow, currentWord, difference);
 
@@ -197,6 +225,11 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
         pictureInformation.addOneAt(minSumIndex);
     }
 
+/*    for(int t = 0; t < 1000; ++t)
+    {
+        cout << pictureInformation.getValueAt(t) << " ";
+    }
+    cout << endl;*/
 
     pictureInformation.normalize(features.rows);
 
@@ -217,7 +250,7 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
 ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
 {
     PictureInformation queryPicture = this->computeHistogram(pathToPicture);
-
+    cout << pathToPicture << endl;
     int minIndex = 0;
     double distances[this->pictureDatabase->getSize()];
     double minDistance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(0));
@@ -388,6 +421,46 @@ string BOW::getDatabasePath()
 string BOW::getDictionaryPath()
 {
     return this->dictionaryPath;
+}
+
+void BOW::compareDictionaryEntries()
+{
+    int size = this->visualDictionary->getSize();
+    int sameNumber = 0;
+    for(int i = 0; i < size - 1; ++i)
+    {
+        Mat word = this->visualDictionary->getWord(i);
+        for(int j = i + 1; j < size; ++j)
+        {
+            Mat cmp = this->visualDictionary->getWord(j);
+
+            for(int k = 0; k < 36; ++k)
+            {
+                if(word.at<float>(0, k) == cmp.at<float>(0, k))
+                {
+                    //cout << "the same" << endl;
+                    sameNumber++;
+                }
+            }
+            if(sameNumber == 36)
+            {
+                cout << "same word" << endl;
+                for(int t = 0; t < 36; ++t)
+                {
+                    cout << word.at<float>(0, t) << " ";
+                }
+                cout << endl;
+                sameNumber = 0;
+            }
+        }
+    }
+    cout << sameNumber << endl;
+
+}
+
+void BOW::printMatrix(Mat matrix)
+{
+    std::cout << matrix << std::endl;
 }
 
 

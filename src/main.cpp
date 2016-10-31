@@ -10,9 +10,9 @@ void showManyImages(char* title, int nArgs, IplImage ** images);
 
 int main(int argc, char** argv)
 {
-    if (argc != 4)
+    if (argc != 5)
     {
-        cout << "Usage: BagOfWords sizeOfDictionary pathToDatabase databaseName" << endl;
+        cout << "Usage: BagOfWords sizeOfDictionary pathToDatabase databaseName mode" << endl;
         exit(0);
     }
 
@@ -21,21 +21,14 @@ int main(int argc, char** argv)
     //vd.testDictionaryK();
 
 
-    BOW bow(atoi(argv[1]), argv[2], argv[3]);
-    //bow.testDictionary();
+    BOW bow(atoi(argv[1]), argv[2], argv[3], argv[4]);
     bow.init();
-    //bow.init();
-    //bow.prepareDictionary();
-    //bow.testDictionary();
-
-    //bow.createDatabase(argv[2]);
-    //bow.loadDatabase();
-    //bow.listDatabase();
+    bow.compareDictionaryEntries();
     string pathToPic;
     int numberOfImagesToDisplay;
 
 
-/*    path p(argv[2]);
+    path p(argv[2]);
     recursive_directory_iterator dir(p), end;
     double averagePrecision[9];
     double averageRecall[9];
@@ -110,11 +103,10 @@ int main(int argc, char** argv)
     }
 
 
-    //cout << "Average precison: " << averagePrecision << endl;
-    */
+    cout << "Average precison: " << averagePrecision << endl;
 
 
-    cout << "Ile obrazow mam wyswietlic?" << endl;
+/*    cout << "Ile obrazow mam wyswietlic?" << endl;
     cin >> numberOfImagesToDisplay;
     ++numberOfImagesToDisplay;
     cout << "Podaj nazwe pliku" << endl;
@@ -139,7 +131,7 @@ int main(int argc, char** argv)
         ++numberOfImagesToDisplay;
         cout << "Podaj nazwe pliku" << endl;
         cin >> pathToPic;
-    }
+    }*/
 
     //bow.testPicture(10, 90, 10, 100);
 

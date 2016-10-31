@@ -7,11 +7,13 @@
 #include "SIFTDictionary.h"
 #include "SIFTandLBPDictionary.h"
 #include "LBPDescriptor.h"
+#include "HOGDescriptorExtractor.hpp"
+#include "HOGDictionary.hpp"
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
 
-enum Mode {SIFT_DESCRIPTOR, SIFTandLBP_DESCRIPTOR};
+enum Mode {SIFT_DESCRIPTOR, SIFTandLBP_DESCRIPTOR, HOG_DESCRIPTOR};
 /*
  * Główna klasa tworząca interfejs korzystania z metody BOW. Umożliwia stworzenie słownika(lub wczytanie go, jeśli
  * istnieje), utworzenie bazy obrazów, wczytanie obrazów do niej, zapisanie jej w pliku, odczyt z pliku oraz
@@ -38,7 +40,7 @@ public:
     PictureInformation computeHistogram(string pathToPicture);
     void testDictionary();
 
-    BOW(int sizeOfDictionary, string pathToImages, string databaseName);
+    BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode);
     ~BOW();
     //void prepareDictionary();
     void createDatabase();
@@ -52,7 +54,9 @@ public:
     std::pair<double, double> getPrecisionAndRecall(ResultVector vec, int numberOfAskedPictures);
     vector<string> splitString(string s);
     void testPicture(int min, int max, int step, int questionNumber);
+    void compareDictionaryEntries();
     void init();
+    void printMatrix(Mat matrix);
 
     string removeLastPathSegment(string path);
     string getDatabasePath();
