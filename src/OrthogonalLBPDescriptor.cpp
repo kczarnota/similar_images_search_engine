@@ -1,14 +1,14 @@
-#include "LBPDescriptor.h"
+#include "OrthogonalLBPDescriptor.hpp"
 
-void LBPDescriptor::computeLBPfeatures(Mat image, Mat lbpFeatures, vector<KeyPoint> keyPoints)
+void OrthogonalLBPDescriptor::computeOrthogonalLBPfeatures(Mat image, Mat lbpFeatures, vector<KeyPoint> keyPoints)
 {
+    int counter = 0;
     for(KeyPoint p : keyPoints)
     {
         Mat dest;
         getRectSubPix(image, Size(10, 10), Point2f(p.pt.x, p.pt.y), dest);
 
         int flatNumber = 0;
-        Mat currentFeatures = Mat(1, 64, CV_32FC1, Scalar(0));
         for(int r = 1; r < 9; ++r)
         {
             for (int c = 1; c < 9; ++c)
@@ -76,10 +76,10 @@ void LBPDescriptor::computeLBPfeatures(Mat image, Mat lbpFeatures, vector<KeyPoi
                 }
 
 
-                currentFeatures.at<float>(0, flatNumber) = number;
+                lbpFeatures.at<float>(counter, flatNumber) = number;
                 flatNumber++;
             }
         }
-        vconcat(currentFeatures, lbpFeatures, lbpFeatures);
+        counter++;
     }
 }

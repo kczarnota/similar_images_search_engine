@@ -145,7 +145,7 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
     Mat onlySIFT = Mat(0, 128, CV_32FC1, Scalar(0));
     Mat onlyHOG = Mat(0, 36, CV_32FC1, Scalar(0));
 
-    cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_ANYDEPTH);
+    cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_GRAYSCALE);
 
     if (!picture.data)
     {
@@ -154,15 +154,14 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
     }
 
     Mat features = Mat(0, vectorLength, CV_32FC1, Scalar(0));
-    Mat lbpFeatures = Mat(onlySIFT.rows, 64, CV_32FC1, Scalar(0));
+    Mat lbpFeatures = Mat(0, 64, CV_32FC1, Scalar(0));
     if(mode == Mode::SIFT_DESCRIPTOR)
     {
         SIFTDescriptorExtractor::computeSIFTfeatures(picture, features, keyPoints);
     }
     else if(mode == Mode::SIFTandLBP_DESCRIPTOR)
     {
-        //TODO FIX
-        SIFTDescriptorExtractor::computeSIFTfeatures(picture, features, keyPoints);
+        SIFTDescriptorExtractor::computeSIFTfeatures(picture, onlySIFT, keyPoints);
         LBPDescriptor::computeLBPfeatures(picture, lbpFeatures, keyPoints);
 
         for (int i = 0; i < features.rows; ++i)
