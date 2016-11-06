@@ -27,6 +27,7 @@ public:
     double getValueAt(int index);
     std::string getName();
     void normalize(int numberOfAllElements);
+    int getHistogramSize();
 };
 
 

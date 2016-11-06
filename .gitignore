@@ -2,6 +2,7 @@
 build/
 BazaDanych/**
 VisionTexture/**
+VisTex/**
 *.xml
 TODO
 bin/

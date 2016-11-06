@@ -1,6 +1,6 @@
 #include "LBPDescriptor.h"
 
-void LBPDescriptor::computeLBPfeatures(Mat image, Mat lbpFeatures, vector<KeyPoint> keyPoints)
+void LBPDescriptor::computeLBPfeatures(const Mat & image, Mat & lbpFeatures, const vector<KeyPoint> & keyPoints)
 {
     for(KeyPoint p : keyPoints)
     {

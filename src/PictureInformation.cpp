@@ -46,3 +46,8 @@ void PictureInformation::normalize(int numberOfAllElements)
         this->histogram[i] /= numberOfAllElements;
     }
 }
+
+int PictureInformation::getHistogramSize()
+{
+    return this->histogram.size();
+}

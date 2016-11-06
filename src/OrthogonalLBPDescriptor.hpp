@@ -7,7 +7,7 @@
 class OrthogonalLBPDescriptor
 {
 public:
-    static void computeOrthogonalLBPfeatures(Mat image, Mat lbpFeatures, vector<KeyPoint> keyPoints);
+    static void computeOrthogonalLBPfeatures(const Mat & image, Mat & lbpFeatures, const vector<KeyPoint> & keyPoints);
 };
 
 

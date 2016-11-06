@@ -7,7 +7,7 @@
 class SIFTDescriptorExtractor
 {
 public:
-    static void computeSIFTfeatures(const Mat & currentImage, Mat & features, vector<KeyPoint> keyPoints);
+    static void computeSIFTfeatures(const Mat & currentImage, Mat & features, vector<KeyPoint> & keyPoints);
 };
 
 

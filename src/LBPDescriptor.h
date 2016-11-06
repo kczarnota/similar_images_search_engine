@@ -6,7 +6,7 @@
 class LBPDescriptor
 {
 public:
-    static void computeLBPfeatures(Mat image, Mat lbpFeatures, vector<KeyPoint> keyPoints);
+    static void computeLBPfeatures(const Mat & image, Mat & lbpFeatures, const vector<KeyPoint> & keyPoints);
 };
 
 

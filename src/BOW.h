@@ -9,11 +9,12 @@
 #include "LBPDescriptor.h"
 #include "HOGDescriptorExtractor.hpp"
 #include "HOGDictionary.hpp"
+#include "OrthogonalLBPDescriptor.hpp"
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
 
-enum Mode {SIFT_DESCRIPTOR, SIFTandLBP_DESCRIPTOR, HOG_DESCRIPTOR};
+enum Mode {SIFT_DESCRIPTOR, SIFTandLBP_DESCRIPTOR, HOG_DESCRIPTOR, LBP_DESCRIPTOR, ORTHOGONAL_LBP_DESCRIPTOR};
 /*
  * Główna klasa tworząca interfejs korzystania z metody BOW. Umożliwia stworzenie słownika(lub wczytanie go, jeśli
  * istnieje), utworzenie bazy obrazów, wczytanie obrazów do niej, zapisanie jej w pliku, odczyt z pliku oraz
@@ -27,8 +28,8 @@ private:
     string dictionaryPath = "../dictionary.xml";
     VisualDictionary * visualDictionary;
     PictureDatabase * pictureDatabase;
-    double precision;
-    double recall;
+   // double precision;
+   // double recall;
     Mode mode;
 
     void addPictureToDatabase(string pathToPicture);
@@ -37,6 +38,7 @@ private:
 
 public:
     double comparePictureHistograms(PictureInformation p1, PictureInformation p2);
+    double compareOrthogonalLBPHistograms(PictureInformation p1, PictureInformation p2);
     PictureInformation computeHistogram(string pathToPicture);
     void testDictionary();
 
@@ -48,19 +50,25 @@ public:
     void loadDatabase();
     void listDatabase();
     ResultVector makeQuery(string pathToPicture, int resultNumber);
-    double getPrecision() {return this->precision;}
-    double getRecall() {return this->recall; }
-    void computePrecisionAndRecall(ResultVector vec, int numberOfAskedPictures);
+   // double getPrecision() {return this->precision;}
+    //double getRecall() {return this->recall; }
+    //void computePrecisionAndRecall(ResultVector vec, int numberOfAskedPictures);
     std::pair<double, double> getPrecisionAndRecall(ResultVector vec, int numberOfAskedPictures);
     vector<string> splitString(string s);
     void testPicture(int min, int max, int step, int questionNumber);
     void compareDictionaryEntries();
     void init();
-    void printMatrix(Mat matrix);
+    static void printMatrix(Mat matrix);
 
     string removeLastPathSegment(string path);
     string getDatabasePath();
     string getDictionaryPath();
+
+    PictureInformation computeLBPHistogram(string pathToPicture);
+
+    PictureInformation computeOrthogonalLBPHistogram(string pathToPicture);
+
+    int countImagesInCategory(string pathToCategoryDirectory);
 };
 
 

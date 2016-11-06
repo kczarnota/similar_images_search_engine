@@ -23,12 +23,11 @@ int main(int argc, char** argv)
 
     BOW bow(atoi(argv[1]), argv[2], argv[3], argv[4]);
     bow.init();
-    bow.compareDictionaryEntries();
     string pathToPic;
     int numberOfImagesToDisplay;
 
 
-    path p(argv[2]);
+/*    path p(argv[2]);
     recursive_directory_iterator dir(p), end;
     double averagePrecision[9];
     double averageRecall[9];
@@ -39,7 +38,7 @@ int main(int argc, char** argv)
     for(int i = 0; i < 9; ++i)
         averageRecall[i] = 0.0;
 
-    int m = 0;
+    int imagesQueried = 0;
     int wrongFirst = 0;
     while (dir != end)
     {
@@ -48,6 +47,9 @@ int main(int argc, char** argv)
         if (!is_directory(fs))
         {
             ResultVector res = bow.makeQuery(dir->path().string(), 90);
+
+            if(res.getSize() == 0)
+                continue;
 
             if(dir->path().string() != res.getPairAt(0).first)
             {
@@ -92,9 +94,9 @@ int main(int argc, char** argv)
             averageRecall[8] += p.second;
 
 
-            cout << m << " " << bow.getPrecision() << endl;
+            //cout << imagesQueried << " " << bow.getPrecision() << endl;
 
-            ++m;
+            ++imagesQueried;
         }
 
         ++dir;
@@ -102,17 +104,17 @@ int main(int argc, char** argv)
 
     for(int i = 0, j = 10; i < 9; ++i, j+= 10)
     {
-        averagePrecision[i] /= 1000;
+        averagePrecision[i] /= imagesQueried;
         cout << "Average precison for: "<< j << "    " << averagePrecision[i] << endl;
 
-        averageRecall[i] /= 1000;
+        averageRecall[i] /= imagesQueried;
         cout << "Average recall for: "<< j << "    " << averageRecall[i] << endl;
 
         cout << "Wrong first " << wrongFirst << endl;
-    }
+    } */
 
 
-/*    cout << "Ile obrazow mam wyswietlic?" << endl;
+    cout << "Ile obrazow mam wyswietlic?" << endl;
     cin >> numberOfImagesToDisplay;
     ++numberOfImagesToDisplay;
     cout << "Podaj nazwe pliku" << endl;
@@ -120,8 +122,12 @@ int main(int argc, char** argv)
     while(pathToPic != "q")
     {
         ResultVector res = bow.makeQuery(pathToPic, numberOfImagesToDisplay);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
+
         res.printTable();
-        cout << "Precision: " << bow.getPrecision() << ", recall: " << bow.getRecall() << endl;
+
+        std::pair<double, double> p = bow.getPrecisionAndRecall(res, numberOfImagesToDisplay);
+        cout << "Precision: " << p.first << ", recall: " << p.second << endl;
+        //cout << "Precision: " << bow.getPrecision() << ", recall: " << bow.getRecall() << endl;
 
         IplImage ** images = new IplImage*[numberOfImagesToDisplay];
 
@@ -137,7 +143,7 @@ int main(int argc, char** argv)
         ++numberOfImagesToDisplay;
         cout << "Podaj nazwe pliku" << endl;
         cin >> pathToPic;
-    }*/
+    }
 
     //bow.testPicture(10, 90, 10, 100);
 

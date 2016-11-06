@@ -1,6 +1,6 @@
 #include "OrthogonalLBPDescriptor.hpp"
 
-void OrthogonalLBPDescriptor::computeOrthogonalLBPfeatures(Mat image, Mat lbpFeatures, vector<KeyPoint> keyPoints)
+void OrthogonalLBPDescriptor::computeOrthogonalLBPfeatures(const Mat & image, Mat & lbpFeatures, const vector<KeyPoint> & keyPoints)
 {
     for(KeyPoint p : keyPoints)
     {

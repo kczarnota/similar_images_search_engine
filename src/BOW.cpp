@@ -21,10 +21,22 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
         this->mode = Mode::SIFTandLBP_DESCRIPTOR;
         this->visualDictionary = new SIFTandLBPDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
     }
-    else
+    else if(mode == "h")
     {
         this->mode = Mode::HOG_DESCRIPTOR;
         this->visualDictionary = new HOGDictionary(sizeOfDictionary, pathToImages, this->dictionaryPath);
+    }
+    else if(mode == "l")
+    {
+        this->mode = Mode::LBP_DESCRIPTOR;
+        sizeOfDictionary = 256;
+        this->visualDictionary = nullptr;
+    }
+    else if(mode == "ol")
+    {
+        this->mode = ORTHOGONAL_LBP_DESCRIPTOR;
+        sizeOfDictionary = 32;
+        this->visualDictionary = nullptr;
     }
 
     this->pictureDatabase = new PictureDatabase(sizeOfDictionary);
@@ -39,7 +51,8 @@ BOW::~BOW()
 
 void BOW::init()
 {
-    this->visualDictionary->prepareDictionary();
+    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR)
+        this->visualDictionary->prepareDictionary();
 
     std::ifstream f(this->databasePath);
     if(f.good())
@@ -115,7 +128,9 @@ void BOW::updateDatabase(string pathToDatabase)
 
         if (!is_directory(fs))
         {
-            this->addPictureToDatabase(dir->path().string());
+            //TODO move it inside braces
+            string s = dir->path().string();
+            this->addPictureToDatabase(s);
             cout << "Picture nr: " << picNum++ << endl;
         }
 
@@ -125,8 +140,18 @@ void BOW::updateDatabase(string pathToDatabase)
 
 void BOW::addPictureToDatabase(string pathToPicture)
 {
-    PictureInformation pi = this->computeHistogram(pathToPicture);
-    this->pictureDatabase->addPicture(pi);
+    PictureInformation pi;
+    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR)
+        pi = this->computeHistogram(pathToPicture);
+    else if(mode == LBP_DESCRIPTOR)
+        pi = this->computeLBPHistogram(pathToPicture);
+    else
+        pi = this->computeOrthogonalLBPHistogram(pathToPicture);
+
+    if(pi.getHistogramSize() != 0)
+        this->pictureDatabase->addPicture(pi);
+    else
+        cout << pi.getName() << endl;
 }
 
 
@@ -240,18 +265,115 @@ PictureInformation BOW::computeHistogram(string pathToPicture)
 }
 
 
+PictureInformation BOW::computeLBPHistogram(string pathToPicture)
+{
+    int vectorLength = 64;
+    vector<KeyPoint> keyPoints;
+
+    Mat onlySIFT = Mat(0, 128, CV_32FC1, Scalar(0));
+    cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_GRAYSCALE);
+
+    if (!picture.data)
+    {
+        cout << "Could not open or find the image" << std::endl;
+        exit(-1);
+    }
+
+    Mat features = Mat(0, vectorLength, CV_32FC1, Scalar(0));
+    SIFTDescriptorExtractor::computeSIFTfeatures(picture, onlySIFT, keyPoints);
+
+    if(keyPoints.size() == 0)
+        return PictureInformation(pathToPicture, 0);
+
+    LBPDescriptor::computeLBPfeatures(picture, features, keyPoints);
+
+
+    PictureInformation pictureInformation(pathToPicture, 256);
+    int i, j;
+    for(i = 0; i < features.rows; ++i)
+    {
+        for(j = 0; j < features.cols; ++j)
+        {
+            pictureInformation.addOneAt((int)features.at<float>(i, j));
+        }
+    }
+
+    pictureInformation.normalize(features.rows * features.cols);
+
+    return pictureInformation;
+}
+
+PictureInformation BOW::computeOrthogonalLBPHistogram(string pathToPicture)
+{
+    int vectorLength = 128;
+    vector<KeyPoint> keyPoints;
+
+    Mat onlySIFT = Mat(0, 128, CV_32FC1, Scalar(0));
+    cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_GRAYSCALE);
+
+    if (!picture.data)
+    {
+        cout << "Could not open or find the image" << std::endl;
+        exit(-1);
+    }
+
+    Mat features = Mat(0, vectorLength, CV_32FC1, Scalar(0));
+    SIFTDescriptorExtractor::computeSIFTfeatures(picture, onlySIFT, keyPoints);
+
+    if(keyPoints.size() == 0)
+        return PictureInformation(pathToPicture, 0);
+
+    OrthogonalLBPDescriptor::computeOrthogonalLBPfeatures(picture, features, keyPoints);
+
+
+    PictureInformation pictureInformation(pathToPicture, 32);
+    int i, j;
+    for(i = 0; i < features.rows; ++i)
+    {
+        for(j = 0; j < features.cols; j+=2)
+        {
+            pictureInformation.addOneAt((int)features.at<float>(i, j));
+            pictureInformation.addOneAt((int)features.at<float>(i, j) + 16);
+        }
+    }
+
+    pictureInformation.normalize(features.rows * features.cols / 2);
+
+    return pictureInformation;
+}
+
+
 ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
 {
-    PictureInformation queryPicture = this->computeHistogram(pathToPicture);
+    PictureInformation queryPicture;
+    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR)
+        queryPicture = this->computeHistogram(pathToPicture);
+    else if(mode == LBP_DESCRIPTOR)
+        queryPicture = this->computeLBPHistogram(pathToPicture);
+    else
+        queryPicture = this->computeOrthogonalLBPHistogram(pathToPicture);
+
+    if(queryPicture.getHistogramSize() == 0)
+        return ResultVector(0, 0);
+
     cout << pathToPicture << endl;
-    double minDistance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(0));
+    double minDistance;
+
+    if(mode != ORTHOGONAL_LBP_DESCRIPTOR)
+        minDistance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(0));
+    else
+        minDistance = this->compareOrthogonalLBPHistograms(queryPicture, this->pictureDatabase->getPicture(0));
+
     double distance = minDistance;
-    ResultVector resultVector(resultNumber, 2.0);
+    ResultVector resultVector(resultNumber, 32.0);
     resultVector.tryAdd(make_pair(this->pictureDatabase->getPicture(0).getName(), distance));
 
     for(int i = 1; i < this->pictureDatabase->getSize(); ++i)//this->visualDictionary->getSize(); ++i)
     {
-        distance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(i));
+        if(mode != ORTHOGONAL_LBP_DESCRIPTOR)
+            distance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(i));
+        else
+            distance = this->compareOrthogonalLBPHistograms(queryPicture, this->pictureDatabase->getPicture(i));
         resultVector.tryAdd(make_pair(this->pictureDatabase->getPicture(i).getName(), distance));
     }
 
@@ -267,7 +389,7 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
     } */
 
 
-    this->computePrecisionAndRecall(resultVector, resultNumber);
+    //this->computePrecisionAndRecall(resultVector, resultNumber);
 
    /* for(int i = 0; i < this->pictureDatabase->getSize(); ++i)
     {
@@ -280,40 +402,43 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
 double BOW::comparePictureHistograms(PictureInformation p1, PictureInformation p2)
 {
     double distance = 0.0, sumOfMinElements = 0.0;
+    int size;
+    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR)
+        size = this->visualDictionary->getSize();
+    else if(mode == LBP_DESCRIPTOR)
+        size = 256;
+    else
+        size = 32;
 
-    for(int i = 0; i < this->visualDictionary->getSize(); ++i)
+
+    for(int i = 0; i < size; ++i)
         sumOfMinElements += std::min(p1.getValueAt(i), p2.getValueAt(i));
 
     distance = 1 - sumOfMinElements;
     return distance;
 }
 
-void BOW::computePrecisionAndRecall(ResultVector vec, int numberOfAskedPictures)
+double BOW::compareOrthogonalLBPHistograms(PictureInformation p1, PictureInformation p2)
 {
-    vector<string> splittedString = this->splitString(vec.getPairAt(0).first);
-    string queryPictureCategory = splittedString[3];
-    double numberOfSimilarPictures = 0.0;
-    string currentPicCategory;
-
-    for(int i = 1; i < vec.getSize(); ++i)
+    int size = 32;
+    double sum = 0;
+    for(int i = 0; i < size; ++i)
     {
-        splittedString = this->splitString(vec.getPairAt(i).first);
-        currentPicCategory = splittedString[3];
-
-        if(queryPictureCategory == currentPicCategory)
-            ++numberOfSimilarPictures;
+        double x = p1.getValueAt(i);
+        double q = p2.getValueAt(i);
+        sum += std::abs(x - q)/(x + q);
     }
 
-    this->precision = numberOfSimilarPictures/(numberOfAskedPictures - 1);
-    this->recall = numberOfSimilarPictures/100;
+    return sum;
 }
-
 
 
 std::pair<double, double> BOW::getPrecisionAndRecall(ResultVector vec, int numberOfAskedPictures)
 {
     vector<string> splittedString = this->splitString(vec.getPairAt(0).first);
     string queryPictureCategory = splittedString[3];
+    string queryPictureCategoryPath = removeLastPathSegment(vec.getPairAt(0).first);
+    int imagesInCategory = countImagesInCategory(queryPictureCategoryPath);
     double numberOfSimilarPictures = 0.0;
     string currentPicCategory;
 
@@ -326,7 +451,7 @@ std::pair<double, double> BOW::getPrecisionAndRecall(ResultVector vec, int numbe
             ++numberOfSimilarPictures;
     }
 
-    return std::make_pair(numberOfSimilarPictures/(numberOfAskedPictures - 1), numberOfSimilarPictures/100);
+    return std::make_pair(numberOfSimilarPictures/(numberOfAskedPictures - 1), numberOfSimilarPictures/imagesInCategory);
 }
 
 
@@ -356,7 +481,7 @@ void BOW::testPicture(int min, int max, int step, int questionNumber)
             ResultVector res = this->makeQuery(pathToPic,
                                                current);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
             cout << "Query for: " << current << endl;
-            cout << "Precision: " << this->getPrecision() << ", recall: " << this->getRecall() << endl;
+          //  cout << "Precision: " << this->getPrecision() << ", recall: " << this->getRecall() << endl;
         }
     }
 }
@@ -453,6 +578,16 @@ void BOW::printMatrix(Mat matrix)
     std::cout << matrix << std::endl;
 }
 
+int BOW::countImagesInCategory(string pathToCategoryDirectory)
+{
+    path p(pathToCategoryDirectory);
+    directory_iterator end_iter;
+    int files = 0;
+    for (directory_iterator iter(pathToCategoryDirectory); iter != end_iter; ++iter)
+        files++;
+    return files;
+}
+
 
 /* Sprawdza czy istnieje już słownik - jeśli tak to go wczytuje, w przeciwnym wypadku tworzy go */
 /*void BOW::prepareDictionary()
@@ -470,4 +605,25 @@ void BOW::printMatrix(Mat matrix)
         this->visualDictionary->constructDictionaryRandom();
         this->visualDictionary->saveDictionary();
     }
+}*/
+
+/*
+void BOW::computePrecisionAndRecall(ResultVector vec, int numberOfAskedPictures)
+{
+    vector<string> splittedString = this->splitString(vec.getPairAt(0).first);
+    string queryPictureCategory = splittedString[3];
+    double numberOfSimilarPictures = 0.0;
+    string currentPicCategory;
+
+    for(int i = 1; i < vec.getSize(); ++i)
+    {
+        splittedString = this->splitString(vec.getPairAt(i).first);
+        currentPicCategory = splittedString[3];
+
+        if(queryPictureCategory == currentPicCategory)
+            ++numberOfSimilarPictures;
+    }
+
+    this->precision = numberOfSimilarPictures/(numberOfAskedPictures - 1);
+    this->recall = numberOfSimilarPictures/100;
 }*/
