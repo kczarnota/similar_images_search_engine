@@ -26,8 +26,7 @@ int main(int argc, char** argv)
     string pathToPic;
     int numberOfImagesToDisplay;
 
-
-/*    path p(argv[2]);
+    path p(argv[2]);
     recursive_directory_iterator dir(p), end;
     double averagePrecision[9];
     double averageRecall[9];
@@ -57,11 +56,11 @@ int main(int argc, char** argv)
             }
 
             std::pair<double, double> p;
-            p = bow.getPrecisionAndRecall(res, 10);
+            p = bow.getPrecisionAndRecall(res, 8);
             averagePrecision[0] += p.first;
             averageRecall[0] += p.second;
 
-            p = bow.getPrecisionAndRecall(res, 20);
+          /* p = bow.getPrecisionAndRecall(res, 20);
             averagePrecision[1] += p.first;
             averageRecall[1] += p.second;
 
@@ -91,7 +90,7 @@ int main(int argc, char** argv)
 
             p = bow.getPrecisionAndRecall(res, 90);
             averagePrecision[8] += p.first;
-            averageRecall[8] += p.second;
+            averageRecall[8] += p.second;*/
 
 
             //cout << imagesQueried << " " << bow.getPrecision() << endl;
@@ -111,10 +110,10 @@ int main(int argc, char** argv)
         cout << "Average recall for: "<< j << "    " << averageRecall[i] << endl;
 
         cout << "Wrong first " << wrongFirst << endl;
-    } */
+    }
 
 
-    cout << "Ile obrazow mam wyswietlic?" << endl;
+/*    cout << "Ile obrazow mam wyswietlic?" << endl;
     cin >> numberOfImagesToDisplay;
     ++numberOfImagesToDisplay;
     cout << "Podaj nazwe pliku" << endl;
@@ -143,7 +142,7 @@ int main(int argc, char** argv)
         ++numberOfImagesToDisplay;
         cout << "Podaj nazwe pliku" << endl;
         cin >> pathToPic;
-    }
+    }*/
 
     //bow.testPicture(10, 90, 10, 100);
 

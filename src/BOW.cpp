@@ -1,4 +1,5 @@
 #include "BOW.h"
+#include "ColorOrthogonalLBPDescriptor.hpp"
 
 BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode)
 {
@@ -38,6 +39,12 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
         sizeOfDictionary = 32;
         this->visualDictionary = nullptr;
     }
+    else if(mode == "col")
+    {
+        this->mode = COLOR_ORTHOGONAL_LBP_DESCRIPTOR;
+        sizeOfDictionary = 96;
+        this->visualDictionary = nullptr;
+    }
 
     this->pictureDatabase = new PictureDatabase(sizeOfDictionary);
 }
@@ -51,7 +58,7 @@ BOW::~BOW()
 
 void BOW::init()
 {
-    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR)
+    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR && mode != COLOR_ORTHOGONAL_LBP_DESCRIPTOR)
         this->visualDictionary->prepareDictionary();
 
     std::ifstream f(this->databasePath);
@@ -141,12 +148,16 @@ void BOW::updateDatabase(string pathToDatabase)
 void BOW::addPictureToDatabase(string pathToPicture)
 {
     PictureInformation pi;
-    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR)
+    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR && mode != COLOR_ORTHOGONAL_LBP_DESCRIPTOR)
         pi = this->computeHistogram(pathToPicture);
     else if(mode == LBP_DESCRIPTOR)
-        pi = this->computeLBPHistogram(pathToPicture);
+        //pi = this->computeLBPHistogram(pathToPicture);
+        pi = LBPDescriptor::computeHistrogramForWholePicture(pathToPicture);
+    else if(mode == ORTHOGONAL_LBP_DESCRIPTOR)
+        //pi = this->computeOrthogonalLBPHistogram(pathToPicture);
+        pi = OrthogonalLBPDescriptor::computeHistrogramForWholePicture(pathToPicture);
     else
-        pi = this->computeOrthogonalLBPHistogram(pathToPicture);
+        pi = ColorOrthogonalLBPDescriptor::computeHistrogramForWholePicture(pathToPicture);
 
     if(pi.getHistogramSize() != 0)
         this->pictureDatabase->addPicture(pi);
@@ -346,12 +357,16 @@ PictureInformation BOW::computeOrthogonalLBPHistogram(string pathToPicture)
 ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
 {
     PictureInformation queryPicture;
-    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR)
+    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR && mode != COLOR_ORTHOGONAL_LBP_DESCRIPTOR)
         queryPicture = this->computeHistogram(pathToPicture);
     else if(mode == LBP_DESCRIPTOR)
-        queryPicture = this->computeLBPHistogram(pathToPicture);
+        //queryPicture = this->computeLBPHistogram(pathToPicture);
+        queryPicture = LBPDescriptor::computeHistrogramForWholePicture(pathToPicture);
+    else if(mode == ORTHOGONAL_LBP_DESCRIPTOR)
+        //queryPicture = this->computeOrthogonalLBPHistogram(pathToPicture);
+        queryPicture = OrthogonalLBPDescriptor::computeHistrogramForWholePicture(pathToPicture);
     else
-        queryPicture = this->computeOrthogonalLBPHistogram(pathToPicture);
+        queryPicture = ColorOrthogonalLBPDescriptor::computeHistrogramForWholePicture(pathToPicture);
 
     if(queryPicture.getHistogramSize() == 0)
         return ResultVector(0, 0);
@@ -359,21 +374,26 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
     cout << pathToPicture << endl;
     double minDistance;
 
-    if(mode != ORTHOGONAL_LBP_DESCRIPTOR)
+    //Wybierz czy porównywać metodą zwykłą czy suma przez różnicę
+    if(mode != ORTHOGONAL_LBP_DESCRIPTOR && mode != LBP_DESCRIPTOR && mode != COLOR_ORTHOGONAL_LBP_DESCRIPTOR)
         minDistance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(0));
     else
         minDistance = this->compareOrthogonalLBPHistograms(queryPicture, this->pictureDatabase->getPicture(0));
 
     double distance = minDistance;
-    ResultVector resultVector(resultNumber, 32.0);
+    ResultVector resultVector(resultNumber, DISTANCE_MAX_VALUE);
     resultVector.tryAdd(make_pair(this->pictureDatabase->getPicture(0).getName(), distance));
-
-    for(int i = 1; i < this->pictureDatabase->getSize(); ++i)//this->visualDictionary->getSize(); ++i)
+    int dataaseSize = this->pictureDatabase->getSize();
+    for(int i = 1; i < dataaseSize; ++i)//this->visualDictionary->getSize(); ++i)
     {
-        if(mode != ORTHOGONAL_LBP_DESCRIPTOR)
+        string firstName = queryPicture.getName();
+        string secondName = this->pictureDatabase->getPicture(i).getName();
+
+        if(mode != ORTHOGONAL_LBP_DESCRIPTOR && mode != LBP_DESCRIPTOR && mode != COLOR_ORTHOGONAL_LBP_DESCRIPTOR)
             distance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(i));
         else
             distance = this->compareOrthogonalLBPHistograms(queryPicture, this->pictureDatabase->getPicture(i));
+
         resultVector.tryAdd(make_pair(this->pictureDatabase->getPicture(i).getName(), distance));
     }
 
@@ -403,12 +423,14 @@ double BOW::comparePictureHistograms(PictureInformation p1, PictureInformation p
 {
     double distance = 0.0, sumOfMinElements = 0.0;
     int size;
-    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR)
+    if(mode != LBP_DESCRIPTOR && mode != ORTHOGONAL_LBP_DESCRIPTOR && mode != COLOR_ORTHOGONAL_LBP_DESCRIPTOR)
         size = this->visualDictionary->getSize();
     else if(mode == LBP_DESCRIPTOR)
         size = 256;
-    else
+    else if(mode == ORTHOGONAL_LBP_DESCRIPTOR)
         size = 32;
+    else
+        size = 96;
 
 
     for(int i = 0; i < size; ++i)
@@ -420,13 +442,14 @@ double BOW::comparePictureHistograms(PictureInformation p1, PictureInformation p
 
 double BOW::compareOrthogonalLBPHistograms(PictureInformation p1, PictureInformation p2)
 {
-    int size = 32;
+    int size = p1.getHistogramSize();
     double sum = 0;
     for(int i = 0; i < size; ++i)
     {
         double x = p1.getValueAt(i);
         double q = p2.getValueAt(i);
-        sum += std::abs(x - q)/(x + q);
+        if(x + q != 0)
+            sum += std::abs(x - q)/(x + q);
     }
 
     return sum;
