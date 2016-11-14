@@ -4,12 +4,22 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/objdetect.hpp>
 #include <iostream>
-#include "VisualDictionary.h"
+#include "DescriptorUsingDictionary.hpp"
+#include "HOGDictionary.hpp"
 
-class HOGDescriptorExtractor
+using namespace cv;
+
+class HOGDescriptorExtractor : public DescriptorUsingDictionary
 {
+private:
+    static const int HISTOGRAM_SIZE = 36;
 public:
+    HOGDescriptorExtractor(int dictionarySize, string pathToDatabase, string pathToDictionary);
+    ~HOGDescriptorExtractor();
     static void computeHOGfeatures(const Mat & image, Mat & lbpFeatures);
+    virtual int getHistogramSize();
+    virtual int getDictionarySize();
+    virtual PictureInformation computeHistogram(string pathToPicture);
 };
 
 

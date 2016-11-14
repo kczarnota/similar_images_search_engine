@@ -38,3 +38,39 @@ void HOGDescriptorExtractor::computeHOGfeatures(const Mat &currentImage, Mat &fe
 
     delete featureExtractor;
 }
+
+PictureInformation HOGDescriptorExtractor::computeHistogram(string pathToPicture)
+{
+    cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_GRAYSCALE);
+
+    if (!picture.data)
+    {
+        cout << "Could not open or find the image" << std::endl;
+        exit(-1);
+    }
+
+    Mat features = Mat(0, HISTOGRAM_SIZE, CV_32FC1, Scalar(0));
+    HOGDescriptorExtractor::computeHOGfeatures(picture, features);
+    return getHistogramBasedOnDictionary(pathToPicture, features);
+}
+
+HOGDescriptorExtractor::HOGDescriptorExtractor(int dictionarySize, string pathToDatabase, string pathToDictionary)
+{
+    this->visualDictionary = new HOGDictionary(dictionarySize, pathToDatabase, pathToDictionary);
+    this->visualDictionary->prepareDictionary();
+}
+
+HOGDescriptorExtractor::~HOGDescriptorExtractor()
+{
+    delete  this->visualDictionary;
+}
+
+int HOGDescriptorExtractor::getDictionarySize()
+{
+    return visualDictionary->getSize();
+}
+
+int HOGDescriptorExtractor::getHistogramSize()
+{
+    return HISTOGRAM_SIZE;
+}

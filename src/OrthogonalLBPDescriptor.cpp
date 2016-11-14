@@ -181,3 +181,18 @@ PictureInformation OrthogonalLBPDescriptor::computeHistrogramForWholePicture(str
     pictureInformation.normalize(values);
     return pictureInformation;
 }
+
+int OrthogonalLBPDescriptor::getHistogramSize()
+{
+    return HISTOGRAM_SIZE;
+}
+
+PictureInformation OrthogonalLBPDescriptor::computeHistogram(string pathToPicture)
+{
+    return computeHistrogramForWholePicture(pathToPicture);
+}
+
+int OrthogonalLBPDescriptor::getDictionarySize()
+{
+    return getHistogramSize();
+}

@@ -7,6 +7,7 @@
 #include <opencv2/core/cvstd.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <iostream>
 
 
 using namespace cv;
@@ -15,13 +16,12 @@ using namespace boost::filesystem;
 using namespace std;
 
 /*
- * Klasa reprezentująca słownik
+ * Klasa bazowa do reprezentacji słownika
  */
 class VisualDictionary
 {
 protected:
     int sizeOfDictionary;
-    //string dictionaryPath = "../dictionaryTest.xml";
     string dictionaryPath;
     path startPath;
     Mat currentImage;
@@ -30,21 +30,15 @@ protected:
     Mat selectedWords;
     int vectorLength;
 
-
-
 public:
     VisualDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath);
 
     virtual void constructDictionaryRandom()= 0;
-    virtual void constructDictionaryKMeans() = 0;
+    void prepareDictionary();
     void saveDictionary();
     void loadDictionary();
     Mat getWord(int rowNumber);
     int getSize();
-    void testDictionary();
-    void testDictionaryK();
-    void printMatrix(Mat matrix);
-    void prepareDictionary();
 
 protected:
     void chooseWords();

@@ -5,7 +5,7 @@ PictureInformation ColorOrthogonalLBPDescriptor::computeHistrogramForWholePictur
 {
     int values = 0;
 
-    cv::Mat image = imread(pathToPicture, CV_LOAD_IMAGE_COLOR);
+    Mat image = imread(pathToPicture, CV_LOAD_IMAGE_COLOR);
 
     if (!image.data)
     {
@@ -167,4 +167,19 @@ PictureInformation ColorOrthogonalLBPDescriptor::computeHistrogramForWholePictur
 
     pictureInformation.normalize(values);
     return pictureInformation;
+}
+
+int ColorOrthogonalLBPDescriptor::getHistogramSize()
+{
+    return HISTOGRAM_SIZE;
+}
+
+PictureInformation ColorOrthogonalLBPDescriptor::computeHistogram(string pathToPicture)
+{
+    return computeHistrogramForWholePicture(pathToPicture);
+}
+
+int ColorOrthogonalLBPDescriptor::getDictionarySize()
+{
+    return getHistogramSize();
 }

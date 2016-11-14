@@ -174,3 +174,18 @@ PictureInformation LBPDescriptor::computeHistrogramForWholePicture(string pathTo
     pictureInformation.normalize(values);
     return pictureInformation;
 }
+
+int LBPDescriptor::getHistogramSize()
+{
+    return HISTOGRAM_SIZE;
+}
+
+PictureInformation LBPDescriptor::computeHistogram(string pathToPicture)
+{
+    return computeHistrogramForWholePicture(pathToPicture);
+}
+
+int LBPDescriptor::getDictionarySize()
+{
+    return getHistogramSize();
+}
