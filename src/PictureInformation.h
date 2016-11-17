@@ -24,10 +24,10 @@ public:
     PictureInformation();
     PictureInformation(std::string filename, int sizeOfDictionary);
     void addOneAt(int index);
-    double getValueAt(int index);
+    double getValueAt(int index) const;
     std::string getName();
     void normalize(int numberOfAllElements);
-    int getHistogramSize();
+    int getHistogramSize() const;
 };
 
 

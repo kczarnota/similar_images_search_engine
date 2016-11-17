@@ -16,6 +16,9 @@
 #include "SIFTLBPDescriptorExtractor.hpp"
 #include "ColorOrthogonalLBPDescriptor.hpp"
 #include "HueDescriptor.hpp"
+#include "Comparator.hpp"
+#include "IntersectionOfHistogramsComparator.hpp"
+#include "DifferenceBySumComparator.hpp"
 
 
 enum DistanceMode {IntersectionOfHistograms, DifferenceBySum};
@@ -34,15 +37,15 @@ private:
     PictureDatabase * pictureDatabase;
     DistanceMode distanceMode;
     BasicDescriptor * descriptor;
+    Comparator * comparator;
 
     void addPictureToDatabase(string pathToPicture);
     void saveDatabase();
 
 
 public:
-    double comparePictureHistograms(PictureInformation p1, PictureInformation p2);
-    double compareDifferenceBySum(PictureInformation p1, PictureInformation p2);
-    void testDictionary();
+    //double comparePictureHistograms(PictureInformation p1, PictureInformation p2);
+    //double compareDifferenceBySum(PictureInformation p1, PictureInformation p2);
 
     BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode);
     ~BOW();

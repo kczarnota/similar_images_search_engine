@@ -41,6 +41,11 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
 
     distanceMode = IntersectionOfHistograms;
 
+    if(distanceMode == IntersectionOfHistograms)
+        comparator = new IntersectionOfHistogramsComparator();
+    else
+        comparator = new DifferenceBySumComparator();
+
     this->pictureDatabase = new PictureDatabase(sizeOfDictionary);
 }
 
@@ -48,6 +53,7 @@ BOW::~BOW()
 {
     delete this->pictureDatabase;
     delete this->descriptor;
+    delete this->comparator;
 }
 
 
@@ -129,11 +135,7 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
     cout << pathToPicture << endl;
     double minDistance;
 
-    //Wybierz czy porównywać metodą zwykłą czy suma przez różnicę
-    if(distanceMode == IntersectionOfHistograms)
-        minDistance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(0));
-    else
-        minDistance = this->compareDifferenceBySum(queryPicture, this->pictureDatabase->getPicture(0));
+    minDistance = this->comparator->compare(queryPicture, this->pictureDatabase->getPicture(0));
 
     double distance = minDistance;
     ResultVector resultVector(resultNumber, DISTANCE_MAX_VALUE);
@@ -150,10 +152,8 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
             c++;
         }
 
-        if(distanceMode == IntersectionOfHistograms)
-            distance = this->comparePictureHistograms(queryPicture, this->pictureDatabase->getPicture(i));
-        else
-            distance = this->compareDifferenceBySum(queryPicture, this->pictureDatabase->getPicture(i));
+        distance = this->comparator->compare(queryPicture, this->pictureDatabase->getPicture(i));
+
 
         resultVector.tryAdd(make_pair(this->pictureDatabase->getPicture(i).getName(), distance));
     }
@@ -161,7 +161,7 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
     return resultVector;
 }
 
-double BOW::comparePictureHistograms(PictureInformation p1, PictureInformation p2)
+/*double BOW::comparePictureHistograms(PictureInformation p1, PictureInformation p2)
 {
     double distance = 0.0, sumOfMinElements = 0.0;
     int size = p1.getHistogramSize();
@@ -186,7 +186,7 @@ double BOW::compareDifferenceBySum(PictureInformation p1, PictureInformation p2)
     }
 
     return sum;
-}
+}*/
 
 
 std::pair<double, double> BOW::getPrecisionAndRecall(ResultVector vec, int numberOfAskedPictures)

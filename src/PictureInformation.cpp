@@ -22,7 +22,7 @@ void PictureInformation::addOneAt(int index)
 /*
  * Zwraca ilość wystąpień danego słowa w histogramie.
  */
-double PictureInformation::getValueAt(int index)
+double PictureInformation::getValueAt(int index) const
 {
     return (this->histogram)[index];
 }
@@ -47,7 +47,7 @@ void PictureInformation::normalize(int numberOfAllElements)
     }
 }
 
-int PictureInformation::getHistogramSize()
+int PictureInformation::getHistogramSize() const
 {
     return this->histogram.size();
 }
