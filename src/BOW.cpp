@@ -1,5 +1,4 @@
 #include "BOW.h"
-#include "ColorOrthogonalLBPDescriptor.hpp"
 
 BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode)
 {
@@ -10,30 +9,34 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
     cout << databasePath << endl;
     cout << dictionaryPath << endl;
 
-    if(mode == "s")
+    if(mode == "sift")
     {
         descriptor = new SIFTDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
     }
-    else if(mode == "sl")
+    else if(mode == "siftlbp")
     {
         descriptor = new SIFTLBPDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
 
     }
-    else if(mode == "h")
+    else if(mode == "hog")
     {
         descriptor = new HOGDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
     }
-    else if(mode == "l")
+    else if(mode == "lbp")
     {
         descriptor = new LBPDescriptor();
     }
-    else if(mode == "ol")
+    else if(mode == "orthogonallbp")
     {
         descriptor = new OrthogonalLBPDescriptor();
     }
-    else if(mode == "col")
+    else if(mode == "colororthogonallbp")
     {
         descriptor = new ColorOrthogonalLBPDescriptor();
+    }
+    else if(mode == "hue")
+    {
+        descriptor = new HueDescriptor();
     }
 
     distanceMode = IntersectionOfHistograms;

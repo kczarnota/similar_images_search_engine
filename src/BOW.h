@@ -14,6 +14,8 @@
 #include "HOGDictionary.hpp"
 #include "OrthogonalLBPDescriptor.hpp"
 #include "SIFTLBPDescriptorExtractor.hpp"
+#include "ColorOrthogonalLBPDescriptor.hpp"
+#include "HueDescriptor.hpp"
 
 
 enum DistanceMode {IntersectionOfHistograms, DifferenceBySum};
