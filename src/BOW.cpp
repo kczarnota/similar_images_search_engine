@@ -16,7 +16,6 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
     else if(mode == "siftlbp")
     {
         descriptor = new SIFTLBPDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
-
     }
     else if(mode == "hog")
     {
@@ -41,7 +40,7 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
 
     distanceMode = IntersectionOfHistograms;
 
-    if(distanceMode == IntersectionOfHistograms)
+    if(comparator == nullptr && distanceMode == IntersectionOfHistograms)
         comparator = new IntersectionOfHistogramsComparator();
     else
         comparator = new DifferenceBySumComparator();
@@ -145,12 +144,6 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
     {
         string firstName = queryPicture.getName();
         string secondName = this->pictureDatabase->getPicture(i).getName();
-
-        if(secondName == "../BazaDanych/images/kat1/9.jpg")
-        {
-            int c;
-            c++;
-        }
 
         distance = this->comparator->compare(queryPicture, this->pictureDatabase->getPicture(i));
 
