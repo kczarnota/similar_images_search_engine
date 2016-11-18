@@ -11,19 +11,13 @@ class SIFTandLBPSeparateDescriptorExtractor : public BasicDescriptor
 private:
     const int LBP_HISTOGRAM_SIZE = 256;
     SIFTDescriptorExtractor * siftDescriptorExtractor;
-public:
-    virtual ~SIFTandLBPSeparateDescriptorExtractor();
-
-private:
-    int dictionarySize;
-    string pathToDatabase;
-    string pathToDictionary;
 
 public:
     virtual int getHistogramSize() override;
     virtual int getDictionarySize() override;
 
     SIFTandLBPSeparateDescriptorExtractor(int dictionarySize, string pathToDatabase, string pathToDictionary);
+    ~SIFTandLBPSeparateDescriptorExtractor();
 
     virtual PictureInformation computeHistogram(string pathToPicture) override;
 };
