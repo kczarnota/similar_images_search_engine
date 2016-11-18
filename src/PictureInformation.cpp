@@ -51,3 +51,8 @@ int PictureInformation::getHistogramSize() const
 {
     return this->histogram.size();
 }
+
+void PictureInformation::setValueAt(int index, double value)
+{
+    (this->histogram[index]) = value;
+}

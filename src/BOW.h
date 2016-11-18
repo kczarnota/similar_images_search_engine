@@ -20,6 +20,7 @@
 #include "IntersectionOfHistogramsComparator.hpp"
 #include "DifferenceBySumComparator.hpp"
 #include "SIFTLBPSeparateComparator.hpp"
+#include "SIFTandLBPSeparateDescriptorExtractor.hpp"
 
 
 enum DistanceMode {IntersectionOfHistograms, DifferenceBySum};

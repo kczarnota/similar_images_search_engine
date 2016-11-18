@@ -7,11 +7,11 @@ class SIFTLBPSeparateComparator : public Comparator
 {
 private:
     int SIFTHistogramSize;
-    int weightSIFT;
-    int weightLBP;
+    double weightSIFT;
+    double weightLBP;
 
 public:
-    SIFTLBPSeparateComparator(int SIFTDictionarySize, int weightSIFT,int weightLBP);
+    SIFTLBPSeparateComparator(int SIFTDictionarySize, double weightSIFT,double weightLBP);
     virtual double compare(const PictureInformation &p1, const PictureInformation &p2) const override;
 
 };

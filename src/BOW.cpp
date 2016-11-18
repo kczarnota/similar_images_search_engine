@@ -16,6 +16,7 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
     else if(mode == "siftlbp")
     {
         descriptor = new SIFTLBPDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
+
     }
     else if(mode == "hog")
     {
@@ -37,15 +38,23 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
     {
         descriptor = new HueDescriptor();
     }
+    else if(mode == "siftlbpseparate")
+    {
+        descriptor = new SIFTandLBPSeparateDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
+        comparator = new SIFTLBPSeparateComparator(descriptor->getDictionarySize(), 0.8, 0.2);
+    }
 
     distanceMode = IntersectionOfHistograms;
 
-    if(comparator == nullptr && distanceMode == IntersectionOfHistograms)
-        comparator = new IntersectionOfHistogramsComparator();
-    else
-        comparator = new DifferenceBySumComparator();
+    if(comparator == nullptr)
+    {
+        if (distanceMode == IntersectionOfHistograms)
+            comparator = new IntersectionOfHistogramsComparator();
+        else
+            comparator = new DifferenceBySumComparator();
+    }
 
-    this->pictureDatabase = new PictureDatabase(sizeOfDictionary);
+    this->pictureDatabase = new PictureDatabase(descriptor->getHistogramSize());
 }
 
 BOW::~BOW()

@@ -19,7 +19,7 @@ double SIFTLBPSeparateComparator::compare(const PictureInformation &p1, const Pi
     return distanceSIFT*weightSIFT + distanceLBP*weightLBP;
 }
 
-SIFTLBPSeparateComparator::SIFTLBPSeparateComparator(int SIFTDictionarySize, int weightSIFT,int weightLBP)
+SIFTLBPSeparateComparator::SIFTLBPSeparateComparator(int SIFTDictionarySize, double weightSIFT,double weightLBP)
 {
     this->SIFTHistogramSize = SIFTDictionarySize;
     this->weightSIFT = weightSIFT;

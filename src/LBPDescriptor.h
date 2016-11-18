@@ -9,6 +9,7 @@ class LBPDescriptor : public BasicDescriptor
 {
 public:
     const static int HISTOGRAM_SIZE = 256;
+    const static int PATCH_SIZE = 64;
     static void computeLBPfeatures(const Mat & image, Mat & lbpFeatures, const vector<KeyPoint> & keyPoints);
     static PictureInformation computeHistrogramForWholePicture(string Path);
     virtual int getHistogramSize();

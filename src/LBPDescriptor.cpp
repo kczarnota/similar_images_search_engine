@@ -182,7 +182,35 @@ int LBPDescriptor::getHistogramSize()
 
 PictureInformation LBPDescriptor::computeHistogram(string pathToPicture)
 {
-    return computeHistrogramForWholePicture(pathToPicture);
+    cv::Mat picture = imread(pathToPicture, CV_LOAD_IMAGE_GRAYSCALE);
+
+    if (!picture.data)
+    {
+        cout << "Could not open or find the image" << std::endl;
+        exit(-1);
+    }
+
+    vector<KeyPoint> keyPoints;
+    Ptr<SIFT> detector = SIFT::create();
+    detector->detect(picture, keyPoints);
+    int size = keyPoints.size();
+    Mat features = Mat(0, PATCH_SIZE, CV_32FC1, Scalar(0));
+    computeLBPfeatures(picture, features, keyPoints);
+
+    PictureInformation pi = PictureInformation(pathToPicture, getHistogramSize());
+    int values = 0;
+    for(int i = 0; i < features.rows; ++i)
+    {
+        for(int j = 0; j < PATCH_SIZE; ++j)
+        {
+            pi.addOneAt(features.at<float>(i, j));
+            ++values;
+        }
+    }
+
+    pi.normalize(values);
+
+    return pi;
 }
 
 int LBPDescriptor::getDictionarySize()
