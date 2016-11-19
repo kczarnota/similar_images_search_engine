@@ -9,7 +9,7 @@ void LBPDescriptor::computeLBPfeatures(const Mat & image, Mat & lbpFeatures, con
         getRectSubPix(image, Size(10, 10), Point2f(p.pt.x, p.pt.y), dest);
 
         int flatNumber = 0;
-        Mat currentFeatures = Mat(1, 64, CV_32FC1, Scalar(0));
+        Mat currentFeatures = Mat(1, PATCH_SIZE, CV_32FC1, Scalar(0));
         //For all 8 pixels around the center
         for(int r = 1; r < 9; ++r)
         {

@@ -8,6 +8,8 @@ class OrthogonalLBPDescriptor : public BasicDescriptor
 {
 private:
     static const int HISTOGRAM_SIZE = 32;
+    static const int PATCH_SIZE = 128;
+    static const int OFFSET = 16;
 public:
     static void computeOrthogonalLBPfeatures(const Mat & image, Mat & lbpFeatures, const vector<KeyPoint> & keyPoints);
     static PictureInformation computeHistrogramForWholePicture(string pathToPicture);
