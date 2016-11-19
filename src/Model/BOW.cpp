@@ -53,6 +53,11 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
         descriptor = new SIFT_OrthogonalLBPDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
         comparator = new SIFT_OrthogonalLBPComparator(descriptor->getDictionarySize(), 0.8, 0.2);
     }
+    else if(mode == "siftorthogonallbphue")
+    {
+        descriptor = new SIFT_OrthogonalLBP_HUEDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
+        comparator = new SIFT_OrthogonalLBP_HUEComparator(descriptor->getDictionarySize(), 0.8, 0.2, 0.2);
+    }
 
     distanceMode = IntersectionOfHistograms;
 

@@ -11,7 +11,7 @@ double SIFT_OrthogonalLBPComparator::compare(const PictureInformation &p1, const
         double x = p1.getValueAt(i);
         double q = p2.getValueAt(i);
         if(i < SIFTHistogramSize)
-            sumOfMinElementsSIFT += std::min(p1.getValueAt(i), p2.getValueAt(i));
+            sumOfMinElementsSIFT += std::min(x, q);
         else
         {
             if(x + q != 0)
