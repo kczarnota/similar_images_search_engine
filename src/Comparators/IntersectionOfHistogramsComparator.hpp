@@ -3,7 +3,7 @@
 
 
 #include "Comparator.hpp"
-#include "PictureInformation.h"
+#include "../Model/PictureInformation.hpp"
 
 class IntersectionOfHistogramsComparator : public Comparator
 {

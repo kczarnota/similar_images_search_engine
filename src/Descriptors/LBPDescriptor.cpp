@@ -1,5 +1,5 @@
 #include <iostream>
-#include "LBPDescriptor.h"
+#include "LBPDescriptor.hpp"
 
 void LBPDescriptor::computeLBPfeatures(const Mat & image, Mat & lbpFeatures, const vector<KeyPoint> & keyPoints)
 {

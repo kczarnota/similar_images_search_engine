@@ -2,9 +2,9 @@
 #define BAGOFWORDS_SIFTANDLBPSEPARATEDESCRIPTOREXTRACTOR_HPP
 
 #include "BasicDescriptor.hpp"
-#include "VisualDictionary.h"
-#include "SIFTDictionary.h"
-#include "LBPDescriptor.h"
+#include "../Dictionaries/VisualDictionary.hpp"
+#include "../Dictionaries/SIFTDictionary.hpp"
+#include "LBPDescriptor.hpp"
 
 class SIFTandLBPSeparateDescriptorExtractor : public BasicDescriptor
 {

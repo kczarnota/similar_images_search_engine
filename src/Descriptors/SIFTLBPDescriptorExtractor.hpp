@@ -2,7 +2,7 @@
 #define BAGOFWORDS_SIFTLBPDESCRIPTOREXTRACTOR_HPP
 
 #include "DescriptorUsingDictionary.hpp"
-#include "SIFTandLBPDictionary.h"
+#include "../Dictionaries/SIFTandLBPDictionary.hpp"
 
 class SIFTLBPDescriptorExtractor : public DescriptorUsingDictionary
 {

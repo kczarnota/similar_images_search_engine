@@ -2,8 +2,8 @@
 #define BAGOFWORDS_SIFTDICTIONARY_H
 
 
-#include "VisualDictionary.h"
-#include "SIFTDescriptorExtractor.hpp"
+#include "VisualDictionary.hpp"
+#include "../Descriptors/SIFTDescriptorExtractor.hpp"
 
 using namespace std;
 

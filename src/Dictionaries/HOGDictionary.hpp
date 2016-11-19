@@ -1,8 +1,8 @@
 #ifndef BAGOFWORDS_HOGDICTIONARY_HPP
 #define BAGOFWORDS_HOGDICTIONARY_HPP
 
-#include "VisualDictionary.h"
-#include "HOGDescriptorExtractor.hpp"
+#include "VisualDictionary.hpp"
+#include "../Descriptors/HOGDescriptorExtractor.hpp"
 #include <opencv2/objdetect.hpp>
 
 class HOGDictionary : public VisualDictionary

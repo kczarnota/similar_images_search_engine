@@ -1,10 +1,12 @@
-#include "SIFTDictionary.h"
+#include "SIFTandLBPDictionary.hpp"
+#include "../Descriptors/LBPDescriptor.hpp"
+#include "../Descriptors/SIFTDescriptorExtractor.hpp"
 #include <iostream>
 
-SIFTDictionary::SIFTDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath) : VisualDictionary(
+SIFTandLBPDictionary::SIFTandLBPDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath) : VisualDictionary(
         sizeOfDictionary, pathToDatabase, dictionaryPath)
 {
-    vectorLength = 128;
+    vectorLength = 192;
     this->startPath = path(pathToDatabase);
     this->sizeOfDictionary = sizeOfDictionary;
     this->currentFeatures = Mat(0, 128, CV_32FC1, Scalar(0));
@@ -13,7 +15,7 @@ SIFTDictionary::SIFTDictionary(int sizeOfDictionary, string pathToDatabase, stri
     this->dictionaryPath = dictionaryPath;
 }
 
-void SIFTDictionary::constructDictionaryRandom()
+void SIFTandLBPDictionary::constructDictionaryRandom()
 {
     recursive_directory_iterator dir(this->startPath), end;
 
@@ -35,16 +37,40 @@ void SIFTDictionary::constructDictionaryRandom()
 
             //std::cout << dir->path() << std::endl;
             SIFTDescriptorExtractor::computeSIFTfeatures(currentImage, currentFeatures, keyPoints);
-            cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
-            vconcat(currentFeatures, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
+            Mat featuresSIFTandLBP = Mat(currentFeatures.rows, 192, CV_32FC1, Scalar(0));
+            Mat featuresLBP = Mat(currentFeatures.rows, 64, CV_32FC1, Scalar(0));
+            LBPDescriptor::computeLBPfeatures(currentImage, featuresLBP, keyPoints);
+
+            for (int i = 0; i < currentFeatures.rows; ++i)
+            {
+                for (int j = 0; j < 192; ++j)
+                {
+                    if(j < 128)
+                    {
+                        featuresSIFTandLBP.at<float>(i, j) = currentFeatures.at<float>(i, j);
+                    }
+                    else
+                    {
+                        featuresSIFTandLBP.at<float>(i, j) = featuresLBP.at<float>(i, j % 64);
+                    }
+                }
+            }
+
+            cout << "Rows: " << featuresSIFTandLBP.rows << ", columns " << featuresSIFTandLBP.cols << endl;
+            vconcat(featuresSIFTandLBP, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
         }
         ++dir;
     }
 
-        chooseWords();
+    chooseWords();
 }
 
-void SIFTDictionary::constructDictionaryKMeans()
+
+
+
+
+
+void SIFTandLBPDictionary::constructDictionaryKMeans()
 {
     //Wybranie k losowych słów
     this->constructDictionaryRandom();

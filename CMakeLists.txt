@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB SRC_LIST
         "src/*.hpp"
         "src/*.cpp"
+        "src/*/*.hpp"
+        "src/*/*.cpp"
         )
 
 #file(GLOB SRC_LIST_TEST

@@ -1,8 +1,8 @@
 #ifndef BAGOFWORDS_PICTUREDATABASE_H
 #define BAGOFWORDS_PICTUREDATABASE_H
 
-#include "PictureInformation.h"
-#include "VisualDictionary.h"
+#include "PictureInformation.hpp"
+#include "../Dictionaries/VisualDictionary.hpp"
 
 /*
  * Klasa przechowująca wektor obiektów PictureInforamtion opisujące obrazy

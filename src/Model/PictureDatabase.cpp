@@ -1,4 +1,4 @@
-#include "PictureDatabase.h"
+#include "PictureDatabase.hpp"
 
 PictureDatabase::PictureDatabase()
 {

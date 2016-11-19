@@ -5,7 +5,7 @@
 #include <opencv2/objdetect.hpp>
 #include <iostream>
 #include "DescriptorUsingDictionary.hpp"
-#include "HOGDictionary.hpp"
+#include "../Dictionaries/HOGDictionary.hpp"
 
 using namespace cv;
 

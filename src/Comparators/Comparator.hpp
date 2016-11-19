@@ -2,7 +2,7 @@
 #define BAGOFWORDS_COMPARATOR_HPP
 
 
-#include "PictureInformation.h"
+#include "../Model/PictureInformation.hpp"
 
 class Comparator
 {

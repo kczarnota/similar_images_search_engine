@@ -2,7 +2,7 @@
 #define BAGOFWORDS_SIFTANDLBPDICTIONARY_H
 
 
-#include "VisualDictionary.h"
+#include "VisualDictionary.hpp"
 #include <opencv2/imgproc.hpp>
 
 class SIFTandLBPDictionary : public VisualDictionary

@@ -1,7 +1,7 @@
 #include <boost/regex.hpp>
 #include <opencv2/core/core.hpp>
 #include <iostream>
-#include "BOW.h"
+#include "Model/BOW.hpp"
 
 using namespace cv;
 using namespace std;
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     string pathToPic;
     int numberOfImagesToDisplay;
 
-/*    path p(argv[2]);
+ /*   path p(argv[2]);
     recursive_directory_iterator dir(p), end;
     double averagePrecision[9];
     double averageRecall[9];

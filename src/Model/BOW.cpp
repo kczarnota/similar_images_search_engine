@@ -1,4 +1,4 @@
-#include "BOW.h"
+#include "BOW.hpp"
 
 BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode)
 {

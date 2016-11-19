@@ -3,8 +3,8 @@
 
 
 #include <opencv2/opencv.hpp>
-#include "PictureInformation.h"
-#include "VisualDictionary.h"
+#include "../Model/PictureInformation.hpp"
+#include "../Dictionaries/VisualDictionary.hpp"
 
 using namespace std;
 using namespace cv;

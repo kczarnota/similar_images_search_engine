@@ -1,4 +1,4 @@
-#include "ResultVector.h"
+#include "ResultVector.hpp"
 
 ResultVector::ResultVector(int capacity, double mValue)
 {

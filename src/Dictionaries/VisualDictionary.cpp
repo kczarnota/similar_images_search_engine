@@ -1,4 +1,4 @@
-#include "VisualDictionary.h"
+#include "VisualDictionary.hpp"
 
 
 void VisualDictionary::prepareDictionary()

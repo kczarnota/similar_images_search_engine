@@ -2,7 +2,7 @@
 #define BAGOFWORDS_DESCRIPTORUSINGDICTIONARY_HPP
 
 #include "BasicDescriptor.hpp"
-#include "VisualDictionary.h"
+#include "../Dictionaries/VisualDictionary.hpp"
 
 class DescriptorUsingDictionary : public BasicDescriptor
 {

@@ -1,7 +1,7 @@
 #ifndef BAGOFWORDS_LBPDESCRIPTOR_H
 #define BAGOFWORDS_LBPDESCRIPTOR_H
-#include "VisualDictionary.h"
-#include "PictureInformation.h"
+#include "../Dictionaries/VisualDictionary.hpp"
+#include "../Model/PictureInformation.hpp"
 #include "BasicDescriptor.hpp"
 #include <opencv2/imgproc.hpp>
 

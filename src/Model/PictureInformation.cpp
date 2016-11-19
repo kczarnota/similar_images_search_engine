@@ -1,4 +1,4 @@
-#include "PictureInformation.h"
+#include "PictureInformation.hpp"
 
 PictureInformation::PictureInformation()
 {

@@ -1,6 +1,6 @@
 #include "SIFTLBPDescriptorExtractor.hpp"
 #include "SIFTDescriptorExtractor.hpp"
-#include "LBPDescriptor.h"
+#include "LBPDescriptor.hpp"
 
 SIFTLBPDescriptorExtractor::SIFTLBPDescriptorExtractor(int dictionarySize, string pathToDatabase,
                                                        string pathToDictionary)

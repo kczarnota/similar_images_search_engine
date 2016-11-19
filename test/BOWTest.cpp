@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/BOW.h"
+#include "../src/Model/BOW.hpp"
 
 
 TEST_CASE("Testing visual dictionary")
