@@ -39,7 +39,7 @@ void HOGDictionary::constructDictionaryRandom()
             vconcat(currentFeatures, allFeatures, allFeatures);
             ++imgNumber;
             cout << "Image number: " << imgNumber << endl;
-            cout << "All rows: " << allFeatures.rows << endl;
+            //cout << "All rows: " << allFeatures.rows << endl;
         }
         ++dir;
     }

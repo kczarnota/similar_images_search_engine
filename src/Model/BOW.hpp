@@ -27,6 +27,8 @@
 #include "../Descriptors/SIFT_OrthogonalLBPDescriptorExtractor.hpp"
 #include "../Descriptors/SIFT_OrthogonalLBP_HUEDescriptorExtractor.hpp"
 #include "../Comparators/SIFT_OrthogonalLBP_HUEComparator.hpp"
+#include "../Descriptors/HOGLBPDescriptor.hpp"
+#include "../Comparators/HOGLBPComparator.hpp"
 
 
 enum DistanceMode {IntersectionOfHistograms, DifferenceBySum};

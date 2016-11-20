@@ -13,7 +13,7 @@ void HOGDescriptorExtractor::computeHOGfeatures(const Mat &currentImage, Mat &fe
     int cellSize = 4;
     int nBins = 9;
 
-    Mat currentFeatures = Mat(1, 36, CV_32FC1, Scalar(0));
+    Mat currentFeatures = Mat(1, HISTOGRAM_SIZE, CV_32FC1, Scalar(0));
 
     featureExtractor = new HOGDescriptor(Size(alignedWidth, alignedHeight)
             , Size(blockSize, blockSize), Size(blockStride, blockStride), Size(cellSize, cellSize), nBins);
