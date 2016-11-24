@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     string pathToPic;
     int numberOfImagesToDisplay;
 
-    path p(argv[2]);
+/*    path p(argv[2]);
     recursive_directory_iterator dir(p), end;
     double averagePrecision[9];
     double averageRecall[9];
@@ -110,9 +110,9 @@ int main(int argc, char** argv)
         cout << "Average recall for: "<< j << "    " << averageRecall[i] << endl;
 
         cout << "Wrong first " << wrongFirst << endl;
-    }
+    }*/
 
-/*    cout << "Ile obrazow mam wyswietlic?" << endl;
+    cout << "Ile obrazow mam wyswietlic?" << endl;
     cin >> numberOfImagesToDisplay;
     ++numberOfImagesToDisplay;
     cout << "Podaj nazwe pliku" << endl;
@@ -141,7 +141,7 @@ int main(int argc, char** argv)
         ++numberOfImagesToDisplay;
         cout << "Podaj nazwe pliku" << endl;
         cin >> pathToPic;
-    }*/
+    }
 
     //bow.testPicture(10, 90, 10, 100);
 

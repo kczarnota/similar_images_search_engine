@@ -39,6 +39,7 @@ public:
     void loadDictionary();
     Mat getWord(int rowNumber);
     int getSize();
+    ~VisualDictionary() {};
 
 protected:
     void chooseWords();

@@ -44,10 +44,10 @@ private:
     string pathToImages;
     string databasePath;
     string dictionaryPath = "../dictionary.xml";
-    PictureDatabase * pictureDatabase;
+    PictureDatabase * pictureDatabase = nullptr;
     DistanceMode distanceMode;
-    BasicDescriptor * descriptor;
-    Comparator * comparator;
+    BasicDescriptor * descriptor= nullptr;
+    Comparator * comparator = nullptr;
 
     void addPictureToDatabase(string pathToPicture);
     void saveDatabase();
