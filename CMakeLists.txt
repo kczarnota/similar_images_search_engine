@@ -17,11 +17,13 @@ file(GLOB SRC_LIST
 #        )
 find_package( OpenCV REQUIRED )
 find_package( Boost REQUIRED COMPONENTS system filesystem serialization )
+#find_package( Qt5Widgets REQUIRED )
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS} )
 target_link_libraries( ${PROJECT_NAME} ${Boost_LIBRARIES} )
+#target_link_libraries( ${PROJECT_NAME} ${Qt5Widgets_LIBRARIES} )
 
 #set(TEST_SOURCE_FILES ${SRC_LIST}) #kopiuje pliki do testow
 
