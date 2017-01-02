@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <iostream>
+
+using namespace std;
 
 namespace Ui {
 class MainWindow;
@@ -22,9 +25,17 @@ private slots:
 
     void on_loadDictionaryButton_clicked();
     void radioBtnSelected();
+    void prepareBtnSelected();
+    void queryBtnSelected();
+    void testBtnSelected();
 
 private:
     Ui::MainWindow *ui;
+    string databasePath;
+    string dictionaryPath;
+    string imagesPath;
+    string selectedDescriptor;
+
 };
 
 #endif // MAINWINDOW_H
