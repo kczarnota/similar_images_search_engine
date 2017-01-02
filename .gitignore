@@ -6,4 +6,5 @@ VisTex/**
 *.xml
 TODO
 bin/
-
+Database/**
+*~

@@ -2,6 +2,8 @@
 #include <opencv2/core/core.hpp>
 #include <iostream>
 #include "Model/BOW.hpp"
+#include "mainwindow.h"
+#include <QApplication>
 
 using namespace cv;
 using namespace std;
@@ -10,23 +12,27 @@ void showManyImages(char* title, int nArgs, IplImage ** images);
 
 int main(int argc, char** argv)
 {
-    if (argc != 5)
+
+
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+
+    return a.exec();
+   /*	UNCOMMENT 
+	if (argc != 5)
     {
         cout << "Usage: BagOfWords sizeOfDictionary pathToDatabase databaseName mode" << endl;
         exit(0);
     }
 
 
-    //VisualDictionary vd(atoi(argv[1]), argv[2]);
-    //vd.testDictionaryK();
-
-
     BOW bow(atoi(argv[1]), argv[2], argv[3], argv[4]);
     bow.init();
     string pathToPic;
-    int numberOfImagesToDisplay;
+    int numberOfImagesToDisplay; */
 
-/*    path p(argv[2]);
+   /* path p(argv[2]); ALLTESTS
     recursive_directory_iterator dir(p), end;
     double averagePrecision[9];
     double averageRecall[9];
@@ -110,9 +116,11 @@ int main(int argc, char** argv)
         cout << "Average recall for: "<< j << "    " << averageRecall[i] << endl;
 
         cout << "Wrong first " << wrongFirst << endl;
-    }*/
+    }  */
+	
+	/* TEST WYBRANE
 
-    cout << "Ile obrazow mam wyswietlic?" << endl;
+    cout << "Ile obrazow mam wyswietlic?" << endl;  
     cin >> numberOfImagesToDisplay;
     ++numberOfImagesToDisplay;
     cout << "Podaj nazwe pliku" << endl;
@@ -141,11 +149,11 @@ int main(int argc, char** argv)
         ++numberOfImagesToDisplay;
         cout << "Podaj nazwe pliku" << endl;
         cin >> pathToPic;
-    }
+    } */
 
     //bow.testPicture(10, 90, 10, 100);
 
-    return 0;
+    //return 0; UNCOMMENT
 }
 
 void showManyImages(char* title, int nArgs, IplImage ** images)
