@@ -3,7 +3,8 @@
 BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode)
 {
     this->pathToImages = pathToImages;
-    this->databasePath = removeLastPathSegment(this->pathToImages) + databaseName;
+    //this->databasePath = removeLastPathSegment(this->pathToImages) + databaseName;
+    this->databasePath = databaseName;//removeLastPathSegment(this->pathToImages) + databaseName;
     this->dictionaryPath = databasePath + "_dictionary.xml";
 
     cout << databasePath << endl;
@@ -18,7 +19,7 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
         descriptor = new SIFTLBPDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
 
     }
-    else if(mode == "hog")
+    else if(mode == "HOG")
     {
         descriptor = new HOGDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
     }

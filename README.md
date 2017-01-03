@@ -6,7 +6,7 @@ sudo apt-get install build-essential
 
 [required]
 ```bash
-sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev qtcreator
+sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev qtcreator qt5-default
 ```
 
 [optional]

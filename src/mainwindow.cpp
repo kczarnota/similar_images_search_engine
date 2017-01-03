@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete bow;
 }
 
 void MainWindow::on_loadDatabaseButton_clicked()
@@ -49,35 +50,29 @@ void MainWindow::prepareBtnSelected()
     
     int dictionarySize = atoi(ui->dictionarySizeEdit->text().toUtf8().constData());
     if(dictionarySize == 0)
-	dictionarySize = 1000;
+	    dictionarySize = 1000;
 
-    float siftWeight = atof(ui->siftWeightEdit->text().toUtf8().constData());
-float lbpWeight = atof(ui->lbpWeightEdit->text().toUtf8().constData());
-float hueWeight = atof(ui->hueWeightEdit->text().toUtf8().constData());
-
-std::cout << ui->siftWeightEdit->text().toUtf8().constData() << " " << ui->lbpWeightEdit->text().toUtf8().constData() << " " << ui->hueWeightEdit->text().toUtf8().constData() << std::endl;
-std::cout << siftWeight << " " << lbpWeight << " " << hueWeight << std::endl;
-
-	string pathToDatabase = ui->databaseEdit->text().toUtf8().constData();
-std::cout << pathToDatabase << std::endl;
-
+    float siftWeight = ui->siftWeightEdit->text().toFloat();
+    float lbpWeight = ui->lbpWeightEdit->text().toFloat();
+    float hueWeight = ui->hueWeightEdit->text().toFloat();
+    string pathToDatabase = ui->databaseEdit->text().toUtf8().constData();
     string pathToImages = ui->imagesEdit->text().toUtf8().constData();
-std::cout << pathToImages << std::endl;
-
     string pathToDictionary = ui->dictionaryEdit->text().toUtf8().constData();
-std::cout << pathToDictionary << std::endl;
-
     string databaseName = ui->databaseEdit->text().toUtf8().constData();
-    //BOW bow();
-    //bow.init();
+
+    this->bow = new BOW(dictionarySize, pathToImages, pathToDatabase, this->selectedDescriptor);
+    this->bow->init();
+    cout << "End of preparation" << endl;
 }
 
 void MainWindow::queryBtnSelected()
 {
-    QRadioButton * rb = (QRadioButton*)QObject::sender();
+    QRadioButton *rb = (QRadioButton *) QObject::sender();
     ui->label->setText(rb->text());
-}
 
+    ShowImages *imgs = new ShowImages(this->bow);
+    imgs->start();
+}
 
 void MainWindow::testBtnSelected()
 {

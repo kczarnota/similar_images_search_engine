@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <iostream>
+#include "Model/BOW.hpp"
+#include "ShowImages.hpp"
 
 using namespace std;
 
@@ -35,6 +37,7 @@ private:
     string dictionaryPath;
     string imagesPath;
     string selectedDescriptor;
+    BOW * bow;
 
 };
 
