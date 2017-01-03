@@ -70,8 +70,10 @@ void MainWindow::queryBtnSelected()
     QRadioButton *rb = (QRadioButton *) QObject::sender();
     ui->label->setText(rb->text());
 
-    ShowImages *imgs = new ShowImages(this->bow);
-    imgs->start();
+    //ShowImages *imgs = new ShowImages(this->bow);
+    //imgs->start();
+    ImagesWindow * images = new ImagesWindow(bow);
+    images->show();
 }
 
 void MainWindow::testBtnSelected()

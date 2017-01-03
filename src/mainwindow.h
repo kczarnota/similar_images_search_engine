@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Model/BOW.hpp"
 #include "ShowImages.hpp"
+#include "imageswindow.h"
 
 using namespace std;
 
