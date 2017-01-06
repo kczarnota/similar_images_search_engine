@@ -24,6 +24,7 @@ void SIFTDictionary::constructDictionaryRandom()
     QProgressDialog progress("Preparing dictionary...", "Abort action", 0, allFiles);
     progress.setWindowModality(Qt::WindowModal);
     int imgNum = 0;
+    bool cancelled = false;
     while (dir != end)
     {
         file_status fs = status(dir->path());
@@ -45,14 +46,21 @@ void SIFTDictionary::constructDictionaryRandom()
             cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
             vconcat(currentFeatures, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
             if (progress.wasCanceled())
+            {
+                cancelled = true;
                 break;
+            }
 
             progress.setValue(++imgNum);
         }
         ++dir;
     }
 
+    if(!cancelled)
+    {
+        setReady(true);
         chooseWords();
+    }
 }
 
 void SIFTDictionary::constructDictionaryKMeans()

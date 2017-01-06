@@ -15,6 +15,7 @@ public:
     virtual int getDictionarySize() = 0;
     virtual PictureInformation computeHistogram(string pathToPicture) = 0;
     virtual ~DescriptorUsingDictionary() {};
+    virtual bool isReady() {return visualDictionary->isReady();};
 };
 
 

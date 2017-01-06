@@ -24,6 +24,7 @@ void SIFTandLBPDictionary::constructDictionaryRandom()
     int allFiles = BOW::countFiles(this->startPath.string());
     QProgressDialog progress("Preparing dictionary...", "Abort action", 0, allFiles);
     progress.setWindowModality(Qt::WindowModal);
+    bool cancelled = false;
 
     while (dir != end)
     {
@@ -66,12 +67,18 @@ void SIFTandLBPDictionary::constructDictionaryRandom()
             vconcat(featuresSIFTandLBP, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
 
             if (progress.wasCanceled())
+            {
+                cancelled = true;
                 break;
+            }
 
             progress.setValue(++imgNumber);
         }
         ++dir;
     }
+
+    if(!cancelled)
+        setReady(true);
 
     chooseWords();
 }

@@ -18,6 +18,7 @@ public:
     virtual PictureInformation computeHistogram(string pathToPicture) override;
     HOGLBPDescriptor(int dictionarySize, string pathToDatabase, string pathToDictionary);
     ~HOGLBPDescriptor();
+    virtual bool isReady() {return hogDescriptorExtractor->isReady();}
 };
 
 

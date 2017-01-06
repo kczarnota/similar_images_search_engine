@@ -73,14 +73,20 @@ void MainWindow::prepareBtnSelected()
 
     this->bow = new BOW(dictionarySize, pathToImages, databaseName, this->selectedDescriptor, siftWeight, lbpWeight, hueWeight);
 
+    if(!this->bow->isDictionaryReady())
+        return;
+
     this->bow->init();
+
+    if(!bow->isDatabaseReady())
+        return;
+
+    readyForQuery = true;
     cout << "End of preparation" << endl;
 }
 
 void MainWindow::queryBtnSelected()
 {
-    QRadioButton *rb = (QRadioButton *) QObject::sender();
-
     if(!checkQuery())
         return;
 
@@ -94,7 +100,7 @@ void MainWindow::queryBtnSelected()
 
 void MainWindow::testBtnSelected()
 {
-    QRadioButton * rb = (QRadioButton*)QObject::sender();
+    //TODO implement
 }
 
 QList<string> MainWindow::findAllImages()
@@ -154,7 +160,11 @@ bool MainWindow::checkQuery()
     double lbpWeight = ui->lbpWeightEdit->text().toDouble();
     double hueWeight = ui->hueWeightEdit->text().toDouble();
 
-    if(ui->listWidget->currentItem() == nullptr)
+    if(!readyForQuery)
+    {
+        msg = "Please prepare dictionary and database first";
+    }
+    else if(ui->listWidget->currentItem() == nullptr)
         msg = "Please select image to query";
     else if(ui->returnImagesEdit->text().toInt() < 1 || ui->returnImagesEdit->text().toInt() > 101)
         msg = "Please provide image number to return(between 1 and 100)";

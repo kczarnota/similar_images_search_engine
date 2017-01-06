@@ -29,6 +29,7 @@ protected:
     Mat allFeatures;
     Mat selectedWords;
     int vectorLength;
+    bool ready = false;
 
 public:
     VisualDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath);
@@ -40,6 +41,8 @@ public:
     Mat getWord(int rowNumber);
     int getSize();
     ~VisualDictionary() {};
+    bool isReady() { return ready;}
+    void setReady(bool b) {ready = b;}
 
 protected:
     void chooseWords();

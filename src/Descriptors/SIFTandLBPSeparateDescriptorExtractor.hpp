@@ -20,6 +20,7 @@ public:
     ~SIFTandLBPSeparateDescriptorExtractor();
 
     virtual PictureInformation computeHistogram(string pathToPicture) override;
+    virtual bool isReady() { return siftDescriptorExtractor->isReady();}
 };
 
 

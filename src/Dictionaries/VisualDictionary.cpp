@@ -8,13 +8,15 @@ void VisualDictionary::prepareDictionary()
     {
         cout << "Loading dictionary" << endl;
         this->loadDictionary();
+        setReady(true);
     }
     else
     {
         cout << "Constructing and saving dictionary" << endl;
         this->constructDictionaryRandom();
-        //this->constructDictionaryKMeans();
-        this->saveDictionary();
+
+        if(isReady())
+            this->saveDictionary();
     }
 }
 

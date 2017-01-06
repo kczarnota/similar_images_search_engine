@@ -16,6 +16,7 @@ public:
     virtual PictureInformation computeHistogram(string pathToPicture) override;
     SIFT_OrthogonalLBP_HUEDescriptorExtractor(int dictionarySize, string pathToDatabase, string pathToDictionary);
     ~SIFT_OrthogonalLBP_HUEDescriptorExtractor();
+    virtual bool isReady() { return SiftOrthogonalLbpExtractor->isReady();}
 
 };
 

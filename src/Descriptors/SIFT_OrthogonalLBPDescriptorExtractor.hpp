@@ -17,6 +17,7 @@ public:
     virtual int getHistogramSize() override;
     virtual int getDictionarySize() override;
     virtual PictureInformation computeHistogram(string pathToPicture) override;
+    virtual bool isReady() { return siftDescriptorExtractor->isReady();}
 };
 
 

@@ -14,6 +14,7 @@ class BasicDescriptor
 public:
     virtual int getHistogramSize() = 0;
     virtual int getDictionarySize() = 0;
+    virtual bool isReady() = 0;
     virtual PictureInformation computeHistogram(string pathToPicture) = 0;
     virtual ~BasicDescriptor() {};
 };

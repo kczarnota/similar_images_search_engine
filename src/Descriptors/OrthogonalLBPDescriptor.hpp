@@ -16,6 +16,7 @@ public:
     virtual int getHistogramSize();
     virtual int getDictionarySize();
     virtual PictureInformation computeHistogram(string pathToPicture);
+    virtual bool isReady() { return true;}
 };
 
 

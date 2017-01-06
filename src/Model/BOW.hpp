@@ -48,6 +48,7 @@ private:
     DistanceMode distanceMode;
     BasicDescriptor * descriptor= nullptr;
     Comparator * comparator = nullptr;
+    bool databaseReady;
 
     void addPictureToDatabase(string pathToPicture);
     void saveDatabase();
@@ -74,6 +75,8 @@ public:
     void setLBPWeight(double lW);
     void setHUEWeight(double hW);
     static int countFiles(string path);
+    bool isDictionaryReady();
+    bool isDatabaseReady();
 };
 
 

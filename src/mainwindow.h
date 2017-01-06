@@ -38,6 +38,7 @@ private:
     string imagesPath;
     string selectedDescriptor;
     BOW * bow;
+    bool readyForQuery;
 
     QList<string> findAllImages();
     bool checkPreparation();

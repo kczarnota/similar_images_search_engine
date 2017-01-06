@@ -92,6 +92,7 @@ void BOW::init()
     if(f.good())
     {
         loadDatabase();
+        databaseReady = true;
     }
     else
     {
@@ -102,7 +103,9 @@ void BOW::init()
 void BOW::createDatabase()
 {
     this->updateDatabase(this->pathToImages);
-    this->saveDatabase();
+
+    if(databaseReady)
+        this->saveDatabase();
 }
 
 void BOW::saveDatabase()
@@ -132,6 +135,7 @@ void BOW::updateDatabase(string pathToDatabase)
 
     QProgressDialog progress("Preparing database...", "Abort action", 0, all);
     progress.setWindowModality(Qt::WindowModal);
+    bool cancelled = false;
 
     while (dir != end)
     {
@@ -139,13 +143,14 @@ void BOW::updateDatabase(string pathToDatabase)
 
         if (!is_directory(fs))
         {
-            //TODO move it inside braces
-            string s = dir->path().string();
-            this->addPictureToDatabase(s);
+            this->addPictureToDatabase(dir->path().string());
             cout << "Picture nr: " << picNum++ << endl;
 
             if (progress.wasCanceled())
+            {
+                cancelled = true;
                 break;
+            }
 
             progress.setValue(picNum);
         }
@@ -153,6 +158,9 @@ void BOW::updateDatabase(string pathToDatabase)
         ++dir;
     }
     progress.setValue(all);
+
+    if(!cancelled)
+        databaseReady = true;
 }
 
 void BOW::addPictureToDatabase(string pathToPicture)
@@ -348,4 +356,14 @@ int BOW::countFiles(string pathToDatabase)
     }
 
     return picNum;
+}
+
+bool BOW::isDictionaryReady()
+{
+    return descriptor->isReady();
+}
+
+bool BOW::isDatabaseReady()
+{
+    return databaseReady;
 }

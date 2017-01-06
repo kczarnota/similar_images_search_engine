@@ -17,6 +17,7 @@ public:
     virtual int getDictionarySize() override;
     virtual PictureInformation computeHistogram(string pathToPicture) override;
     ~SIFT_LBP_HUEDescriptorExtractor();
+    virtual bool isReady() { return SiftLbpExtractor->isReady();}
 
 };
 
