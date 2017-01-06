@@ -14,7 +14,7 @@ class ImagesWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit ImagesWindow(BOW * b, QWidget *parent = 0);
+    explicit ImagesWindow(BOW * b, QString selectedImage, QWidget *parent = 0);
     ~ImagesWindow();
 
 private slots:

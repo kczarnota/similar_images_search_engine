@@ -1,8 +1,9 @@
 #include "worker.h"
 
 // --- CONSTRUCTOR ---
-Worker::Worker(BOW * b) {
+Worker::Worker(BOW * b, QString it) {
     this->bow = b;
+    this->selectedItem = it;
 }
 
 // --- DECONSTRUCTOR ---
@@ -14,11 +15,10 @@ Worker::~Worker() {
 // Start processing data.
 void Worker::process() {
     // allocate resources using new here
-    qDebug("Hello World!");
     QList<QString> list;
 
-    string pathToPic = "9.jpg";
-    int numberOfImagesToDisplay = 10;
+    string pathToPic = selectedItem.toUtf8().constData();
+    int numberOfImagesToDisplay = 11;
 
     ResultVector res = bow->makeQuery(pathToPic,
                                       numberOfImagesToDisplay);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");

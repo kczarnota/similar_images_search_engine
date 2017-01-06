@@ -26,7 +26,6 @@ private slots:
 
     void on_loadImagesButton_clicked();
 
-    void on_loadDictionaryButton_clicked();
     void radioBtnSelected();
     void prepareBtnSelected();
     void queryBtnSelected();
@@ -39,6 +38,9 @@ private:
     string imagesPath;
     string selectedDescriptor;
     BOW * bow;
+
+    QList<string> findAllImages();
+    string getLastTwoPathSegments(string path);
 
 };
 

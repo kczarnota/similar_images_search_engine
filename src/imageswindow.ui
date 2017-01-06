@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>705</width>
+    <height>644</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,10 +18,49 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>20</y>
-      <width>771</width>
-      <height>521</height>
+      <y>209</y>
+      <width>665</width>
+      <height>381</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="queryImageLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>150</width>
+      <height>150</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="queryImageLabelText">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>20</y>
+      <width>120</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Query Image</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="queryImageName">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>60</y>
+      <width>120</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>
@@ -30,7 +69,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>705</width>
      <height>28</height>
     </rect>
    </property>

@@ -1,7 +1,7 @@
 #include "imageswindow.h"
 #include "ui_imageswindow.h"
 
-ImagesWindow::ImagesWindow(BOW * b, QWidget *parent) :
+ImagesWindow::ImagesWindow(BOW * b, QString selectedImage, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ImagesWindow)
 {
@@ -11,8 +11,10 @@ ImagesWindow::ImagesWindow(BOW * b, QWidget *parent) :
     ui->listWidget->selectionMode();
     ui->listWidget->setIconSize(QSize(200,200));
     ui->listWidget->setResizeMode(QListWidget::Adjust);
+    ui->listWidget->setGridSize(QSize(215, 215));
+
     QThread* thread = new QThread;
-    Worker* worker = new Worker(bow);
+    Worker* worker = new Worker(bow, selectedImage);
     worker->moveToThread(thread);
     qRegisterMetaType< QList<QString> >( "QList<QString>" );
     connect(thread, SIGNAL(started()), worker, SLOT(process()));
@@ -26,11 +28,21 @@ ImagesWindow::ImagesWindow(BOW * b, QWidget *parent) :
 ImagesWindow::~ImagesWindow()
 {
     delete ui;
+    for(int i = 0; i < ui->listWidget->count(); ++i)
+    {
+        delete ui->listWidget->item(i);
+    }
 }
 
 void ImagesWindow::getData(QList<QString> list)
 {
-    for(int i = 0; i < list.size(); ++i)
+    QIcon ic(list.at(0));
+    QSize size = ic.availableSizes()[0];
+    cout << size.width() << " " << size.height() << endl;
+
+    ui->queryImageLabel->setPixmap(QPixmap(list.at(0)).scaled(150, 150, Qt::KeepAspectRatio));
+    ui->queryImageName->setText(list.at(0));
+    for(int i = 1; i < list.size(); ++i)
     {
         ui->listWidget->addItem(new QListWidgetItem(QIcon(list.at(i)), ""));
     }
