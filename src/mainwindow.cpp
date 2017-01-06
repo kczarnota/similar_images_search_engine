@@ -122,9 +122,6 @@ bool MainWindow::checkPreparation()
     string databaseName = this->ui->databaseEdit->text().toUtf8().constData();
     string imagesPath = this->ui->imagesEdit->text().toUtf8().constData();
     string dictionarySize = this->ui->dictionarySizeEdit->text().toUtf8().constData();
-    double siftWeight = ui->siftWeightEdit->text().toDouble();
-    double lbpWeight = ui->lbpWeightEdit->text().toDouble();
-    double hueWeight = ui->hueWeightEdit->text().toDouble();
 
     if(databaseName == "")
         msg = "Please provide name of database to create or path to existing one";
@@ -134,18 +131,6 @@ bool MainWindow::checkPreparation()
         msg = "Please provide dictionary size";
     else if(selectedDescriptor == "")
         msg = "Please select one of descriptors";
-    else if(selectedDescriptor == "SIFT and LBP" || selectedDescriptor == "SIFT and OC-LBP" || selectedDescriptor == "HOG and LBP" )
-    {
-        if(siftWeight + lbpWeight != 1)
-            msg = "Please provide correct weights for SIFT/HOG and LBP/OC-LBP(sum must be 1)";
-    }
-    else if(selectedDescriptor == "SIFT, LBP, HUE" || selectedDescriptor == "SIFT, OC-LBP, HUE" )
-    {
-        if(siftWeight + lbpWeight + hueWeight != 1)
-        {
-            msg = "Please provide correct weights for SIFT/HOG and LBP/OC-LBP and HUE(sum must be 1)";
-        }
-    }
 
     if(msg != "")
     {
@@ -163,11 +148,36 @@ bool MainWindow::checkPreparation()
 bool MainWindow::checkQuery()
 {
     string msg = "";
+    double siftWeight = ui->siftWeightEdit->text().toDouble();
+    double lbpWeight = ui->lbpWeightEdit->text().toDouble();
+    double hueWeight = ui->hueWeightEdit->text().toDouble();
 
     if(ui->listWidget->currentItem() == nullptr)
         msg = "Please select image to query";
     else if(ui->returnImagesEdit->text().toInt() < 1 || ui->returnImagesEdit->text().toInt() > 101)
         msg = "Please provide image number to return(between 1 and 100)";
+    else if(selectedDescriptor == "SIFT and LBP" || selectedDescriptor == "SIFT and OC-LBP" || selectedDescriptor == "HOG and LBP" )
+    {
+        if(siftWeight + lbpWeight != 1)
+            msg = "Please provide correct weights for SIFT/HOG and LBP/OC-LBP(sum must be 1)";
+        else
+        {
+            bow->setSIFTWeight(siftWeight);
+            bow->setLBPWeight(lbpWeight);
+        }
+    }
+    else if(selectedDescriptor == "SIFT, LBP, HUE" || selectedDescriptor == "SIFT, OC-LBP, HUE" )
+    {
+        if(siftWeight + lbpWeight + hueWeight != 1)
+        {
+            msg = "Please provide correct weights for SIFT/HOG and LBP/OC-LBP and HUE(sum must be 1)";
+        } else
+        {
+            bow->setSIFTWeight(siftWeight);
+            bow->setLBPWeight(lbpWeight);
+            bow->setHUEWeight(hueWeight);
+        }
+    }
 
     if(msg != "")
     {

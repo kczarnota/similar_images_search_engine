@@ -41,27 +41,27 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
     else if(mode == "SIFT and LBP")
     {
         descriptor = new SIFTandLBPSeparateDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new SIFTLBPSeparateComparator(descriptor->getDictionarySize(), sW, lW);
+        comparator = new SIFTLBPSeparateComparator(descriptor->getDictionarySize());
     }
     else if(mode == "SIFT, LBP, HUE")
     {
         descriptor = new SIFT_LBP_HUEDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new SIFT_LBP_HUEComparator(descriptor->getDictionarySize(), sW, lW, hW);
+        comparator = new SIFT_LBP_HUEComparator(descriptor->getDictionarySize());
     }
     else if(mode == "siftorthogonallbp")
     {
         descriptor = new SIFT_OrthogonalLBPDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new SIFT_OrthogonalLBPComparator(descriptor->getDictionarySize(), sW, lW);
+        comparator = new SIFT_OrthogonalLBPComparator(descriptor->getDictionarySize());
     }
     else if(mode == "SIFT, OC-LBP, HUE")
     {
         descriptor = new SIFT_OrthogonalLBP_HUEDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new SIFT_OrthogonalLBP_HUEComparator(descriptor->getDictionarySize(), sW, lW, hW);
+        comparator = new SIFT_OrthogonalLBP_HUEComparator(descriptor->getDictionarySize());
     }
     else if(mode == "HOG and LBP")
     {
         descriptor = new HOGLBPDescriptor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new HOGLBPComparator(descriptor->getDictionarySize(), sW, lW);
+        comparator = new HOGLBPComparator(descriptor->getDictionarySize());
     }
 
     distanceMode = IntersectionOfHistograms;
@@ -302,4 +302,19 @@ string BOW::getNLastPathSegments(string path, int n)
 
         return path.substr(beginIndex + 1, path.length() - beginIndex);
     }
+}
+
+void BOW::setSIFTWeight(double sW)
+{
+    this->comparator->setSIFTWeight(sW);
+}
+
+void BOW::setLBPWeight(double lW)
+{
+    this->comparator->setLBPWeight(lW);
+}
+
+void BOW::setHUEWeight(double hW)
+{
+    this->comparator->setHUEWeight(hW);
 }

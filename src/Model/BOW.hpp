@@ -70,6 +70,9 @@ public:
     string removeLastPathSegment(string path);
     static string getNLastPathSegments(string path, int n);
     int countImagesInCategory(string pathToCategoryDirectory);
+    void setSIFTWeight(double sW);
+    void setLBPWeight(double lW);
+    void setHUEWeight(double hW);
 };
 
 

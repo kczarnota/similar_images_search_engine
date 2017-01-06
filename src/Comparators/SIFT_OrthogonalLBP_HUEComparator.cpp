@@ -24,13 +24,10 @@ double SIFT_OrthogonalLBP_HUEComparator::compare(const PictureInformation &p1, c
 
     double distanceSIFT = 1 - sumOfMinElementsSIFT;
     double distanceHUE = 1 - sumOfMinElementsHUE;
-    return distanceSIFT*weightSIFT + differenceBySum*weightOrthogonalLBP + distanceHUE*weightHUE;
+    return distanceSIFT*getSIFTWeight() + differenceBySum*getLBPWeight()+ distanceHUE*getHUEWeight();
 }
 
-SIFT_OrthogonalLBP_HUEComparator::SIFT_OrthogonalLBP_HUEComparator(int SIFTHistogramSize, double weightSIFT, double weightOrthogonalLBP, double weightHUE)
+SIFT_OrthogonalLBP_HUEComparator::SIFT_OrthogonalLBP_HUEComparator(int SIFTHistogramSize)
 {
     this->SIFTHistogramSize = SIFTHistogramSize;
-    this->weightSIFT = weightSIFT;
-    this->weightOrthogonalLBP  = weightOrthogonalLBP;
-    this->weightHUE = weightHUE;
 }

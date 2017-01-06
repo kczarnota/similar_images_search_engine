@@ -20,13 +20,10 @@ double SIFT_LBP_HUEComparator::compare(const PictureInformation &p1, const Pictu
     double distanceSIFT = 1 - sumOfMinElementsSIFT;
     double distanceLBP = 1 - sumOfMinElementsLBP;
     double distanceHUE = 1 - sumOfMinElementsHUE;
-    return distanceSIFT*weightSIFT + distanceLBP*weightLBP + distanceHUE*weightHUE;
+    return distanceSIFT*getSIFTWeight() + distanceLBP*getLBPWeight() + distanceHUE*getHUEWeight();
 }
 
-SIFT_LBP_HUEComparator::SIFT_LBP_HUEComparator(int SIFTDictionarySize, double weightSIFT, double weightLBP, double weightHUE)
+SIFT_LBP_HUEComparator::SIFT_LBP_HUEComparator(int SIFTDictionarySize)
 {
     this->SIFTHistogramSize = SIFTDictionarySize;
-    this->weightSIFT = weightSIFT;
-    this->weightLBP = weightLBP;
-    this->weightHUE = weightHUE;
 }

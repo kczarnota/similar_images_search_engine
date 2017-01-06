@@ -9,12 +9,10 @@ private:
     int SIFTHistogramSize;
     const int LBP_HISTOGRAM_SIZE = 256;
     const int HUE_HISTOGRAM_SIZE = 362;
-    double weightSIFT;
-    double weightLBP;
-    double weightHUE;
+
 
 public:
-    SIFT_LBP_HUEComparator(int SIFTDictionarySize, double weightSIFT,double weightLBP, double weightHUE);
+    SIFT_LBP_HUEComparator(int SIFTDictionarySize);
     virtual double compare(const PictureInformation &p1, const PictureInformation &p2) const override;
 
 };

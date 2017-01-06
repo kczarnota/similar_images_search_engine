@@ -21,12 +21,10 @@ double SIFT_OrthogonalLBPComparator::compare(const PictureInformation &p1, const
 
     double distanceSIFT = 1 - sumOfMinElementsSIFT;
     double distanceLBP = differenceBySum;
-    return distanceSIFT*weightSIFT + distanceLBP*weightOrthogonalLBP;
+    return distanceSIFT*getSIFTWeight() + distanceLBP*getLBPWeight();
 }
 
-SIFT_OrthogonalLBPComparator::SIFT_OrthogonalLBPComparator(int SIFTHistogramSize, double weightSIFT, double weightOrthogonalLBP)
+SIFT_OrthogonalLBPComparator::SIFT_OrthogonalLBPComparator(int SIFTHistogramSize)
 {
     this->SIFTHistogramSize = SIFTHistogramSize;
-    this->weightSIFT = weightSIFT;
-    this->weightOrthogonalLBP = weightOrthogonalLBP;
 }

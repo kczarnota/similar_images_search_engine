@@ -7,10 +7,8 @@ class HOGLBPComparator : public Comparator
 {
 private:
     int HOGHistogramSize;
-    double weightHOG;
-    double weightLBP;
 public:
-    HOGLBPComparator(int hogHistogramSize, double weightHog, double weightLBP);
+    HOGLBPComparator(int hogHistogramSize);
     virtual double compare(const PictureInformation &p1, const PictureInformation &p2) const override;
 };
 

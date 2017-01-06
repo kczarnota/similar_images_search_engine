@@ -16,12 +16,10 @@ double HOGLBPComparator::compare(const PictureInformation &p1, const PictureInfo
 
     double distanceSIFT = 1 - sumOfMinElementsHOG;
     double distanceLBP = 1 - sumOfMinElementsLBP;
-    return distanceSIFT*weightHOG + distanceLBP*weightLBP;
+    return distanceSIFT*getSIFTWeight() + distanceLBP*getLBPWeight();
 }
 
-HOGLBPComparator::HOGLBPComparator(int hogHistogramSize, double weightHog, double weightLBP)
+HOGLBPComparator::HOGLBPComparator(int hogHistogramSize)
 {
     this->HOGHistogramSize = hogHistogramSize;
-    this->weightHOG = weightHog;
-    this->weightLBP = weightLBP;
 }

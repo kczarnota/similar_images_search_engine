@@ -16,12 +16,10 @@ double SIFTLBPSeparateComparator::compare(const PictureInformation &p1, const Pi
 
     double distanceSIFT = 1 - sumOfMinElementsSIFT;
     double distanceLBP = 1 - sumOfMinElementsLBP;
-    return distanceSIFT*weightSIFT + distanceLBP*weightLBP;
+    return distanceSIFT*getSIFTWeight() + distanceLBP*getLBPWeight();
 }
 
-SIFTLBPSeparateComparator::SIFTLBPSeparateComparator(int SIFTDictionarySize, double weightSIFT,double weightLBP)
+SIFTLBPSeparateComparator::SIFTLBPSeparateComparator(int SIFTDictionarySize)
 {
     this->SIFTHistogramSize = SIFTDictionarySize;
-    this->weightSIFT = weightSIFT;
-    this->weightLBP = weightLBP;
 }

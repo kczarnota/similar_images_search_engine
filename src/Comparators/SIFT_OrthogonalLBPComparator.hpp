@@ -7,11 +7,9 @@ class SIFT_OrthogonalLBPComparator : public Comparator
 {
 private:
     int SIFTHistogramSize;
-    double weightSIFT;
-    double weightOrthogonalLBP;
 
 public:
-    SIFT_OrthogonalLBPComparator(int SIFTHistogramSize, double weightSIFT, double weightOrthogonalLBP);
+    SIFT_OrthogonalLBPComparator(int SIFTHistogramSize);
     virtual double compare(const PictureInformation &p1, const PictureInformation &p2) const override;
 };
 
