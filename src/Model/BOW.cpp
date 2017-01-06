@@ -214,7 +214,7 @@ double BOW::compareDifferenceBySum(PictureInformation p1, PictureInformation p2)
 std::pair<double, double> BOW::getPrecisionAndRecall(ResultVector vec, int numberOfAskedPictures)
 {
     vector<string> splittedString = this->splitString(vec.getPairAt(0).first);
-    string queryPictureCategory = splittedString[3];
+    string queryPictureCategory = splittedString[splittedString.size() - 2];
     string queryPictureCategoryPath = removeLastPathSegment(vec.getPairAt(0).first);
     int imagesInCategory = countImagesInCategory(queryPictureCategoryPath);
     double numberOfSimilarPictures = 0.0;
@@ -223,7 +223,7 @@ std::pair<double, double> BOW::getPrecisionAndRecall(ResultVector vec, int numbe
     for(int i = 1; i < numberOfAskedPictures; ++i)
     {
         splittedString = this->splitString(vec.getPairAt(i).first);
-        currentPicCategory = splittedString[3];
+        currentPicCategory = splittedString[splittedString.size() - 2];
 
         if(queryPictureCategory == currentPicCategory)
             ++numberOfSimilarPictures;
