@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -71,6 +72,7 @@ void MainWindow::prepareBtnSelected()
     }
 
     this->bow = new BOW(dictionarySize, pathToImages, databaseName, this->selectedDescriptor, siftWeight, lbpWeight, hueWeight);
+
     this->bow->init();
     cout << "End of preparation" << endl;
 }

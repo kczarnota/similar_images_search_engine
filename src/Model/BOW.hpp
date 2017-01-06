@@ -73,6 +73,7 @@ public:
     void setSIFTWeight(double sW);
     void setLBPWeight(double lW);
     void setHUEWeight(double hW);
+    static int countFiles(string path);
 };
 
 

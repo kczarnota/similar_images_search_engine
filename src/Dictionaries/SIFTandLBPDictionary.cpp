@@ -2,6 +2,8 @@
 #include "../Descriptors/LBPDescriptor.hpp"
 #include "../Descriptors/SIFTDescriptorExtractor.hpp"
 #include <iostream>
+#include <QtWidgets/QProgressDialog>
+#include <src/Model/BOW.hpp>
 
 SIFTandLBPDictionary::SIFTandLBPDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath) : VisualDictionary(
         sizeOfDictionary, pathToDatabase, dictionaryPath)
@@ -18,6 +20,10 @@ SIFTandLBPDictionary::SIFTandLBPDictionary(int sizeOfDictionary, string pathToDa
 void SIFTandLBPDictionary::constructDictionaryRandom()
 {
     recursive_directory_iterator dir(this->startPath), end;
+    int imgNumber = 0;
+    int allFiles = BOW::countFiles(this->startPath.string());
+    QProgressDialog progress("Preparing dictionary...", "Abort action", 0, allFiles);
+    progress.setWindowModality(Qt::WindowModal);
 
     while (dir != end)
     {
@@ -58,6 +64,11 @@ void SIFTandLBPDictionary::constructDictionaryRandom()
 
             cout << "Rows: " << featuresSIFTandLBP.rows << ", columns " << featuresSIFTandLBP.cols << endl;
             vconcat(featuresSIFTandLBP, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
+
+            if (progress.wasCanceled())
+                break;
+
+            progress.setValue(++imgNumber);
         }
         ++dir;
     }

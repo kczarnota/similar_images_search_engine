@@ -1,4 +1,6 @@
 #include <iostream>
+#include <QtWidgets/QProgressDialog>
+#include <src/Model/BOW.hpp>
 #include "HOGDictionary.hpp"
 
 HOGDictionary::HOGDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath) : VisualDictionary(
@@ -17,6 +19,9 @@ void HOGDictionary::constructDictionaryRandom()
 {
     recursive_directory_iterator dir(this->startPath), end;
     int imgNumber = 0;
+    int allFiles = BOW::countFiles(this->startPath.string());
+    QProgressDialog progress("Preparing dictionary...", "Abort action", 0, allFiles);
+    progress.setWindowModality(Qt::WindowModal);
     while (dir != end)
     {
         file_status fs = status(dir->path());
@@ -39,7 +44,10 @@ void HOGDictionary::constructDictionaryRandom()
             vconcat(currentFeatures, allFeatures, allFeatures);
             ++imgNumber;
             cout << "Image number: " << imgNumber << endl;
-            //cout << "All rows: " << allFeatures.rows << endl;
+            if (progress.wasCanceled())
+                break;
+
+            progress.setValue(imgNumber);
         }
         ++dir;
     }

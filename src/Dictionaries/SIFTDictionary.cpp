@@ -1,5 +1,8 @@
 #include "SIFTDictionary.hpp"
 #include <iostream>
+#include <QtWidgets/QProgressDialog>
+#include <src/Model/BOW.hpp>
+
 
 SIFTDictionary::SIFTDictionary(int sizeOfDictionary, string pathToDatabase, string dictionaryPath) : VisualDictionary(
         sizeOfDictionary, pathToDatabase, dictionaryPath)
@@ -17,6 +20,10 @@ void SIFTDictionary::constructDictionaryRandom()
 {
     recursive_directory_iterator dir(this->startPath), end;
 
+    int allFiles = BOW::countFiles(this->startPath.string());
+    QProgressDialog progress("Preparing dictionary...", "Abort action", 0, allFiles);
+    progress.setWindowModality(Qt::WindowModal);
+    int imgNum = 0;
     while (dir != end)
     {
         file_status fs = status(dir->path());
@@ -37,6 +44,10 @@ void SIFTDictionary::constructDictionaryRandom()
             SIFTDescriptorExtractor::computeSIFTfeatures(currentImage, currentFeatures, keyPoints);
             cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
             vconcat(currentFeatures, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
+            if (progress.wasCanceled())
+                break;
+
+            progress.setValue(++imgNum);
         }
         ++dir;
     }

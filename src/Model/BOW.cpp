@@ -1,3 +1,4 @@
+#include <QtWidgets/QProgressDialog>
 #include "BOW.hpp"
 
 BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode, double sW, double lW, double hW)
@@ -126,6 +127,11 @@ void BOW::updateDatabase(string pathToDatabase)
     path p(pathToDatabase);
     recursive_directory_iterator dir(p), end;
     int picNum = 0;
+    int all = countFiles(pathToDatabase);
+
+
+    QProgressDialog progress("Preparing database...", "Abort action", 0, all);
+    progress.setWindowModality(Qt::WindowModal);
 
     while (dir != end)
     {
@@ -137,10 +143,16 @@ void BOW::updateDatabase(string pathToDatabase)
             string s = dir->path().string();
             this->addPictureToDatabase(s);
             cout << "Picture nr: " << picNum++ << endl;
+
+            if (progress.wasCanceled())
+                break;
+
+            progress.setValue(picNum);
         }
 
         ++dir;
     }
+    progress.setValue(all);
 }
 
 void BOW::addPictureToDatabase(string pathToPicture)
@@ -317,4 +329,23 @@ void BOW::setLBPWeight(double lW)
 void BOW::setHUEWeight(double hW)
 {
     this->comparator->setHUEWeight(hW);
+}
+
+int BOW::countFiles(string pathToDatabase)
+{
+    path p(pathToDatabase);
+    recursive_directory_iterator dir(p), end;
+    int picNum = 0;
+
+    while (dir != end)
+    {
+        file_status fs = status(dir->path());
+
+        if (!is_directory(fs))
+            picNum++;
+
+        ++dir;
+    }
+
+    return picNum;
 }
