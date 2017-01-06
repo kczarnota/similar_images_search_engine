@@ -40,7 +40,6 @@ private:
     BOW * bow;
 
     QList<string> findAllImages();
-    string getLastTwoPathSegments(string path);
 
 };
 

@@ -1,7 +1,7 @@
 #include "imageswindow.h"
 #include "ui_imageswindow.h"
 
-ImagesWindow::ImagesWindow(BOW * b, QString selectedImage, QWidget *parent) :
+ImagesWindow::ImagesWindow(BOW * b, QString selectedImage, int nImgs, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ImagesWindow)
 {
@@ -11,10 +11,11 @@ ImagesWindow::ImagesWindow(BOW * b, QString selectedImage, QWidget *parent) :
     ui->listWidget->selectionMode();
     ui->listWidget->setIconSize(QSize(200,200));
     ui->listWidget->setResizeMode(QListWidget::Adjust);
-    ui->listWidget->setGridSize(QSize(215, 215));
+    ui->listWidget->setGridSize(QSize(220, 225));
+    ui->listWidget->setMovement(QListView::Static);
 
     QThread* thread = new QThread;
-    Worker* worker = new Worker(bow, selectedImage);
+    Worker* worker = new Worker(bow, selectedImage, nImgs);
     worker->moveToThread(thread);
     qRegisterMetaType< QList<QString> >( "QList<QString>" );
     connect(thread, SIGNAL(started()), worker, SLOT(process()));
@@ -41,9 +42,16 @@ void ImagesWindow::getData(QList<QString> list)
     cout << size.width() << " " << size.height() << endl;
 
     ui->queryImageLabel->setPixmap(QPixmap(list.at(0)).scaled(150, 150, Qt::KeepAspectRatio));
-    ui->queryImageName->setText(list.at(0));
-    for(int i = 1; i < list.size(); ++i)
+    string firstItem = BOW::getLastTwoPathSegments(list.at(0).toUtf8().constData());
+    ui->queryImageName->setText(QString::fromStdString(firstItem));
+    for(int i = 1; i < list.size() - 2; ++i)
     {
-        ui->listWidget->addItem(new QListWidgetItem(QIcon(list.at(i)), ""));
+        string l = BOW::getLastTwoPathSegments(list.at(i).toUtf8().constData());
+        ui->listWidget->addItem(new QListWidgetItem(QIcon(list.at(i)), QString::fromStdString(l)));
     }
+
+    ui->precisionText->setText(list.at(list.count() - 2));
+    ui->recallText->setText(list.at(list.count() - 1));
+    //cout << "Precision " << list.at(list.count() - 2).toUtf8().constData() << endl;
+    //cout << "Recall " << list.at(list.count() - 1).toUtf8().constData() << endl;
 }

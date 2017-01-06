@@ -1,9 +1,10 @@
 #include "worker.h"
 
 // --- CONSTRUCTOR ---
-Worker::Worker(BOW * b, QString it) {
+Worker::Worker(BOW * b, QString it, int nImgs) {
     this->bow = b;
     this->selectedItem = it;
+    this->numberOfImagesToDisplay = nImgs;
 }
 
 // --- DECONSTRUCTOR ---
@@ -17,15 +18,13 @@ void Worker::process() {
     // allocate resources using new here
     QList<QString> list;
 
-    string pathToPic = selectedItem.toUtf8().constData();
-    int numberOfImagesToDisplay = 11;
-
-    ResultVector res = bow->makeQuery(pathToPic,
-                                      numberOfImagesToDisplay);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
+    int totalNumberToDisplay = numberOfImagesToDisplay + 1;
+    ResultVector res = bow->makeQuery(selectedItem.toUtf8().constData(),
+                                      totalNumberToDisplay);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
 
     res.printTable();
 
-    std::pair<double, double> p = bow->getPrecisionAndRecall(res, numberOfImagesToDisplay);
+    std::pair<double, double> p = bow->getPrecisionAndRecall(res, totalNumberToDisplay);
     cout << "Precision: " << p.first << ", recall: " << p.second << endl;
     //cout << "Precision: " << bow.getPrecision() << ", recall: " << bow.getRecall() << endl;
 
@@ -34,6 +33,8 @@ void Worker::process() {
     {
         list.append(QString::fromStdString(res.getPairAt(i).first));
     }
+    list.append(QString::fromStdString(to_string(p.first)));
+    list.append(QString::fromStdString(to_string(p.second)));
     emit giveData(list);
     emit finished();
 }

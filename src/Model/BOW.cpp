@@ -280,3 +280,27 @@ int BOW::countImagesInCategory(string pathToCategoryDirectory)
         files++;
     return files;
 }
+
+string BOW::getLastTwoPathSegments(string path)
+{
+    {
+        bool firstSlash = false;
+        int beginIndex = -1;
+
+        for(int i = path.length() - 1; i >= 0; --i)
+        {
+            if(path.at(i) == '/')
+            {
+                if(!firstSlash)
+                    firstSlash = true;
+                else
+                {
+                    beginIndex = i;
+                    break;
+                }
+            }
+        }
+
+        return path.substr(beginIndex + 1, path.length() - beginIndex);
+    }
+}

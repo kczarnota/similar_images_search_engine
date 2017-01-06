@@ -4,6 +4,7 @@
 #include "Model/BOW.hpp"
 #include "mainwindow.h"
 #include <QApplication>
+#include "QStatusBar"
 
 using namespace cv;
 using namespace std;
@@ -16,6 +17,7 @@ int main(int argc, char** argv)
 
     QApplication a(argc, argv);
     MainWindow w;
+    w.statusBar()->setSizeGripEnabled(false);
     w.show();
 
     return a.exec();

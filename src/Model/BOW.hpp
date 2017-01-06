@@ -68,6 +68,7 @@ public:
     vector<string> splitString(string s);
     static void printMatrix(Mat matrix);
     string removeLastPathSegment(string path);
+    static string getLastTwoPathSegments(string path);
     int countImagesInCategory(string pathToCategoryDirectory);
 };
 

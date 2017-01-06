@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //ui->listWidget->selectionMode();
     ui->listWidget->setIconSize(QSize(200,200));
     ui->listWidget->setResizeMode(QListWidget::Adjust);
-    ui->listWidget->setGridSize(QSize(220, 220));
+    ui->listWidget->setGridSize(QSize(220, 225));
     ui->listWidget->setMovement(QListView::Static);
 }
 
@@ -63,7 +63,7 @@ void MainWindow::prepareBtnSelected()
     for(int i = 0; i < images.count(); ++i)
     {
         QString fileName = QString::fromStdString(images.at(i));
-        ui->listWidget->addItem(new QListWidgetItem(QIcon(fileName), QString::fromStdString(getLastTwoPathSegments(images.at(i)))));
+        ui->listWidget->addItem(new QListWidgetItem(QIcon(fileName), QString::fromStdString(BOW::getLastTwoPathSegments(images.at(i)))));
     }
 
     this->bow = new BOW(dictionarySize, pathToImages, pathToDatabase, this->selectedDescriptor);
@@ -78,7 +78,8 @@ void MainWindow::queryBtnSelected()
     QListWidgetItem * it = ui->listWidget->item(0);
     cout << "Image name " << it->text().toUtf8().constData() << endl;
     QString selectedItem = ui->imagesEdit->text() + "/" + ui->listWidget->currentItem()->text();
-    ImagesWindow * images = new ImagesWindow(bow, selectedItem);
+    ImagesWindow * images = new ImagesWindow(bow, selectedItem, ui->returnImagesEdit->text().toInt());
+    images->statusBar()->setSizeGripEnabled(false);
     images->show();
 }
 
@@ -106,26 +107,4 @@ QList<string> MainWindow::findAllImages()
     }
 
     return list;
-}
-
-string MainWindow::getLastTwoPathSegments(string path)
-{
-    bool firstSlash = false;
-    int beginIndex = -1;
-
-    for(int i = path.length() - 1; i >= 0; --i)
-    {
-        if(path.at(i) == '/')
-        {
-            if(!firstSlash)
-                firstSlash = true;
-            else
-            {
-                beginIndex = i;
-                break;
-            }
-        }
-    }
-
-    return path.substr(beginIndex + 1, path.length() - beginIndex);
 }

@@ -10,7 +10,7 @@ class Worker : public QObject {
     Q_OBJECT
 
 public:
-    Worker(BOW * b, QString selectedItem);
+    Worker(BOW * b, QString selectedItem, int nImgs);
     ~Worker();
     void showManyImages(char* title, int nArgs, IplImage ** images);
 
@@ -25,6 +25,7 @@ signals:
 private:
     BOW * bow;
     QString selectedItem;
+    int numberOfImagesToDisplay;
 };
 
 #endif // WORKER_H
