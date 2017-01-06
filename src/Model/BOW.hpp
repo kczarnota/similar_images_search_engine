@@ -57,7 +57,7 @@ public:
     //double comparePictureHistograms(PictureInformation p1, PictureInformation p2);
     //double compareDifferenceBySum(PictureInformation p1, PictureInformation p2);
 
-    BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode);
+    BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode, double sW, double lW, double hW);
     ~BOW();
     void init();
     void createDatabase();
@@ -68,7 +68,7 @@ public:
     vector<string> splitString(string s);
     static void printMatrix(Mat matrix);
     string removeLastPathSegment(string path);
-    static string getLastTwoPathSegments(string path);
+    static string getNLastPathSegments(string path, int n);
     int countImagesInCategory(string pathToCategoryDirectory);
 };
 

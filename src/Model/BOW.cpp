@@ -1,16 +1,15 @@
 #include "BOW.hpp"
 
-BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode)
+BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode, double sW, double lW, double hW)
 {
     this->pathToImages = pathToImages;
-    //this->databasePath = removeLastPathSegment(this->pathToImages) + databaseName;
-    this->databasePath = databaseName;//removeLastPathSegment(this->pathToImages) + databaseName;
+    this->databasePath = removeLastPathSegment(this->pathToImages) + databaseName;
     this->dictionaryPath = databasePath + "_dictionary.xml";
 
     cout << databasePath << endl;
     cout << dictionaryPath << endl;
 
-    if(mode == "sift")
+    if(mode == "SIFT")
     {
         descriptor = new SIFTDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
     }
@@ -27,7 +26,7 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
     {
         descriptor = new LBPDescriptor();
     }
-    else if(mode == "orthogonallbp")
+    else if(mode == "SIFT and OC-LBP")
     {
         descriptor = new OrthogonalLBPDescriptor();
     }
@@ -39,30 +38,30 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
     {
         descriptor = new HueDescriptor();
     }
-    else if(mode == "siftlbpseparate")
+    else if(mode == "SIFT and LBP")
     {
         descriptor = new SIFTandLBPSeparateDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new SIFTLBPSeparateComparator(descriptor->getDictionarySize(), 0.8, 0.2);
+        comparator = new SIFTLBPSeparateComparator(descriptor->getDictionarySize(), sW, lW);
     }
-    else if(mode == "siftlbphue")
+    else if(mode == "SIFT, LBP, HUE")
     {
         descriptor = new SIFT_LBP_HUEDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new SIFT_LBP_HUEComparator(descriptor->getDictionarySize(), 0.4, 0.3, 0.3);
+        comparator = new SIFT_LBP_HUEComparator(descriptor->getDictionarySize(), sW, lW, hW);
     }
     else if(mode == "siftorthogonallbp")
     {
         descriptor = new SIFT_OrthogonalLBPDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new SIFT_OrthogonalLBPComparator(descriptor->getDictionarySize(), 0.8, 0.2);
+        comparator = new SIFT_OrthogonalLBPComparator(descriptor->getDictionarySize(), sW, lW);
     }
-    else if(mode == "siftorthogonallbphue")
+    else if(mode == "SIFT, OC-LBP, HUE")
     {
         descriptor = new SIFT_OrthogonalLBP_HUEDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new SIFT_OrthogonalLBP_HUEComparator(descriptor->getDictionarySize(), 0.4, 0.3, 0.3);
+        comparator = new SIFT_OrthogonalLBP_HUEComparator(descriptor->getDictionarySize(), sW, lW, hW);
     }
-    else if(mode == "hoglbp")
+    else if(mode == "HOG and LBP")
     {
         descriptor = new HOGLBPDescriptor(sizeOfDictionary, pathToImages, dictionaryPath);
-        comparator = new HOGLBPComparator(descriptor->getDictionarySize(), 0.8, 0.2);
+        comparator = new HOGLBPComparator(descriptor->getDictionarySize(), sW, lW);
     }
 
     distanceMode = IntersectionOfHistograms;
@@ -281,18 +280,18 @@ int BOW::countImagesInCategory(string pathToCategoryDirectory)
     return files;
 }
 
-string BOW::getLastTwoPathSegments(string path)
+string BOW::getNLastPathSegments(string path, int n)
 {
     {
-        bool firstSlash = false;
+        int counter = 0;
         int beginIndex = -1;
 
         for(int i = path.length() - 1; i >= 0; --i)
         {
             if(path.at(i) == '/')
             {
-                if(!firstSlash)
-                    firstSlash = true;
+                if(counter != n - 1)
+                    counter++;
                 else
                 {
                     beginIndex = i;

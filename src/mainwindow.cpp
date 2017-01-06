@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
+#include <QtWidgets/QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -46,27 +47,30 @@ void MainWindow::radioBtnSelected()
 void MainWindow::prepareBtnSelected()
 {
     QRadioButton * rb = (QRadioButton*)QObject::sender();
-    
+
+    if(!checkPreparation())
+        return;
+
     int dictionarySize = atoi(ui->dictionarySizeEdit->text().toUtf8().constData());
     if(dictionarySize == 0)
 	    dictionarySize = 1000;
 
-    float siftWeight = ui->siftWeightEdit->text().toFloat();
-    float lbpWeight = ui->lbpWeightEdit->text().toFloat();
-    float hueWeight = ui->hueWeightEdit->text().toFloat();
+    double siftWeight = ui->siftWeightEdit->text().toDouble();
+    double lbpWeight = ui->lbpWeightEdit->text().toDouble();
+    double hueWeight = ui->hueWeightEdit->text().toDouble();
     string pathToDatabase = ui->databaseEdit->text().toUtf8().constData();
     string pathToImages = ui->imagesEdit->text().toUtf8().constData();
-    string databaseName = ui->databaseEdit->text().toUtf8().constData();
+    string databaseName = BOW::getNLastPathSegments(pathToDatabase, 1);
 
     QList<string> images = findAllImages();
     cout << images.count() << endl;
     for(int i = 0; i < images.count(); ++i)
     {
         QString fileName = QString::fromStdString(images.at(i));
-        ui->listWidget->addItem(new QListWidgetItem(QIcon(fileName), QString::fromStdString(BOW::getLastTwoPathSegments(images.at(i)))));
+        ui->listWidget->addItem(new QListWidgetItem(QIcon(fileName), QString::fromStdString(BOW::getNLastPathSegments(images.at(i), 2))));
     }
 
-    this->bow = new BOW(dictionarySize, pathToImages, pathToDatabase, this->selectedDescriptor);
+    this->bow = new BOW(dictionarySize, pathToImages, databaseName, this->selectedDescriptor, siftWeight, lbpWeight, hueWeight);
     this->bow->init();
     cout << "End of preparation" << endl;
 }
@@ -74,6 +78,9 @@ void MainWindow::prepareBtnSelected()
 void MainWindow::queryBtnSelected()
 {
     QRadioButton *rb = (QRadioButton *) QObject::sender();
+
+    if(!checkQuery())
+        return;
 
     QListWidgetItem * it = ui->listWidget->item(0);
     cout << "Image name " << it->text().toUtf8().constData() << endl;
@@ -107,4 +114,70 @@ QList<string> MainWindow::findAllImages()
     }
 
     return list;
+}
+
+bool MainWindow::checkPreparation()
+{
+    string msg = "";
+    string databaseName = this->ui->databaseEdit->text().toUtf8().constData();
+    string imagesPath = this->ui->imagesEdit->text().toUtf8().constData();
+    string dictionarySize = this->ui->dictionarySizeEdit->text().toUtf8().constData();
+    double siftWeight = ui->siftWeightEdit->text().toDouble();
+    double lbpWeight = ui->lbpWeightEdit->text().toDouble();
+    double hueWeight = ui->hueWeightEdit->text().toDouble();
+
+    if(databaseName == "")
+        msg = "Please provide name of database to create or path to existing one";
+    else if(imagesPath == "")
+        msg = "Please provide path to images";
+    else if(dictionarySize == "")
+        msg = "Please provide dictionary size";
+    else if(selectedDescriptor == "")
+        msg = "Please select one of descriptors";
+    else if(selectedDescriptor == "SIFT and LBP" || selectedDescriptor == "SIFT and OC-LBP" || selectedDescriptor == "HOG and LBP" )
+    {
+        if(siftWeight + lbpWeight != 1)
+            msg = "Please provide correct weights for SIFT/HOG and LBP/OC-LBP(sum must be 1)";
+    }
+    else if(selectedDescriptor == "SIFT, LBP, HUE" || selectedDescriptor == "SIFT, OC-LBP, HUE" )
+    {
+        if(siftWeight + lbpWeight + hueWeight != 1)
+        {
+            msg = "Please provide correct weights for SIFT/HOG and LBP/OC-LBP and HUE(sum must be 1)";
+        }
+    }
+
+    if(msg != "")
+    {
+        QMessageBox messageBox;
+        messageBox.critical(0, "Warning", QString::fromStdString(msg));
+        messageBox.setFixedSize(500, 200);
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+bool MainWindow::checkQuery()
+{
+    string msg = "";
+
+    if(ui->listWidget->currentItem() == nullptr)
+        msg = "Please select image to query";
+    else if(ui->returnImagesEdit->text().toInt() < 1 || ui->returnImagesEdit->text().toInt() > 101)
+        msg = "Please provide image number to return(between 1 and 100)";
+
+    if(msg != "")
+    {
+        QMessageBox messageBox;
+        messageBox.critical(0, "Warning", QString::fromStdString(msg));
+        messageBox.setFixedSize(500, 200);
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }

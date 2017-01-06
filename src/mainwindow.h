@@ -40,7 +40,8 @@ private:
     BOW * bow;
 
     QList<string> findAllImages();
-
+    bool checkPreparation();
+    bool checkQuery();
 };
 
 #endif // MAINWINDOW_H

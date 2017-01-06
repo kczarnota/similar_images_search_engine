@@ -254,7 +254,7 @@
      </font>
     </property>
     <property name="text">
-     <string>SIFT Weight</string>
+     <string>SIFT/HOG Weight</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

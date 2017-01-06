@@ -42,11 +42,11 @@ void ImagesWindow::getData(QList<QString> list)
     cout << size.width() << " " << size.height() << endl;
 
     ui->queryImageLabel->setPixmap(QPixmap(list.at(0)).scaled(150, 150, Qt::KeepAspectRatio));
-    string firstItem = BOW::getLastTwoPathSegments(list.at(0).toUtf8().constData());
+    string firstItem = BOW::getNLastPathSegments(list.at(0).toUtf8().constData(), 2);
     ui->queryImageName->setText(QString::fromStdString(firstItem));
     for(int i = 1; i < list.size() - 2; ++i)
     {
-        string l = BOW::getLastTwoPathSegments(list.at(i).toUtf8().constData());
+        string l = BOW::getNLastPathSegments(list.at(i).toUtf8().constData(), 2);
         ui->listWidget->addItem(new QListWidgetItem(QIcon(list.at(i)), QString::fromStdString(l)));
     }
 
