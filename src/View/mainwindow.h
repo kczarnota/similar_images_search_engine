@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <iostream>
-#include "Model/BOW.hpp"
+#include "src/Model/BOW.hpp"
 #include "imageswindow.h"
 #include "TestWindow.hpp"
 

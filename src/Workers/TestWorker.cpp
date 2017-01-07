@@ -88,8 +88,8 @@ void TestWorker::process()
                 return;
             }
             emit tick();
-            ++dir;
         }
+        ++dir;
     }
 
 

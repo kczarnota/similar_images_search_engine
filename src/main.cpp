@@ -2,7 +2,7 @@
 #include <opencv2/core/core.hpp>
 #include <iostream>
 #include "Model/BOW.hpp"
-#include "mainwindow.h"
+#include "src/View/mainwindow.h"
 #include <QApplication>
 #include "QStatusBar"
 

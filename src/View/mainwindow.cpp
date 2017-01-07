@@ -101,8 +101,8 @@ void MainWindow::queryBtnSelected()
 
 void MainWindow::testBtnSelected()
 {
-    if(!checkQuery())
-        return;
+   // if(!checkQuery())
+     //   return;
 
     TestWindow * testWindow = new TestWindow(bow, ui->imagesEdit->text().toUtf8().constData());
     testWindow->setWindowTitle("Test");

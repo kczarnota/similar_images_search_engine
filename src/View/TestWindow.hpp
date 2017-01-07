@@ -2,7 +2,7 @@
 #define TESTWINDOW_HPP
 
 #include <QMainWindow>
-#include "TestWorker.hpp"
+#include "src/Workers/TestWorker.hpp"
 #include <QThread>
 #include <QtWidgets/QProgressDialog>
 
