@@ -18,6 +18,7 @@ int main(int argc, char** argv)
     QApplication a(argc, argv);
     MainWindow w;
     w.statusBar()->setSizeGripEnabled(false);
+    w.setWindowTitle("BoW");
     w.show();
 
     return a.exec();

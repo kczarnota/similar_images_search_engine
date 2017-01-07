@@ -79,31 +79,38 @@ void TestWorker::process()
             averageRecall[8] += p.second;
 
             ++imagesQueried;
-        }
 
-        if(*cancel)
-        {
-            list.append("Process Canceled");
-            emit giveData(list);
-            emit finished();
-            return;
+            if(*cancel)
+            {
+                list.append("Process Canceled");
+                emit giveData(list);
+                emit finished();
+                return;
+            }
+            emit tick();
+            ++dir;
         }
-        emit tick();
-        ++dir;
     }
 
 
+    double wholeAvgPrec = 0.0;
+    double wholeAvgRec = 0.0;
     for(int i = 0, j = 10; i < 9; ++i, j+= 10)
     {
         averagePrecision[i] /= imagesQueried;
+        wholeAvgPrec += averagePrecision[i];
         cout << "Average precison for: "<< j << "    " << averagePrecision[i] << endl;
         list.append(QString::fromStdString(to_string(averagePrecision[i])));
 
         averageRecall[i] /= imagesQueried;
+        wholeAvgRec += averageRecall[i];
         cout << "Average recall for: "<< j << "    " << averageRecall[i] << endl;
         list.append(QString::fromStdString(to_string(averageRecall[i])));
     }
-
+    wholeAvgPrec /= 9.0;
+    wholeAvgRec /= 9.0;
+    list.append(QString::fromStdString(to_string(wholeAvgPrec)));
+    list.append(QString::fromStdString(to_string(wholeAvgRec)));
 
     emit giveData(list);
     emit finished();

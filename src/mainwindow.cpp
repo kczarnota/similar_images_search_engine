@@ -94,13 +94,18 @@ void MainWindow::queryBtnSelected()
     cout << "Image name " << it->text().toUtf8().constData() << endl;
     QString selectedItem = ui->imagesEdit->text() + "/" + ui->listWidget->currentItem()->text();
     ImagesWindow * images = new ImagesWindow(bow, selectedItem, ui->returnImagesEdit->text().toInt());
+    images->setWindowTitle("Query results");
     images->statusBar()->setSizeGripEnabled(false);
     images->show();
 }
 
 void MainWindow::testBtnSelected()
 {
+    if(!checkQuery())
+        return;
+
     TestWindow * testWindow = new TestWindow(bow, ui->imagesEdit->text().toUtf8().constData());
+    testWindow->setWindowTitle("Test");
     testWindow->show();
 }
 
