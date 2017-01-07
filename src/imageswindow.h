@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QThread>
-#include "worker.h"
+#include "QueryWorker.hpp"
 
 namespace Ui {
 class ImagesWindow;

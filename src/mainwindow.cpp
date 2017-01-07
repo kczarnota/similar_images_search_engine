@@ -100,7 +100,8 @@ void MainWindow::queryBtnSelected()
 
 void MainWindow::testBtnSelected()
 {
-    //TODO implement
+    TestWindow * testWindow = new TestWindow(bow, ui->imagesEdit->text().toUtf8().constData());
+    testWindow->show();
 }
 
 QList<string> MainWindow::findAllImages()

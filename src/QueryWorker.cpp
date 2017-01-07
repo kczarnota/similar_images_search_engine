@@ -1,49 +1,45 @@
-#include "ShowImages.hpp"
+#include "QueryWorker.hpp"
 
-ShowImages::ShowImages(BOW * b)
-{
+// --- CONSTRUCTOR ---
+QueryWorker::QueryWorker(BOW * b, QString it, int nImgs) {
     this->bow = b;
+    this->selectedItem = it;
+    this->numberOfImagesToDisplay = nImgs;
 }
 
-void ShowImages::run()
-{
-    string pathToPic;
-    int numberOfImagesToDisplay;
+// --- DECONSTRUCTOR ---
+QueryWorker::~QueryWorker() {
+    // free resources
+}
 
-    cout << "Ile obrazow mam wyswietlic?" << endl;
-    cin >> numberOfImagesToDisplay;
-    ++numberOfImagesToDisplay;
-    cout << "Podaj nazwe pliku" << endl;
-    cin >> pathToPic;
-    while (pathToPic != "q")
+// --- PROCESS ---
+// Start processing data.
+void QueryWorker::process() {
+    // allocate resources using new here
+    QList<QString> list;
+
+    int totalNumberToDisplay = numberOfImagesToDisplay + 1;
+    ResultVector res = bow->makeQuery(selectedItem.toUtf8().constData(),
+                                      totalNumberToDisplay);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
+
+    res.printTable();
+
+    std::pair<double, double> p = bow->getPrecisionAndRecall(res, totalNumberToDisplay);
+    cout << "Precision: " << p.first << ", recall: " << p.second << endl;
+    //cout << "Precision: " << bow.getPrecision() << ", recall: " << bow.getRecall() << endl;
+
+
+    for(int i = 0; i < res.getSize(); ++i)
     {
-        ResultVector res = bow->makeQuery(pathToPic,
-                                          numberOfImagesToDisplay);//("/home/konrad/Dokumenty/CLionProjects/BagOfWords/BazaDanych/autobus2.jpg");
-
-        res.printTable();
-
-        std::pair<double, double> p = bow->getPrecisionAndRecall(res, numberOfImagesToDisplay);
-        cout << "Precision: " << p.first << ", recall: " << p.second << endl;
-        //cout << "Precision: " << bow.getPrecision() << ", recall: " << bow.getRecall() << endl;
-
-        IplImage **images = new IplImage *[numberOfImagesToDisplay];
-
-        for (int i = 0; i < numberOfImagesToDisplay; ++i)
-        {
-            images[i] = cvLoadImage(res.getPairAt(i).first.c_str());
-        }
-
-        showManyImages((char *) "Bag of Words", numberOfImagesToDisplay, images);
-        delete images;
-        cout << "Ile obrazow mam wyswietlic?" << endl;
-        cin >> numberOfImagesToDisplay;
-        ++numberOfImagesToDisplay;
-        cout << "Podaj nazwe pliku" << endl;
-        cin >> pathToPic;
+        list.append(QString::fromStdString(res.getPairAt(i).first));
     }
+    list.append(QString::fromStdString(to_string(p.first)));
+    list.append(QString::fromStdString(to_string(p.second)));
+    emit giveData(list);
+    emit finished();
 }
 
-void ShowImages::showManyImages(char* title, int nArgs, IplImage ** images)
+void QueryWorker::showManyImages(char* title, int nArgs, IplImage ** images)
 {
     // img - Used for getting the arguments
     IplImage *img;

@@ -6,12 +6,12 @@
 #include <thread>
 #include "src/Model/BOW.hpp"
 
-class Worker : public QObject {
+class QueryWorker : public QObject {
     Q_OBJECT
 
 public:
-    Worker(BOW * b, QString selectedItem, int nImgs);
-    ~Worker();
+    QueryWorker(BOW * b, QString selectedItem, int nImgs);
+    ~QueryWorker();
     void showManyImages(char* title, int nArgs, IplImage ** images);
 
 public slots:

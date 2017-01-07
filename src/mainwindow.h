@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include <iostream>
 #include "Model/BOW.hpp"
-#include "ShowImages.hpp"
 #include "imageswindow.h"
+#include "TestWindow.hpp"
 
 using namespace std;
 

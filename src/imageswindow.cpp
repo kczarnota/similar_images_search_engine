@@ -15,7 +15,7 @@ ImagesWindow::ImagesWindow(BOW * b, QString selectedImage, int nImgs, QWidget *p
     ui->listWidget->setMovement(QListView::Static);
 
     QThread* thread = new QThread;
-    Worker* worker = new Worker(bow, selectedImage, nImgs);
+    QueryWorker* worker = new QueryWorker(bow, selectedImage, nImgs);
     worker->moveToThread(thread);
     qRegisterMetaType< QList<QString> >( "QList<QString>" );
     connect(thread, SIGNAL(started()), worker, SLOT(process()));
