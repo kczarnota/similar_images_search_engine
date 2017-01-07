@@ -101,8 +101,8 @@ void MainWindow::queryBtnSelected()
 
 void MainWindow::testBtnSelected()
 {
-   // if(!checkQuery())
-     //   return;
+    if(!checkQuery())
+        return;
 
     TestWindow * testWindow = new TestWindow(bow, ui->imagesEdit->text().toUtf8().constData());
     testWindow->setWindowTitle("Test");
@@ -165,14 +165,15 @@ bool MainWindow::checkQuery()
     double siftWeight = ui->siftWeightEdit->text().toDouble();
     double lbpWeight = ui->lbpWeightEdit->text().toDouble();
     double hueWeight = ui->hueWeightEdit->text().toDouble();
+    QPushButton * sender = (QPushButton*)QObject::sender();
 
     if(!readyForQuery)
     {
         msg = "Please prepare dictionary and database first";
     }
-    else if(ui->listWidget->currentItem() == nullptr)
+    else if(ui->listWidget->currentItem() == nullptr && !(sender->text() == "Test"))
         msg = "Please select image to query";
-    else if(ui->returnImagesEdit->text().toInt() < 1 || ui->returnImagesEdit->text().toInt() > 101)
+    else if((ui->returnImagesEdit->text().toInt() < 1 || ui->returnImagesEdit->text().toInt() > 101) && !(sender->text() == "Test"))
         msg = "Please provide image number to return(between 1 and 100)";
     else if(selectedDescriptor == "SIFT and LBP" || selectedDescriptor == "SIFT and OC-LBP" || selectedDescriptor == "HOG and LBP" )
     {
