@@ -42,6 +42,7 @@ void MainWindow::radioBtnSelected()
 {
     QRadioButton * rb = (QRadioButton*)QObject::sender();
     this->selectedDescriptor = rb->text().toUtf8().constData();
+    readyForQuery = false;
     cout << this->selectedDescriptor << endl;
 }
 
