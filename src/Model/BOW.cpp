@@ -27,7 +27,7 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
     {
         descriptor = new LBPDescriptor();
     }
-    else if(mode == "SIFT and OC-LBP")
+    else if(mode == "oclbp")
     {
         descriptor = new OrthogonalLBPDescriptor();
     }
@@ -49,7 +49,7 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
         descriptor = new SIFT_LBP_HUEDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
         comparator = new SIFT_LBP_HUEComparator(descriptor->getDictionarySize());
     }
-    else if(mode == "siftorthogonallbp")
+    else if(mode == "SIFT and OC-LBP")
     {
         descriptor = new SIFT_OrthogonalLBPDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
         comparator = new SIFT_OrthogonalLBPComparator(descriptor->getDictionarySize());

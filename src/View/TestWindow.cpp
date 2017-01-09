@@ -8,7 +8,7 @@ TestWindow::TestWindow(BOW * bow, string pathToImages, QWidget *parent) :
     ui->setupUi(this);
     shouldStop = new bool(false);
     int all = BOW::countFiles(pathToImages);
-    progress = new QProgressDialog("Processing queries...", "Abort action", 0, all, this);
+    progress = new QProgressDialog("Processing queries...", "Abort action", 0, all);
     QThread* thread = new QThread;
     TestWorker* worker = new TestWorker(bow, pathToImages, shouldStop);
     worker->moveToThread(thread);
@@ -27,8 +27,8 @@ TestWindow::TestWindow(BOW * bow, string pathToImages, QWidget *parent) :
 TestWindow::~TestWindow()
 {
     delete ui;
-    if(progress != nullptr)
-        delete progress;
+    //if(progress != nullptr)
+    delete progress;
     delete shouldStop;
 }
 
@@ -64,7 +64,7 @@ void TestWindow::getData(QList<QString> list)
         ui->recallA->setText(list.at(19));
     }
 
-    delete progress;
+    //delete progress;
 }
 
 void TestWindow::tick()
