@@ -8,8 +8,6 @@ PictureInformation DescriptorUsingDictionary::getHistogramBasedOnDictionary(stri
     Mat currentWord(1, getHistogramSize(), CV_32FC1, Scalar(0));
     Mat difference(1, getHistogramSize(), CV_32FC1, Scalar(0));
 
-    std::cout << features.rows << std::endl;
-
     int i, j;
     for(i = 0; i < features.rows; ++i)
     {

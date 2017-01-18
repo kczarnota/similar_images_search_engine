@@ -12,7 +12,7 @@ PictureInformation::PictureInformation(std::string filename, int sizeOfDictionar
 }
 
 /*
- * Dodaj jeden do liczby wystąpień danego słowa
+ * Add one to words occurrence
  */
 void PictureInformation::addOneAt(int index)
 {
@@ -20,7 +20,7 @@ void PictureInformation::addOneAt(int index)
 }
 
 /*
- * Zwraca ilość wystąpień danego słowa w histogramie.
+ * Get words count in histogram
  */
 double PictureInformation::getValueAt(int index) const
 {
@@ -28,7 +28,7 @@ double PictureInformation::getValueAt(int index) const
 }
 
 /*
- * Zwraca ścieżkę do pliku z obrazem.
+ * Returns path to file
  */
 std::string PictureInformation::getName()
 {
@@ -36,8 +36,7 @@ std::string PictureInformation::getName()
 }
 
 /*
- * Dzieli wartość wystąpień każdego słowa przez ilość wszystkich słów. Jest to niezbędne ponieważ obrazki mogą mieć
- * różną liczbę punktów kluczowych, a co za tym idzie są opisywane różną liczbą słów.
+ * Normalizes histogram
  */
 void PictureInformation::normalize(int numberOfAllElements)
 {

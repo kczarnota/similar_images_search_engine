@@ -27,7 +27,6 @@ TestWindow::TestWindow(BOW * bow, string pathToImages, QWidget *parent) :
 TestWindow::~TestWindow()
 {
     delete ui;
-    //if(progress != nullptr)
     delete progress;
     delete shouldStop;
 }
@@ -63,8 +62,6 @@ void TestWindow::getData(QList<QString> list)
         ui->precisionA->setText(list.at(18));
         ui->recallA->setText(list.at(19));
     }
-
-    //delete progress;
 }
 
 void TestWindow::tick()

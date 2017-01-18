@@ -33,9 +33,8 @@
 
 enum DistanceMode {IntersectionOfHistograms, DifferenceBySum};
 /*
- * Główna klasa tworząca interfejs korzystania z metody BOW. Umożliwia stworzenie słownika(lub wczytanie go, jeśli
- * istnieje), utworzenie bazy obrazów, wczytanie obrazów do niej, zapisanie jej w pliku, odczyt z pliku oraz
- * umożliwia tworzenie zapytań.
+ * Main class responsible for creating interface for BOW method. It enables creating dictionary(or loading it),
+ * creating image database, loading images into it, saving it into file, loading from file and making queries.
  */
 class BOW
 {
@@ -55,9 +54,6 @@ private:
 
 
 public:
-    //double comparePictureHistograms(PictureInformation p1, PictureInformation p2);
-    //double compareDifferenceBySum(PictureInformation p1, PictureInformation p2);
-
     BOW(int sizeOfDictionary, string pathToImages, string databaseName, string mode, double sW, double lW, double hW);
     ~BOW();
     void init();
@@ -68,7 +64,7 @@ public:
     std::pair<double, double> getPrecisionAndRecall(ResultVector vec, int numberOfAskedPictures);
     vector<string> splitString(string s);
     static void printMatrix(Mat matrix);
-    string removeLastPathSegment(string path);
+    static string removeLastPathSegment(string path);
     static string getNLastPathSegments(string path, int n);
     int countImagesInCategory(string pathToCategoryDirectory);
     void setSIFTWeight(double sW);

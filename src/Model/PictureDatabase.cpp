@@ -1,9 +1,6 @@
 #include "PictureDatabase.hpp"
 
-PictureDatabase::PictureDatabase()
-{
-
-}
+PictureDatabase::PictureDatabase() {}
 
 PictureDatabase::PictureDatabase(int sizeOfDictionary)
 {

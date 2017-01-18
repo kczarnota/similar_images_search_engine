@@ -8,7 +8,7 @@
 using namespace std;
 
 /*
- * Klasa pomocnicza służąca do wyodrębnienia n najbardziej podobnych obrazów.
+ * Helper class, which keeps n most similar pictures
  */
 class ResultVector
 {

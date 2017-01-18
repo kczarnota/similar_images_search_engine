@@ -19,9 +19,6 @@ void HOGDescriptorExtractor::computeHOGfeatures(const Mat &currentImage, Mat &fe
             , Size(blockSize, blockSize), Size(blockStride, blockStride), Size(cellSize, cellSize), nBins);
 
     featureExtractor->compute(currentImage, descriptors, Size(0, 0), Size(0, 0), keyPoints);
-    //std::cout << "cols " << alignedWidth << endl;
-    //std::cout << "rows " << alignedHeight << endl;
-    //std::cout << descriptors.size() << endl;
 
     int blocksInImage = (alignedWidth / 8) * (alignedHeight / 8);
     int descNumber = 0;
@@ -31,10 +28,9 @@ void HOGDescriptorExtractor::computeHOGfeatures(const Mat &currentImage, Mat &fe
         {
             currentFeatures.at<float>(0, j) = descriptors[descNumber];
         }
-         //Dokonkatenuj pobrane cechy
+        //Add new features
         vconcat(currentFeatures, features, features);
     }
-    //cout << features.rows << " col " << features.cols << endl;
 
     delete featureExtractor;
 }

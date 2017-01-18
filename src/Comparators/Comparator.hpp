@@ -1,7 +1,6 @@
 #ifndef BAGOFWORDS_COMPARATOR_HPP
 #define BAGOFWORDS_COMPARATOR_HPP
 
-
 #include "../Model/PictureInformation.hpp"
 
 class Comparator

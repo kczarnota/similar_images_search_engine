@@ -10,9 +10,6 @@ ResultVector::ResultVector(int capacity, double mValue)
         (*it).second = mValue;
 }
 
-/*
- * Wstawia nową wartość na odpowiednie miejsce jeżeli jest ona mniejsza od wartości już znajdujących się w wektorze.
- */
 bool ResultVector::tryAdd(pair<string, double> newPair)
 {
     for(vector<pair<string, double>>::iterator it = this->table.begin(); it != this->table.end(); ++it)
@@ -28,9 +25,6 @@ bool ResultVector::tryAdd(pair<string, double> newPair)
     return false;
 }
 
-/*
- * Przepisuje wartości od danego iteratora do końca wektora usuwając z niego ostatni element.
- */
 void ResultVector::rewriteRest(std::pair<string, double> pairToInsert, vector<pair<string, double>>::iterator it)
 {
     pair<string, double> toMove;

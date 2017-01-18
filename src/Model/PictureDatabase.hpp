@@ -5,7 +5,7 @@
 #include "../Dictionaries/VisualDictionary.hpp"
 
 /*
- * Klasa przechowująca wektor obiektów PictureInforamtion opisujące obrazy
+ * Class containing vector of PictureInformation, describing images
  */
 class PictureDatabase
 {

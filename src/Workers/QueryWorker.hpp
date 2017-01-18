@@ -12,7 +12,6 @@ class QueryWorker : public QObject {
 public:
     QueryWorker(BOW * b, QString selectedItem, int nImgs);
     ~QueryWorker();
-    void showManyImages(char* title, int nArgs, IplImage ** images);
 
 public slots:
     void process();

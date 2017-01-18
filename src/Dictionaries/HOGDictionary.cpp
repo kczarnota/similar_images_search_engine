@@ -27,12 +27,11 @@ void HOGDictionary::constructDictionaryRandom()
     {
         file_status fs = status(dir->path());
 
-        if (!is_directory(fs)) //Pomiń katalogi
+        if (!is_directory(fs)) //Omit directories
         {
-            //Załaduj obrazek
+            //Load image
             currentImage = imread(dir->path().string(), CV_LOAD_IMAGE_ANYDEPTH);
 
-            //Sprawdź czy się udało
             if (!currentImage.data)
             {
                 cout << "Could not open or find the image" << endl;
@@ -40,11 +39,10 @@ void HOGDictionary::constructDictionaryRandom()
             }
 
             currentFeatures = Mat(0, vectorLength, CV_32FC1, Scalar(0));
-            //std::cout << dir->path() << std::endl;
             HOGDescriptorExtractor::computeHOGfeatures(currentImage, currentFeatures);
             vconcat(currentFeatures, allFeatures, allFeatures);
             ++imgNumber;
-            cout << "Image number: " << imgNumber << endl;
+
             if (progress.wasCanceled())
             {
                 cancelled = true;

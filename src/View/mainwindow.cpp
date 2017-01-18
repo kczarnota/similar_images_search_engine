@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->listWidget->setViewMode(QListWidget::IconMode);
-    //ui->listWidget->selectionMode();
     ui->listWidget->setIconSize(QSize(200,200));
     ui->listWidget->setResizeMode(QListWidget::Adjust);
     ui->listWidget->setGridSize(QSize(220, 225));
@@ -43,7 +42,6 @@ void MainWindow::radioBtnSelected()
     QRadioButton * rb = (QRadioButton*)QObject::sender();
     this->selectedDescriptor = rb->text().toUtf8().constData();
     readyForQuery = false;
-    cout << this->selectedDescriptor << endl;
 }
 
 void MainWindow::prepareBtnSelected()
@@ -65,7 +63,6 @@ void MainWindow::prepareBtnSelected()
     string databaseName = BOW::getNLastPathSegments(pathToDatabase, 1);
 
     QList<string> images = findAllImages();
-    cout << images.count() << endl;
     for(int i = 0; i < images.count(); ++i)
     {
         QString fileName = QString::fromStdString(images.at(i));
@@ -92,7 +89,6 @@ void MainWindow::queryBtnSelected()
         return;
 
     QListWidgetItem * it = ui->listWidget->item(0);
-    cout << "Image name " << it->text().toUtf8().constData() << endl;
     QString selectedItem = ui->imagesEdit->text() + "/" + ui->listWidget->currentItem()->text();
     ImagesWindow * images = new ImagesWindow(bow, selectedItem, ui->returnImagesEdit->text().toInt());
     images->setWindowTitle("Query results");

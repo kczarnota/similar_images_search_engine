@@ -39,7 +39,6 @@ void ImagesWindow::getData(QList<QString> list)
 {
     QIcon ic(list.at(0));
     QSize size = ic.availableSizes()[0];
-    cout << size.width() << " " << size.height() << endl;
 
     ui->queryImageLabel->setPixmap(QPixmap(list.at(0)).scaled(150, 150, Qt::KeepAspectRatio));
     string firstItem = BOW::getNLastPathSegments(list.at(0).toUtf8().constData(), 2);
@@ -52,6 +51,4 @@ void ImagesWindow::getData(QList<QString> list)
 
     ui->precisionText->setText(list.at(list.count() - 2));
     ui->recallText->setText(list.at(list.count() - 1));
-    //cout << "Precision " << list.at(list.count() - 2).toUtf8().constData() << endl;
-    //cout << "Recall " << list.at(list.count() - 1).toUtf8().constData() << endl;
 }

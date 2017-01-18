@@ -6,7 +6,7 @@
 #include <boost/serialization/access.hpp>
 
 /*
- * Klasa przechowująca informacje o obrazie. Zawiera histogram słów utworzony na podstawie słownika.
+ * Class containing information about picture. It keeps histogram.
  */
 class PictureInformation
 {

@@ -1,19 +1,14 @@
 #include "TestWorker.hpp"
 
-// --- CONSTRUCTOR ---
 TestWorker::TestWorker(BOW * b, string pToImgs, bool * sS) {
     this->bow = b;
     this->pathToImages = pToImgs;
     this->cancel = sS;
 }
 
-// --- DECONSTRUCTOR ---
-TestWorker::~TestWorker() {
-    // free resources
-}
+TestWorker::~TestWorker() {}
 
-// --- PROCESS ---
-// Start processing data.
+
 void TestWorker::process()
 {
     QList<QString> list;
@@ -32,7 +27,6 @@ void TestWorker::process()
     while (dir != end)
     {
         file_status fs = status(dir->path());
-
         if (!is_directory(fs))
         {
             ResultVector res = bow->makeQuery(dir->path().string(), 90);
@@ -99,12 +93,10 @@ void TestWorker::process()
     {
         averagePrecision[i] /= imagesQueried;
         wholeAvgPrec += averagePrecision[i];
-        cout << "Average precison for: "<< j << "    " << averagePrecision[i] << endl;
         list.append(QString::fromStdString(to_string(averagePrecision[i])));
 
         averageRecall[i] /= imagesQueried;
         wholeAvgRec += averageRecall[i];
-        cout << "Average recall for: "<< j << "    " << averageRecall[i] << endl;
         list.append(QString::fromStdString(to_string(averageRecall[i])));
     }
     wholeAvgPrec /= 9.0;

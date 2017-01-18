@@ -7,9 +7,6 @@ BOW::BOW(int sizeOfDictionary, string pathToImages, string databaseName, string 
     this->databasePath = removeLastPathSegment(this->pathToImages) + databaseName;
     this->dictionaryPath = databasePath + "_dictionary.xml";
 
-    cout << databasePath << endl;
-    cout << dictionaryPath << endl;
-
     if(mode == "SIFT")
     {
         descriptor = new SIFTDescriptorExtractor(sizeOfDictionary, pathToImages, dictionaryPath);
@@ -144,7 +141,6 @@ void BOW::updateDatabase(string pathToDatabase)
         if (!is_directory(fs))
         {
             this->addPictureToDatabase(dir->path().string());
-            cout << "Picture nr: " << picNum++ << endl;
 
             if (progress.wasCanceled())
             {
@@ -169,8 +165,6 @@ void BOW::addPictureToDatabase(string pathToPicture)
 
     if(pi.getHistogramSize() != 0)
         this->pictureDatabase->addPicture(pi);
-    else
-        cout << pi.getName() << endl;
 }
 
 
@@ -180,7 +174,6 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
     if(queryPicture.getHistogramSize() == 0)
         return ResultVector(0, 0);
 
-    cout << pathToPicture << endl;
     double minDistance;
 
     minDistance = this->comparator->compare(queryPicture, this->pictureDatabase->getPicture(0));
@@ -196,39 +189,11 @@ ResultVector BOW::makeQuery(string pathToPicture, int resultNumber)
 
         distance = this->comparator->compare(queryPicture, this->pictureDatabase->getPicture(i));
 
-
         resultVector.tryAdd(make_pair(this->pictureDatabase->getPicture(i).getName(), distance));
     }
 
     return resultVector;
 }
-
-/*double BOW::comparePictureHistograms(PictureInformation p1, PictureInformation p2)
-{
-    double distance = 0.0, sumOfMinElements = 0.0;
-    int size = p1.getHistogramSize();
-
-    for(int i = 0; i < size; ++i)
-        sumOfMinElements += std::min(p1.getValueAt(i), p2.getValueAt(i));
-
-    distance = 1 - sumOfMinElements;
-    return distance;
-}
-
-double BOW::compareDifferenceBySum(PictureInformation p1, PictureInformation p2)
-{
-    int size = p1.getHistogramSize();
-    double sum = 0;
-    for(int i = 0; i < size; ++i)
-    {
-        double x = p1.getValueAt(i);
-        double q = p2.getValueAt(i);
-        if(x + q != 0)
-            sum += std::abs(x - q)/(x + q);
-    }
-
-    return sum;
-}*/
 
 
 std::pair<double, double> BOW::getPrecisionAndRecall(ResultVector vec, int numberOfAskedPictures)

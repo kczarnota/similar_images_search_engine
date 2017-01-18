@@ -16,7 +16,7 @@ using namespace boost::filesystem;
 using namespace std;
 
 /*
- * Klasa bazowa do reprezentacji słownika
+ * Base class representing visual dictionary
  */
 class VisualDictionary
 {

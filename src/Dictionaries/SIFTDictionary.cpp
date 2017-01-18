@@ -29,22 +29,18 @@ void SIFTDictionary::constructDictionaryRandom()
     {
         file_status fs = status(dir->path());
 
-        if (!is_directory(fs)) //Pomiń katalogi
+        if (!is_directory(fs))
         {
-            //Załaduj obrazek
             currentImage = imread(dir->path().string(), CV_LOAD_IMAGE_ANYDEPTH);
 
-            //Sprawdź czy się udało
             if (!currentImage.data)
             {
                 cout << "Could not open or find the image" << endl;
                 exit(-1);
             }
 
-            //std::cout << dir->path() << std::endl;
             SIFTDescriptorExtractor::computeSIFTfeatures(currentImage, currentFeatures, keyPoints);
-            cout << "Rows: " << currentFeatures.rows << ", columns " << currentFeatures.cols << endl;
-            vconcat(currentFeatures, allFeatures, allFeatures); //Dokonkatenuj pobrane cechy
+            vconcat(currentFeatures, allFeatures, allFeatures);
             if (progress.wasCanceled())
             {
                 cancelled = true;
@@ -65,9 +61,7 @@ void SIFTDictionary::constructDictionaryRandom()
 
 void SIFTDictionary::constructDictionaryKMeans()
 {
-    //Wybranie k losowych słów
     this->constructDictionaryRandom();
-    cout << "Random selected" << endl;
 
     bool shouldStop = false;
     Mat *classes = new Mat[this->selectedWords.rows];
@@ -80,7 +74,7 @@ void SIFTDictionary::constructDictionaryKMeans()
     while(!shouldStop && iterations < 10)
     {
         cout << iterations++ << endl;
-        //Wyzerowanie macierzy
+
         for(int i = 0; i < this->selectedWords.rows; ++i)
         {
             classes[i] = Mat(0, vectorLength, CV_32FC1, Scalar(0));
@@ -88,19 +82,17 @@ void SIFTDictionary::constructDictionaryKMeans()
 
         shouldStop = true;
 
-        //Przypisać do najbliższych klas
-        for(int i = 0; i < this->allFeatures.rows; ++i) //każdą z cech trzeba przypisać do klasy
+        for(int i = 0; i < this->allFeatures.rows; ++i)
         {
             int minSumIndex = -1, minSum = std::numeric_limits<int>::max();
-            this->allFeatures.row(i).copyTo(currentFeature.row(0)); //wybrana cecha
-            for(int j = 0; j < this->selectedWords.rows; ++j) //przeglądam wszystkich reprezentantów klas
+            this->allFeatures.row(i).copyTo(currentFeature.row(0));
+            for(int j = 0; j < this->selectedWords.rows; ++j)
             {
                 int currentSum = 0;
-                this->selectedWords.row(j).copyTo(currentClass.row(0)); //wybrana klasa
+                this->selectedWords.row(j).copyTo(currentClass.row(0));
 
                 absdiff(currentClass, currentFeature, difference);
-                // printMatrix(currentClass);
-                // printMatrix(currentFeature);
+
                 for(int k = 0; k < vectorLength; ++k)
                 {
                     currentSum += difference.at<float>(0, k);
@@ -115,26 +107,19 @@ void SIFTDictionary::constructDictionaryKMeans()
             classes[minSumIndex].push_back(currentFeature.row(0));
         }
 
-
-/*        for (int l = 0; l < 5; ++l)
+        for(int i = 0; i < this->selectedWords.rows; ++i)
         {
-            printMatrix(classes[l]);
-            cout << "_________________________________________________________________________" << endl;
-        }*/
-        //Obliczyć średnie i sprawdzić czy nic się nie zmieniło
-        for(int i = 0; i < this->selectedWords.rows; ++i) //dla każdej klasy
-        {
-            for(int j = 0; j < classes[i].rows; ++j) //przechodzę przez wszystkie wiersze i obliczam średnią
+            for(int j = 0; j < classes[i].rows; ++j)
             {
                 for(int k = 0; k < vectorLength; ++k)
                 {
-                    average.at<float>(0, k) += classes[i].row(j).at<float>(0, k); //suma wartości
+                    average.at<float>(0, k) += classes[i].row(j).at<float>(0, k);
                 }
             }
 
             for(int k = 0; k < vectorLength; ++k)
             {
-                average.at<float>(0, k) = (int)average.at<float>(0, k)/classes[i].rows; //wszystkie wartości podzielone przez liczbę cech
+                average.at<float>(0, k) = (int)average.at<float>(0, k)/classes[i].rows;
             }
 
 
@@ -143,7 +128,7 @@ void SIFTDictionary::constructDictionaryKMeans()
                 if(average.at<float>(0, k) != this->selectedWords.row(i).at<float>(0, k))
                 {
                     shouldStop = false;
-                    average.row(0).copyTo(this->selectedWords.row(i)); //to zastępujemy stare nowym
+                    average.row(0).copyTo(this->selectedWords.row(i));
                     break;
                 }
             }
@@ -152,21 +137,6 @@ void SIFTDictionary::constructDictionaryKMeans()
             {
                 average.at<float>(0, k) = 0;
             }
-
-            /*  absdiff(this->selectedWords.row(i), average.row(0), difference); //wyliczenie różnicy
-
-              double differenceSum = 0;
-              for(int k = 0; k < 128; ++k)
-              {
-                  differenceSum += difference.at<float>(0, k); //całkowita różnica
-              }
-
-              if(differenceSum != 0) //jeżeli średnie słowo wyszło inne niż było
-              {
-                  shouldStop = false;
-                  average.row(0).copyTo(this->selectedWords.row(i)); //to zastępujemy stare nowym
-              }
-              */
         }
     }
 
