@@ -1,66 +1,53 @@
-# Potrzebne zależności
-[compiler]
-```bash
-sudo apt-get install build-essential
-```
+# Similar images search engine
+Application measuring performance of state-of-art feature descriptors when combined together in different ways.
+It uses Bag of Words approach to create a visual word dictionary and then perform search.
+Dictionary creation and tests runs are executed on [Wang dataset](http://wang.ist.psu.edu/docs/related/). Used libraries: OpenCV, Boost, QT.
 
-[required]
+## Requirements
 ```bash
 sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev qtcreator qt5-default
 ```
 
-[optional]
+### OpenCV
 ```bash
-sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
-```
-
-# OpenCV
-##1. Klonowanie repo
-```bash
-git clone https://github.com/Itseez/opencv.git 
-git clone https://github.com/Itseez/opencv_contrib.git
-```
-
-##1b. Klonowanie repo
-```bash
-git clone https://github.com/opencv/opencv.git 
+git clone https://github.com/opencv/opencv.git
 git clone https://github.com/opencv/opencv_contrib.git
-```
-
-##2. Folder na build
-```bash
 cd ~/opencv
 mkdir build
 cd build
-```
-
-##3. Użycie cmake
-
-```bash
 cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
 cmake -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules ..
 make -j5
-```
-
-##4. Instalacja
-```bash
 sudo make install
 ```
 
-# BOOST
-Pobranie i dwie komendy:
+### BOOST
 ```bash
 sudo ./bootstrap.sh --prefix=/usr/local
 sudo ./b2 install
 ```
 
-niezbędne linie w cmake:
+## Program compilation
 ```bash
-find_package( OpenCV REQUIRED )
-find_package( Boost REQUIRED COMPONENTS system filesystem)
-find_package( Qt5Widgets REQUIRED )
-
-target_link_libraries( BagOfWords ${OpenCV_LIBS} )
-target_link_libraries( BagOfWords ${Boost_LIBRARIES} )
-target_link_libraries( ${PROJECT_NAME} ${Qt5Widgets_LIBRARIES} )
+git clone https://github.com/kczarnota/similar_images_search_engine
+cd similar_images_search_engine
+mkdir build
+cd build
+cmake ..
+make
+./BagOfWords
 ```
+
+## Usage
+* Specify path to directory with images(they should be grouped in sub-directories which represents different categories)
+* Provide dictionary size
+* Choose descriptor(if it's a combination you have to provide weights)
+* Click prepare and wait for the process to finish
+* Computed database will be saved, so you can load it next time
+* Now you can pick an image and perform a query
+* Or click test and compute precision and recall on whole dataset
+
+## Screenshots
+![](Screenshots/main_window.png?raw=true)
+
+![](Screenshots/query.png?raw=true)
