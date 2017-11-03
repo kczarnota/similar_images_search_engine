@@ -47,7 +47,7 @@ private:
     DistanceMode distanceMode;
     BasicDescriptor * descriptor= nullptr;
     Comparator * comparator = nullptr;
-    bool databaseReady;
+    bool databaseReady = false;
 
     void addPictureToDatabase(string pathToPicture);
     void saveDatabase();
